@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Importer medicaments.json</title>
+  <script src="browser-polyfill.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    h1 {
+      color: #333;
+    }
+    button {
+      padding: 10px 20px;
+      margin-top: 10px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    #message {
+      margin-top: 15px;
+      color: green;
+    }
+	#liste-medicaments {
+  max-height: 200px; /* Limiter la hauteur pour éviter un débordement */
+  overflow-y: auto; /* Ajouter une barre de défilement si nécessaire */
+  border: 1px solid #ccc;
+  padding: 10px;
+  background-color: #f9f9f9;
+}
+
+#medicaments-liste {
+  list-style-type: none; /* Supprimer les puces de la liste */
+  padding: 0;
+  margin: 0;
+}
+
+#medicaments-liste li {
+  padding: 5px 0;
+  cursor: pointer;
+}
+
+#medicaments-liste li:hover {
+  background-color: #e9ecef;
+}
+  </style>
+</head>
+<body>
+  <h1>Importer un fichier medicaments.json</h1>
+  <input type="file" id="fichier-json" accept=".json" hidden />
+  <button id="choisir-fichier">Choisir un fichier JSON</button>
+  <button id="ajouter-contenu">Ajouter le contenu</button>
+  <button id="recharger-medicaments">Recharger les médicaments</button>
+  
+  <div id="liste-medicaments" style="margin-top: 20px;">
+  <h3>Liste des médicaments :</h3>
+  <ul id="medicaments-liste"></ul>
+</div>
+ <h3>Importer des ordonnances types</h3>
+ <div style="margin-bottom: 15px;">
+   <input type="file" id="fichier-ordonnances-type" accept=".json" hidden />
+   <button id="choisir-ordonnances-type">Choisir un fichier d'ordonnances types</button>
+   <button id="ajouter-ordonnances-type">Ajouter les ordonnances types</button>
+ </div>
+ <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #ddd;">
+   <button id="charger-fichier-ordonnances" style="background-color: #6f42c1;">
+     <i class="fas fa-folder-open"></i> Charger fichier pour ord.html
+   </button>
+   <input type="file" id="fichier-ordonnances-pour-ord" accept=".json" hidden />
+   <p style="color: #666; font-size: 0.9em; margin-top: 10px;">
+     Ce bouton charge un fichier d'ordonnances types pour les utiliser dans ord.html
+   </p>
+ </div>
+
+
+ <div id="liste-ordonnances-types" style="margin-top: 20px;">
+   <h4>Liste des ordonnances types :</h4>
+   <ul id="ordonnances-liste"></ul>
+   <button id="recharger-ordonnances-types" style="margin-top: 10px; background-color: #ffc107; color: #000;">
+     Recharger les ordonnances types
+   </button>
+ </div>
+
+ <h2 style="margin-top: 30px; color: #333;">Médicaments personnalisés</h2>
+ <div style="margin-top: 15px;">
+   <button id="exporter-medicaments-personnalises" style="background-color: #28a745;">
+     <i class="fas fa-download"></i> Exporter les médicaments personnalisés
+   </button>
+   <input type="file" id="importer-medicaments-personnalises" accept=".json" hidden />
+   <button id="btn-importer-medicaments" style="background-color: #17a2b8;">
+     <i class="fas fa-upload"></i> Importer des médicaments personnalisés
+   </button>
+ </div>
+
+ <div id="infos-medicaments-personnalises" style="margin-top: 15px; color: #666; font-style: italic;">
+   Ces médicaments sont sauvegardés dans le localStorage de votre navigateur.
+ </div>
+
+   <div id="message"></div>
+
+  <script src="options.js"></script>
+</body>
+</html>
