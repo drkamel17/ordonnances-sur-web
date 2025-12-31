@@ -11,10 +11,21 @@ window.mettreAJourListeOrdonnancesTypes = async function(ordonnancesTypes = null
     
     const nomsTries = Object.keys(ordonnancesTypes).sort((a, b) => a.localeCompare(b, 'fr', { sensitivity: 'base' }));
     
+    const sourcesData = JSON.parse(localStorage.getItem('ordonnancesTypesSources') || '{}');
+    
     nomsTries.forEach(nom => {
         const option = document.createElement('option');
         option.value = nom;
         option.textContent = nom;
+        
+        if (sourcesData[nom] === 'localStorage') {
+            option.style.color = '#2563eb';
+            option.style.fontWeight = '500';
+        } else if (sourcesData[nom] === 'file') {
+            option.style.color = '#059669';
+            option.style.fontWeight = '500';
+        }
+        
         select.appendChild(option);
     });
 };
@@ -267,8 +278,12 @@ document.addEventListener('DOMContentLoaded', async function() {
             const nomType = prompt('Nom de cette ordonnance type:');
             if (nomType && ordonnanceList.length > 0) {
                 let ordonnancesTypes = JSON.parse(localStorage.getItem('ordonnancesTypesPourOrd') || '{}');
+                let sourcesData = JSON.parse(localStorage.getItem('ordonnancesTypesSources') || '{}');
                 ordonnancesTypes[nomType] = ordonnanceList;
+                sourcesData[nomType] = 'localStorage';
                 localStorage.setItem('ordonnancesTypesPourOrd', JSON.stringify(ordonnancesTypes));
+                localStorage.setItem('ordonnancesTypesSources', JSON.stringify(sourcesData));
+                window.ordonnancesTypesSources = sourcesData;
                 
                 ordonnancesTypesChargees = ordonnancesTypes;
                 mettreAJourListeOrdonnancesTypes(ordonnancesTypes);
@@ -1416,19 +1431,28 @@ function chargerOrdonnancesTypesDuFichier() {
         console.log('✅ Ordonnances chargées depuis ordonnances-types-data.js !');
         console.log('- Ordonnances dans le fichier JS :', Object.keys(ordonnancesTypesData).length);
         
+        const sourcesData = JSON.parse(localStorage.getItem('ordonnancesTypesSources') || '{}');
         const fusion = { ...ordonnancesTypesData };
         let nbAjoutes = 0;
         let nbRemplaces = 0;
         
+        Object.keys(ordonnancesTypesData).forEach(nom => {
+            sourcesData[nom] = 'file';
+        });
+        
         Object.keys(fromLocalStorage).forEach(nom => {
             if (!fusion[nom]) {
                 fusion[nom] = fromLocalStorage[nom];
+                sourcesData[nom] = 'localStorage';
                 nbAjoutes++;
             } else {
                 fusion[nom] = fromLocalStorage[nom];
                 nbRemplaces++;
             }
         });
+        
+        localStorage.setItem('ordonnancesTypesSources', JSON.stringify(sourcesData));
+        window.ordonnancesTypesSources = sourcesData;
         
         ordonnancesTypesChargees = fusion;
         localStorage.setItem('ordonnancesTypesPourOrd', JSON.stringify(fusion));
@@ -1445,6 +1469,12 @@ function chargerOrdonnancesTypesDuFichier() {
         console.log('💡 Utilisation des données localStorage uniquement...');
         if (Object.keys(fromLocalStorage).length > 0) {
             ordonnancesTypesChargees = fromLocalStorage;
+            const sourcesData = {};
+            Object.keys(fromLocalStorage).forEach(nom => {
+                sourcesData[nom] = 'localStorage';
+            });
+            localStorage.setItem('ordonnancesTypesSources', JSON.stringify(sourcesData));
+            window.ordonnancesTypesSources = sourcesData;
             mettreAJourListeOrdonnancesTypes(fromLocalStorage);
             console.log('✅ Liste chargée depuis localStorage :', Object.keys(fromLocalStorage).length, 'ordonnances');
         } else {

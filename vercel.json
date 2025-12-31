@@ -8,7 +8,7 @@
   ],
   "routes": [
     {
-      "src": "/(.+\\.(js|css|json|png|jpg|jpeg|gif|svg|ico|woff|woff2|ttf|eot|txt|pdf|zip|map))",
+      "src": "/(.+\\.(js|css|json|png|jpg|jpeg|gif|svg|ico|woff|woff2|ttf|eot|txt|pdf|zip|map))$",
       "dest": "/$1"
     },
     {

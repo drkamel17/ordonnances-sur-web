@@ -54,6 +54,13 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     document.getElementById("ajouter-ordonnances-type").addEventListener("click", ajouterOrdonnancesTypes);
 
+    // Écouteurs pour la gestion des ordonnances types
+    document.getElementById("enregistrer-ordonnance").addEventListener("click", enregistrerOrdonnance);
+    document.getElementById("annuler-ordonnance").addEventListener("click", annulerOrdonnance);
+    document.getElementById("supprimer-ordonnance").addEventListener("click", supprimerOrdonnance);
+    document.getElementById("ajouter-medicament").addEventListener("click", ajouterMedicamentForm);
+    document.getElementById("recharger-ordonnances-types").addEventListener("click", chargerOrdonnancesTypes);
+
     // === Exporter médicaments personnalisés ===
     document.getElementById("exporter-medicaments-personnalises").addEventListener("click", function() {
         const medsPersonnalises = JSON.parse(localStorage.getItem('medicamentsPersonnalises') || '[]');
@@ -240,7 +247,9 @@ function ajouterOrdonnancesTypes() {
 
         storage.set({ ordonnancesTypes: fusion }, () => {
             localStorage.setItem("ordonnancesTypes", JSON.stringify(fusion));
-            remplirListeOrdonnancesTypes(fusion);
+            // Mettre à jour également la clé utilisée par ord.html
+            localStorage.setItem("ordonnancesTypesPourOrd", JSON.stringify(fusion));
+            chargerOrdonnancesTypes();
             showMessage("Ordonnances types ajoutées avec succès !", "green");
         });
     });
@@ -288,52 +297,233 @@ if (chargerFichierOrdonnancesBtn && fichierOrdonnancesPourOrdInput) {
         reader.readAsText(file);
     });
 }
-function remplirListeOrdonnancesTypes(data) {
-    const select = document.getElementById("liste-ordonnances-types");
-    select.innerHTML = '<option value="">Sélectionnez une ordonnance type</option>'; // Effacer les options existantes
 
-    Object.keys(data).forEach(maladie => {
-        const option = document.createElement("option");
-        option.value = maladie;
-        option.textContent = maladie;
-        select.appendChild(option);
-    });
-
-    console.log("Ordonnances types chargées :", Object.keys(data));
-}
 // Remplir la liste HTML des ordonnances types
-function remplirListeOrdonnancesTypes2(data) {
-    const liste = document.getElementById("ordonnances-liste");
-    liste.innerHTML = "";
+function remplirListeOrdonnancesTypes(data) {
+    const container = document.getElementById("ordonnances-liste");
+    container.innerHTML = "";
 
     Object.keys(data).forEach(nom => {
-        const li = document.createElement("li");
-        li.textContent = nom;
-        li.addEventListener("click", () => alert(`Vous avez sélectionné : ${nom}`));
-        liste.appendChild(li);
+        const ordonnanceItem = document.createElement("div");
+        ordonnanceItem.className = "ordonnance-item";
+        ordonnanceItem.innerHTML = `
+            <strong>${nom}</strong>
+            <div class="ordonnance-medicaments">
+                ${data[nom].map(med => `
+                    <div class="ordonnance-medicament">
+                        <span><strong>Médicament:</strong> ${med.medicament}</span>
+                        <span><strong>Posologie:</strong> ${med.posologie}</span>
+                        <span><strong>Quantité:</strong> ${med.quantite}</span>
+                    </div>
+                `).join('')}
+            </div>
+            <div class="ordonnance-actions">
+                <button class="modifier-ordonnance btn-secondary" data-nom="${nom}">Modifier</button>
+                <button class="supprimer-ordonnance btn-danger" data-nom="${nom}">Supprimer</button>
+            </div>
+        `;
+        container.appendChild(ordonnanceItem);
+    });
+
+    // Ajouter les événements pour les boutons de modification et suppression
+    document.querySelectorAll('.modifier-ordonnance').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const nom = this.getAttribute('data-nom');
+            modifierOrdonnance(nom);
+        });
+    });
+
+    document.querySelectorAll('.supprimer-ordonnance').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const nom = this.getAttribute('data-nom');
+            supprimerOrdonnanceDirecte(nom);
+        });
     });
 
     console.log("Liste des ordonnances types mise à jour :", data);
 }
 
-function ajouterOrdonnancesTypes() {
-    if (Object.keys(contenuOrdonnancesTypes).length === 0) {
-        showMessage("Aucun contenu à ajouter.", "red");
+// Fonction pour modifier une ordonnance existante
+function modifierOrdonnance(nom) {
+    storage.get("ordonnancesTypes", (result) => {
+        const data = result.ordonnancesTypes || {};
+        const ordonnance = data[nom];
+
+        if (ordonnance) {
+            // Afficher le formulaire
+            document.getElementById("formulaire-ordonnance").classList.remove("hidden");
+            document.getElementById("titre-formulaire").textContent = `Modifier l'ordonnance: ${nom}`;
+            document.getElementById("nom-ordonnance").value = nom;
+            document.getElementById("supprimer-ordonnance").classList.remove("hidden");
+            document.getElementById("supprimer-ordonnance").setAttribute("data-nom", nom);
+
+            // Remplir la liste des médicaments
+            const listeMeds = document.getElementById("liste-medicaments-ordonnance");
+            listeMeds.innerHTML = "";
+
+            ordonnance.forEach((med, index) => {
+                const medDiv = document.createElement("div");
+                medDiv.className = "form-row";
+                medDiv.innerHTML = `
+                    <div class="form-group">
+                        <label>Médicament</label>
+                        <input type="text" class="medicament-input" value="${med.medicament}" placeholder="Nom du médicament">
+                    </div>
+                    <div class="form-group">
+                        <label>Posologie</label>
+                        <input type="text" class="posologie-input" value="${med.posologie}" placeholder="Posologie">
+                    </div>
+                    <div class="form-group">
+                        <label>Quantité</label>
+                        <input type="text" class="quantite-input" value="${med.quantite}" placeholder="Quantité">
+                    </div>
+                    <div class="form-group" style="display: flex; align-items: flex-end;">
+                        <button type="button" class="btn-danger supprimer-medicament" data-index="${index}">Supprimer</button>
+                    </div>
+                `;
+                listeMeds.appendChild(medDiv);
+            });
+
+            // Ajouter les événements pour supprimer des médicaments
+            document.querySelectorAll('.supprimer-medicament').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const index = parseInt(this.getAttribute('data-index'));
+                    const medicamentDiv = this.closest('.form-row');
+                    medicamentDiv.remove();
+                });
+            });
+
+            // Faire défiler vers le formulaire
+            document.getElementById("formulaire-ordonnance").scrollIntoView({ behavior: "smooth" });
+        }
+    });
+}
+
+// Fonction pour ajouter un médicament dans le formulaire
+function ajouterMedicamentForm() {
+    const listeMeds = document.getElementById("liste-medicaments-ordonnance");
+    const index = listeMeds.children.length;
+    const medDiv = document.createElement("div");
+    medDiv.className = "form-row";
+    medDiv.innerHTML = `
+        <div class="form-group">
+            <label>Médicament</label>
+            <input type="text" class="medicament-input" placeholder="Nom du médicament">
+        </div>
+        <div class="form-group">
+            <label>Posologie</label>
+            <input type="text" class="posologie-input" placeholder="Posologie">
+        </div>
+        <div class="form-group">
+            <label>Quantité</label>
+            <input type="text" class="quantite-input" placeholder="Quantité">
+        </div>
+        <div class="form-group" style="display: flex; align-items: flex-end;">
+            <button type="button" class="btn-danger supprimer-medicament" data-index="${index}">Supprimer</button>
+        </div>
+    `;
+    listeMeds.appendChild(medDiv);
+
+    // Ajouter l'événement pour supprimer ce médicament
+    const supprimerBtn = medDiv.querySelector('.supprimer-medicament');
+    supprimerBtn.addEventListener('click', function() {
+        const medicamentDiv = this.closest('.form-row');
+        medicamentDiv.remove();
+    });
+}
+
+// Fonction pour enregistrer une ordonnance (ajouter ou modifier)
+function enregistrerOrdonnance() {
+    const nom = document.getElementById("nom-ordonnance").value.trim();
+    if (!nom) {
+        showMessage("Veuillez saisir un nom pour l'ordonnance.", "red");
         return;
     }
 
-    storage.get("ordonnancesTypes", (result) => {
-        let existants = result.ordonnancesTypes || {};  // Obtenir les ordonnances existantes
-        let fusion = { ...existants, ...contenuOrdonnancesTypes };  // Fusionner les objets
+    // Récupérer tous les médicaments du formulaire
+    const medicamentInputs = document.querySelectorAll('.medicament-input');
+    const posologieInputs = document.querySelectorAll('.posologie-input');
+    const quantiteInputs = document.querySelectorAll('.quantite-input');
 
-        storage.set({ ordonnancesTypes: fusion }, () => {
-            localStorage.setItem("ordonnancesTypes", JSON.stringify(fusion));
-            remplirListeOrdonnancesTypes(fusion);  // Mettre à jour la liste
-            showMessage("Ordonnances types ajoutées avec succès !", "green");
+    if (medicamentInputs.length === 0) {
+        showMessage("Veuillez ajouter au moins un médicament.", "red");
+        return;
+    }
+
+    const medicaments = [];
+    for (let i = 0; i < medicamentInputs.length; i++) {
+        const medicament = medicamentInputs[i].value.trim();
+        const posologie = posologieInputs[i].value.trim();
+        const quantite = quantiteInputs[i].value.trim();
+
+        if (!medicament || !posologie || !quantite) {
+            showMessage(`Veuillez remplir tous les champs pour le médicament ${i + 1}.`, "red");
+            return;
+        }
+
+        medicaments.push({
+            medicament: medicament,
+            posologie: posologie,
+            quantite: quantite
+        });
+    }
+
+    // Sauvegarder l'ordonnance
+    storage.get("ordonnancesTypes", (result) => {
+        const data = result.ordonnancesTypes || {};
+        const ancienNom = document.getElementById("nom-ordonnance").value; // Récupérer l'ancien nom si modification
+
+        // Supprimer l'ancienne entrée si c'est une modification
+        if (document.getElementById("titre-formulaire").textContent.includes("Modifier")) {
+            delete data[ancienNom];
+        }
+
+        // Ajouter la nouvelle/la mise à jour
+        data[nom] = medicaments;
+
+        storage.set({ ordonnancesTypes: data }, () => {
+            localStorage.setItem("ordonnancesTypes", JSON.stringify(data));
+            // Mettre à jour également la clé utilisée par ord.html
+            localStorage.setItem("ordonnancesTypesPourOrd", JSON.stringify(data));
+            chargerOrdonnancesTypes();
+            annulerOrdonnance();
+            showMessage(`Ordonnance "${nom}" enregistrée avec succès !`, "green");
         });
     });
 }
 
+// Fonction pour annuler la modification/ajout d'une ordonnance
+function annulerOrdonnance() {
+    document.getElementById("formulaire-ordonnance").classList.add("hidden");
+    document.getElementById("titre-formulaire").textContent = "Ajouter une nouvelle ordonnance type";
+    document.getElementById("nom-ordonnance").value = "";
+    document.getElementById("liste-medicaments-ordonnance").innerHTML = "";
+    document.getElementById("supprimer-ordonnance").classList.add("hidden");
+}
+
+// Fonction pour supprimer une ordonnance (appelée depuis le bouton de suppression)
+function supprimerOrdonnance() {
+    const nom = document.getElementById("supprimer-ordonnance").getAttribute("data-nom");
+    if (confirm(`Êtes-vous sûr de vouloir supprimer l'ordonnance "${nom}" ?`)) {
+        supprimerOrdonnanceDirecte(nom);
+    }
+}
+
+// Fonction pour supprimer une ordonnance directement
+function supprimerOrdonnanceDirecte(nom) {
+    storage.get("ordonnancesTypes", (result) => {
+        const data = result.ordonnancesTypes || {};
+        delete data[nom];
+
+        storage.set({ ordonnancesTypes: data }, () => {
+            localStorage.setItem("ordonnancesTypes", JSON.stringify(data));
+            // Mettre à jour également la clé utilisée par ord.html
+            localStorage.setItem("ordonnancesTypesPourOrd", JSON.stringify(data));
+            chargerOrdonnancesTypes();
+            showMessage(`Ordonnance "${nom}" supprimée avec succès !`, "green");
+        });
+    });
+}
 
 // Afficher un message à l'utilisateur
 function showMessage(message, color) {
