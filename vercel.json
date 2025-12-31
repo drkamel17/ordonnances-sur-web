@@ -12,6 +12,10 @@
       "dest": "/$1"
     },
     {
+      "src": "/options.html",
+      "dest": "/options.html"
+    },
+    {
       "src": "/(.*)",
       "dest": "/index.html"
     }
