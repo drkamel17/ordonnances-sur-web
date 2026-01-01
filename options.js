@@ -27,25 +27,6 @@ const storage = {
 // === Chargement de la page ===
 document.addEventListener("DOMContentLoaded", async () => {
     // === Ajout des écouteurs uniquement quand le DOM est prêt ===
-    document.getElementById("choisir-fichier").addEventListener("click", () => {
-        document.getElementById("fichier-json").click();
-    });
-
-    document.getElementById("fichier-json").addEventListener("change", handleFileChangeMedicaments);
-
-    document.getElementById("ajouter-contenu").addEventListener("click", ajouterMedicaments);
-
-    document.getElementById("recharger-medicaments").addEventListener("click", async () => {
-        try {
-            let meds = await chargerMedicaments();
-            remplirListeMedicaments(meds);
-            showMessage("Médicaments rechargés avec succès.", "green");
-        } catch (error) {
-            showMessage("Erreur lors du rechargement des médicaments.", "red");
-            console.error("Erreur :", error);
-        }
-    });
-
     document.getElementById("choisir-ordonnances-type").addEventListener("click", () => {
         document.getElementById("fichier-ordonnances-type").click();
     });
@@ -130,8 +111,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // === Chargement initial ===
     try {
-        let meds = await chargerMedicaments();
-        remplirListeMedicaments(meds);
         chargerOrdonnancesTypes();
         showMessage("Données chargées avec succès.", "green");
     } catch (error) {
@@ -141,24 +120,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 });
 
 // === Fonctions ===
-
-// Gérer le fichier de médicaments
-function handleFileChangeMedicaments(event) {
-    const file = event.target.files[0];
-    if (!file) return;
-
-    const reader = new FileReader();
-    reader.onload = (e) => {
-        try {
-            contenuJSON = JSON.parse(e.target.result);
-            if (!Array.isArray(contenuJSON)) throw new Error("Le contenu n'est pas un tableau.");
-            showMessage("Fichier de médicaments chargé avec succès !", "green");
-        } catch {
-            showMessage("Fichier JSON invalide !", "red");
-        }
-    };
-    reader.readAsText(file);
-}
 
 // Gérer le fichier d'ordonnances types
 function handleFileChangeOrdonnancesTypes(event) {
@@ -176,62 +137,6 @@ function handleFileChangeOrdonnancesTypes(event) {
         }
     };
     reader.readAsText(file);
-}
-
-// Ajouter les médicaments au stockage
-function ajouterMedicaments() {
-    if (contenuJSON.length === 0) {
-        showMessage("Aucun contenu à ajouter.", "red");
-        return;
-    }
-
-    storage.get("medicaments", (result) => {
-        let existants = result.medicaments || [];
-        let fusion = Array.from(new Set([...existants, ...contenuJSON])).sort((a, b) => a.localeCompare(b));
-
-        storage.set({ medicaments: fusion }, () => {
-            localStorage.setItem("medicaments", JSON.stringify(fusion));
-            remplirListeMedicaments(fusion);
-            showMessage("Médicaments ajoutés avec succès !", "green");
-        });
-    });
-}
-
-// Charger les médicaments
-async function chargerMedicaments() {
-    return new Promise((resolve) => {
-        storage.get("medicaments", (result) => {
-            let existants = result.medicaments || [];
-
-            fetch("medicaments.json")
-                .then(res => res.json())
-                .then(fichier => {
-                    let locaux = JSON.parse(localStorage.getItem("medicaments")) || [];
-                    let fusion = Array.from(new Set([...existants, ...fichier, ...locaux])).sort((a, b) => a.localeCompare(b));
-
-                    storage.set({ medicaments: fusion }, () => resolve(fusion));
-                })
-                .catch((err) => {
-                    console.error("Erreur JSON local :", err);
-                    resolve(existants);
-                });
-        });
-    });
-}
-
-// Remplir la liste HTML des médicaments
-function remplirListeMedicaments(meds) {
-    const liste = document.getElementById("medicaments-liste");
-    liste.innerHTML = "";
-
-    meds.forEach(med => {
-        const li = document.createElement("li");
-        li.textContent = med;
-        li.addEventListener("click", () => alert(`Vous avez sélectionné : ${med}`));
-        liste.appendChild(li);
-    });
-
-    console.log("Liste des médicaments mise à jour :", meds);
 }
 
 // Ajouter les ordonnances types

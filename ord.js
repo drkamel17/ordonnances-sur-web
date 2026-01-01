@@ -1417,6 +1417,43 @@ document.addEventListener('DOMContentLoaded', async function() {
         newWindow.document.close();
     }
 
+    function calculerAge(dateNaissance) {
+        if (!dateNaissance) return '';
+        
+        const aujourdhui = new Date();
+        const naissance = new Date(dateNaissance);
+        
+        const differenceTemps = aujourdhui - naissance;
+        const differenceJours = Math.floor(differenceTemps / (1000 * 60 * 60 * 24));
+        
+        if (differenceJours >= 365) {
+            let ans = Math.floor(differenceJours / 365);
+            return ans + ' an' + (ans > 1 ? 's' : '');
+        } else if (differenceJours >= 30) {
+            let mois = Math.floor(differenceJours / 30);
+            return mois + ' mois';
+        } else {
+            return differenceJours + ' jour' + (differenceJours > 1 ? 's' : '');
+        }
+    }
+
+    const dateNaissanceInput = document.getElementById('date-naissance');
+    const ageInput = document.getElementById('age');
+    
+    if (dateNaissanceInput && ageInput) {
+        dateNaissanceInput.addEventListener('input', function() {
+            const dateNaissance = this.value;
+            const age = calculerAge(dateNaissance);
+            ageInput.value = age;
+        });
+        
+        dateNaissanceInput.addEventListener('change', function() {
+            const dateNaissance = this.value;
+            const age = calculerAge(dateNaissance);
+            ageInput.value = age;
+        });
+    }
+
     afficherInfosEtablissement();
     await remplirDatalistMedicaments();
 });
