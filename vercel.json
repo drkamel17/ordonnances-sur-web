@@ -88,6 +88,22 @@
     {
       "src": "ordonnance type/**/*",
       "use": "@vercel/static"
+    },
+    {
+      "src": "ordonnance type/api/config.js",
+      "use": "@vercel/node"
+    },
+    {
+      "src": "ordonnance type/api/save-supabase.js",
+      "use": "@vercel/node"
+    },
+    {
+      "src": "ordonnance type/api/save.js",
+      "use": "@vercel/node"
+    },
+    {
+      "src": "ordonnance type/api/save-github.js",
+      "use": "@vercel/node"
     }
   ],
 "routes": [
