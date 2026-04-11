@@ -10,8 +10,9 @@ export async function POST(request) {
   console.log('=== SUPABASE POST: Debut ===');
   
   try {
-    const { data, password, username, action, pendingKey } = await request.json();
-    console.log('Data received:', Object.keys(data).length, 'ordonnances');
+    const body = await request.json();
+    const { data, password, username, action, pendingKey, pendingId, titre, nouveauxMedicaments } = body;
+    console.log('Data received:', data ? Object.keys(data).length : 0, 'ordonnances');
     console.log('Password received:', password ? 'Yes' : 'No');
     console.log('Username received:', username ? 'Yes' : 'No');
     console.log('Action:', action || 'save');
@@ -158,8 +159,10 @@ export async function POST(request) {
       
       // Modifier les médicaments
       const pendingData = pendingResult[0].data || {};
-      if (pendingData[titre]) {
+      if (pendingData && pendingData[titre]) {
         pendingData[titre] = nouveauxMedicaments;
+      } else {
+        return new Response(JSON.stringify({ success: false, message: 'Titre non trouvé' }), { status: 404, headers: { 'Content-Type': 'application/json' } });
       }
       
       // Sauvegarder
