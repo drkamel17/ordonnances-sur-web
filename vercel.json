@@ -96,6 +96,10 @@
   ],
   "routes": [
     {
+      "src": "/api/save-supabase",
+      "dest": "/api/save-supabase.js"
+    },
+    {
       "src": "/styles/(.*)",
       "dest": "/styles/$1"
     },
