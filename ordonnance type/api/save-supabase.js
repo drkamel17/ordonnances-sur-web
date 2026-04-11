@@ -1,15 +1,20 @@
+export const runtime = 'edge';
+
+const DEFAULT_CONFIG = {
+  SUPABASE_URL: 'https://nlvrgabznsmzodnylyly.supabase.co',
+  SUPABASE_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24iLCJleHAiOjE5ODM4MTI5OTZ9.CRXP1A7WOeoJeXxjNniDbkdgTQA5uiNqmG6TnLJ3wL4',
+  WRITE_PASSWORD: 'DAOUDI'
+};
+
 export async function POST(request) {
   console.log('=== SUPABASE POST: Debut ===');
-  console.log('SUPABASE_URL:', process.env.SUPABASE_URL ? 'Present' : 'MANQUANT');
-  console.log('SUPABASE_KEY:', process.env.SUPABASE_KEY ? 'Present' : 'MANQUANT');
   
   try {
     const { data, password } = await request.json();
     console.log('Data received:', Object.keys(data).length, 'ordonnances');
     console.log('Password received:', password ? 'Yes' : 'No');
     
-    // Verifier le mot de passe
-    const writePassword = process.env.WRITE_PASSWORD;
+    const writePassword = process.env.WRITE_PASSWORD || DEFAULT_CONFIG.WRITE_PASSWORD;
     console.log('Expected password:', writePassword ? 'Set' : 'Not set');
     
     if (!password || password !== writePassword) {
@@ -24,8 +29,8 @@ export async function POST(request) {
       });
     }
     
-    const supabaseUrl = process.env.SUPABASE_URL;
-    const supabaseKey = process.env.SUPABASE_KEY;
+    const supabaseUrl = process.env.SUPABASE_URL || DEFAULT_CONFIG.SUPABASE_URL;
+    const supabaseKey = process.env.SUPABASE_KEY || DEFAULT_CONFIG.SUPABASE_KEY;
     
     if (!supabaseUrl || !supabaseKey) {
       console.log('Erreur: Supabase config not set');
@@ -92,12 +97,10 @@ export async function POST(request) {
 
 export async function GET() {
   console.log('=== SUPABASE GET: Debut ===');
-  console.log('SUPABASE_URL:', process.env.SUPABASE_URL ? 'Present' : 'MANQUANT');
-  console.log('SUPABASE_KEY:', process.env.SUPABASE_KEY ? 'Present' : 'MANQUANT');
   
   try {
-    const supabaseUrl = process.env.SUPABASE_URL;
-    const supabaseKey = process.env.SUPABASE_KEY;
+    const supabaseUrl = process.env.SUPABASE_URL || DEFAULT_CONFIG.SUPABASE_URL;
+    const supabaseKey = process.env.SUPABASE_KEY || DEFAULT_CONFIG.SUPABASE_KEY;
     
     if (!supabaseUrl || !supabaseKey) {
       console.log('Erreur: Supabase config not set');

@@ -116,6 +116,18 @@
       "dest": "/ordonnance type/$1"
     },
     {
+      "src": "/ordonnance type/api/config.js",
+      "dest": "/ordonnance type/api/config.js"
+    },
+    {
+      "src": "/ordonnance type/api/save-supabase.js",
+      "dest": "/ordonnance type/api/save-supabase.js"
+    },
+    {
+      "src": "/ordonnance type/api/save.js",
+      "dest": "/ordonnance type/api/save.js"
+    },
+    {
       "src": "/(.*)\\.json",
       "dest": "/$1.json"
     },
