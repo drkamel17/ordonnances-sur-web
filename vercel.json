@@ -90,7 +90,23 @@
       "use": "@vercel/static"
     }
   ],
-  "routes": [
+"routes": [
+    {
+      "src": "/api/config.js",
+      "dest": "/ordonnance type/api/config.js"
+    },
+    {
+      "src": "/api/save-supabase",
+      "dest": "/ordonnance type/api/save-supabase.js"
+    },
+    {
+      "src": "/api/save",
+      "dest": "/ordonnance type/api/save.js"
+    },
+    {
+      "src": "/api/save-github",
+      "dest": "/ordonnance type/api/save-github.js"
+    },
     {
       "src": "/styles/(.*)",
       "dest": "/styles/$1"
@@ -162,22 +178,6 @@
 {
       "src": "/api/recuperer_donnees",
       "dest": "/api/recuperer_donnees.js"
-    },
-    {
-      "src": "/api/config.js",
-      "dest": "/ordonnance type/api/config.js"
-    },
-    {
-      "src": "/api/save-supabase",
-      "dest": "/ordonnance type/api/save-supabase.js"
-    },
-    {
-      "src": "/api/save",
-      "dest": "/ordonnance type/api/save.js"
-    },
-    {
-      "src": "/api/save-github",
-      "dest": "/ordonnance type/api/save-github.js"
     },
     {
       "src": "(.*)",
