@@ -123,9 +123,21 @@
       "src": "/ordonnance type/api/save-supabase.js",
       "dest": "/ordonnance type/api/save-supabase.js"
     },
-    {
+{
       "src": "/ordonnance type/api/save.js",
       "dest": "/ordonnance type/api/save.js"
+    },
+    {
+      "src": "/ordonnance type/api/save-github.js",
+      "dest": "/ordonnance type/api/save-github.js"
+    },
+    {
+      "src": "/ordonnance type/ordonnances-types.json",
+      "dest": "/ordonnance/ordonnances-types.json"
+    },
+    {
+      "src": "/ordonnance type/medicaments.json",
+      "dest": "/ordonnance/medicaments.json"
     },
     {
       "src": "/(.*)\\.json",
@@ -147,9 +159,25 @@
       "src": "/api/modifier_dece",
       "dest": "/api/modifier_dece.js"
     },
-    {
+{
       "src": "/api/recuperer_donnees",
       "dest": "/api/recuperer_donnees.js"
+    },
+    {
+      "src": "/api/config.js",
+      "dest": "/ordonnance type/api/config.js"
+    },
+    {
+      "src": "/api/save-supabase",
+      "dest": "/ordonnance type/api/save-supabase.js"
+    },
+    {
+      "src": "/api/save",
+      "dest": "/ordonnance type/api/save.js"
+    },
+    {
+      "src": "/api/save-github",
+      "dest": "/ordonnance type/api/save-github.js"
     },
     {
       "src": "(.*)",
