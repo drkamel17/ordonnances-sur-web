@@ -86,31 +86,16 @@
       "use": "@vercel/static"
     },
     {
-      "src": "ordonnance type/api/config.js",
+      "src": "api/config.js",
       "use": "@vercel/node"
     },
     {
-      "src": "ordonnance type/api/save-supabase.js",
+      "src": "api/save-supabase.js",
       "use": "@vercel/node"
     }
   ],
   "routes": [
     {
-      "src": "/api/config.js",
-      "dest": "/ordonnance%20type/api/config.js"
-    },
-    {
-      "src": "/api/save-supabase",
-      "dest": "/ordonnance%20type/api/save-supabase.js"
-    },
-    {
-      "src": "/api/save",
-      "dest": "/ordonnance%20type/api/save.js"
-    },
-    {
-      "src": "/api/save-github",
-      "dest": "/ordonnance%20type/api/save-github.js"
-    },
     {
       "src": "/styles/(.*)",
       "dest": "/styles/$1"
