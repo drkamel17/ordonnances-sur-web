@@ -184,10 +184,20 @@
                 Ordonnance Type
             </a>
             
-            <a href="aide.html" class="cta-button" style="background-color: #607D8B;">
+<a href="aide.html" class="cta-button" style="background-color: #607D8B;">
                 <i class="fas fa-question-circle"></i>
                 Guide d'utilisation
             </a>
+            
+            <button id="btn-admin" class="cta-button" style="background-color: #f44336; margin-top: 20px;" onclick="demanderAdmin()">
+                <i class="fas fa-admin"></i>
+                Zone Admin
+            </button>
+        </div>
+        
+        <div id="admin-section" style="display:none; margin-top: 30px; padding: 20px; border: 2px solid #f44336; border-radius: 10px;">
+            <h3 style="color: #f44336;">Admin - Ordonnances en attente</h3>
+            <div id="pending-list"></div>
         </div>
         
         <div class="features">
@@ -203,9 +213,123 @@
             </ul>
         </div>
         
-        <p class="footer">
+<p class="footer">
             Créé par Dr Daoudi | Application médicale professionnelle
         </p>
     </div>
+    
+    <script>
+    async function demanderAdmin() {
+        const password = prompt('Entrez le mot de passe admin:');
+        if (password !== 'DAOUDI') {
+            alert('Mot de passe incorrect');
+            return;
+        }
+        
+        document.getElementById('admin-section').style.display = 'block';
+        document.getElementById('btn-admin').style.display = 'none';
+        
+        await chargerPending();
+    }
+    
+    async function chargerPending() {
+        try {
+            const response = await fetch('/api/save-supabase?pending=true');
+            const result = await response.json();
+            
+            if (result.success && result.data) {
+                const list = document.getElementById('pending-list');
+                list.innerHTML = '';
+                
+                Object.keys(result.data).forEach(titre => {
+                    const div = document.createElement('div');
+                    div.style.padding = '10px';
+                    div.style.margin = '10px 0';
+                    div.style.border = '1px solid #ccc';
+                    div.style.borderRadius = '5px';
+                    
+                    const titreDisplay = result.suggested_by ? `${titre} (par ${result.suggested_by})` : titre;
+                    
+                    div.innerHTML = `
+                        <p><strong>${titreDisplay}</strong></p>
+                        <button onclick="confirmer('${titre}')" style="background: #4CAF50; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer;">Confirmer</button>
+                        <button onclick="rejeter('${titre}')" style="background: #f44336; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; margin-left: 10px;">Rejeter</button>
+                    `;
+                    list.appendChild(div);
+                });
+                
+                if (Object.keys(result.data).length === 0) {
+                    list.innerHTML = '<p>Aucune ordonnance en attente</p>';
+                }
+            }
+        } catch (e) {
+            console.error(e);
+        }
+    }
+    
+    async function confirmer(titre) {
+        const password = prompt('Entrez le mot de passe admin pour confirmer:');
+        if (password !== 'DAOUDI') {
+            alert('Mot de passe incorrect');
+            return;
+        }
+        
+        try {
+            const response = await fetch('/api/save-supabase', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ 
+                    action: 'confirm', 
+                    password: password,
+                    data: {},
+                    pendingKey: titre
+                })
+            });
+            
+            const result = await response.json();
+            if (result.success) {
+                alert('Ordonnance confirmée!');
+                await chargerPending();
+            } else {
+                alert('Erreur: ' + result.message);
+            }
+        } catch (e) {
+            alert('Erreur');
+        }
+    }
+    
+    async function rejeter(titre) {
+        const password = prompt('Entrez le mot de passe admin pour rejeter:');
+        if (password !== 'DAOUDI') {
+            alert('Mot de passe incorrect');
+            return;
+        }
+        
+        if (!confirm('Voulez-vous vraiment rejeter cette ordonnance?')) return;
+        
+        try {
+            const response = await fetch('/api/save-supabase', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ 
+                    action: 'reject', 
+                    password: password,
+                    data: {},
+                    pendingKey: titre
+                })
+            });
+            
+            const result = await response.json();
+            if (result.success) {
+                alert('Ordonnance rejetée!');
+                await chargerPending();
+            } else {
+                alert('Erreur: ' + result.message);
+            }
+        } catch (e) {
+            alert('Erreur');
+        }
+    }
+    </script>
 </body>
 </html>

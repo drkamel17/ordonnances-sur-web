@@ -574,49 +574,70 @@ async function sauvegarderVersFichier(data) {
     // Sauvegarder dans localStorage (pour compatibilite)
     localStorage.setItem('ordonnancesTypes', JSON.stringify(data));
     
-    // Demander le mot de passe si pas encore defini
-    if (!sessionPassword) {
-        sessionPassword = prompt('Entrez le mot de passe pour sauvegarder dans le cloud:');
-        if (!sessionPassword) {
-            showSyncIndicator('💾 Sauvegarde locale uniquement (mot de passe non fourni).');
-            afficherMessage('Sauvegarde locale effectuee. Vous pouvez l\'utiliser sans modifier ou sauvegarder dans le cloud.', 'warning');
-            return;
-        }
+    if (!config.url || !config.key) {
+        showSyncIndicator('💾 Sauvegarde locale effectué.');
+        return;
     }
     
-    // Sauvegarder sur Supabase
-    if (config.url && config.key) {
-        try {
-            console.log('Appel POST /api/save-supabase...');
-            const response = await fetch('/api/save-supabase', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ data: data, password: sessionPassword })
-            });
-            
-            console.log('Response status:', response.status);
-            
-            const result = await response.json();
-            console.log('Result:', result);
-            
-            if (result.success) {
-                showSyncIndicator('✅ Sauvegarde Supabase reussie !');
-                afficherMessage('Ordonnance sauvegardee sur le cloud !', 'success');
-            } else if (result.requiresPassword) {
-                // Mot de passe incorrect
-                alert('Mot de passe incorrect.\n\nVous pouvez l\'utiliser sans modifier ou sauvegarder dans le cloud.');
-                sessionPassword = null; // Reset pour reessayer
-                showSyncIndicator('❌ Mot de passe incorrect. Sauvegarde locale uniquement.');
-                afficherMessage('Mot de passe incorrect. Sauvegarde locale uniquement.', 'error');
-            } else {
-                throw new Error(result.message || 'Erreur Supabase');
+    // Demander le mot de passe OU le nom d'utilisateur
+    if (!sessionPassword) {
+        const choix = confirm('Voulez-vous saisir le mot de passe admin?\n\nOK = Mot de passe\nAnnuler = Nom d\'utilisateur');
+        
+        if (choix) {
+            // Avec mot de passe → sauvegarde directe
+            sessionPassword = prompt('Entrez le mot de passe pour sauvegarder dans le cloud:');
+            if (!sessionPassword) {
+                showSyncIndicator('💾 Sauvegarde locale uniquement.');
+                return;
             }
-        } catch (e) {
-            console.log('Supabase save failed:', e);
-            showSyncIndicator('❌ Erreur sauvegarde cloud.');
+            
+            try {
+                const response = await fetch('/api/save-supabase', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ data: data, password: sessionPassword })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showSyncIndicator('✅ Sauvegarde cloud réussie !');
+                    afficherMessage('Ordonnance sauvegardée sur le cloud !', 'success');
+                } else {
+                    alert('Mot de passe incorrect.');
+                    sessionPassword = null;
+                    showSyncIndicator('❌ Mot de passe incorrect.');
+                }
+            } catch (e) {
+                showSyncIndicator('❌ Erreur sauvegarde.');
+            }
+        } else {
+            // Sans mot de passe → demander nom d'utilisateur
+            const username = prompt('Entrez votre nom:');
+            if (!username) {
+                showSyncIndicator('💾 Sauvegarde annulée.');
+                return;
+            }
+            
+            try {
+                const response = await fetch('/api/save-supabase', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ data: data, username: username })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success && result.message === 'pending') {
+                    showSyncIndicator('⏳ En attente de confirmation admin');
+                    afficherMessage('Votre enregistrement sera pris en consideration apres la confirmation de l\'admin', 'info');
+                } else {
+                    throw new Error(result.message || 'Erreur');
+                }
+            } catch (e) {
+                showSyncIndicator('❌ Erreur sauvegarde.');
+            }
         }
-    } else {
-        showSyncIndicator('💾 Sauvegarde locale effectuee.');
     }
 }
 
