@@ -1,0 +1,1915 @@
+// Fonction pour convertir les chiffres arabes en chiffres européens
+function convertArabicNumeralsToEuropean(str) {
+    if (typeof str !== 'string') {
+        return str;
+    }
+    
+    // Conversion des chiffres arabes (٠١٢٣٤٥٦٧٨٩) vers européens (0123456789)
+    let result = str.replace(/[٠-٩]/g, function(digit) {
+        return String.fromCharCode(digit.charCodeAt(0) - 0x0660 + '0'.charCodeAt(0));
+    });
+    
+    // Conversion des chiffres persans/urdu (۰۱۲۳۴۵۶۷۸۹) vers européens (0123456789)
+    result = result.replace(/[۰-۹]/g, function(digit) {
+        return String.fromCharCode(digit.charCodeAt(0) - 0x06F0 + '0'.charCodeAt(0));
+    });
+    
+    return result;
+}
+
+let ordonnancesTypesChargees = {};
+let ordonnanceList = [];
+
+// Fonctions pour construire la posologie et la quantité
+function construirePosologie() {
+    const qte = document.getElementById('posologie-qte')?.value.trim();
+    const forme = document.getElementById('posologie-forme')?.value;
+    const nombre = document.getElementById('posologie-nombre')?.value.trim();
+    const frequence = document.getElementById('posologie-frequence')?.value;
+    
+    let posologieTexte = '';
+    
+    // Construire la posologie
+    if (qte && forme) {
+        posologieTexte += qte + ' ' + forme;
+    }
+    
+    if (nombre && frequence) {
+        // Remplacer l'étoile par le nombre
+        const frequenceAvecNombre = frequence.replace('*', nombre);
+        if (posologieTexte) {
+            posologieTexte += ' - ' + frequenceAvecNombre;
+        } else {
+            posologieTexte = frequenceAvecNombre;
+        }
+    }
+    
+    // Mettre à jour le champ caché
+    const posologieField = document.getElementById('posologie');
+    if (posologieField) {
+        posologieField.value = posologieTexte;
+    }
+}
+
+function construireQuantite() {
+    const nombre = document.getElementById('quantite-nombre')?.value.trim();
+    const unite = document.getElementById('quantite-unite')?.value;
+    
+    let quantiteTexte = '';
+    
+    if (nombre && unite) {
+        quantiteTexte = 'QSP ' + nombre + ' ' + unite;
+    }
+    
+    // Mettre à jour le champ caché
+    const quantiteField = document.getElementById('quantite');
+    if (quantiteField) {
+        quantiteField.value = quantiteTexte;
+    }
+}
+
+window.mettreAJourListeOrdonnancesTypes = async function(ordonnancesTypes = null) {
+    const select = document.getElementById('liste-ordonnances-types');
+    
+    if (!ordonnancesTypes) {
+        ordonnancesTypes = JSON.parse(localStorage.getItem('ordonnancesTypesPourOrd') || '{}');
+    }
+    
+    select.innerHTML = '<option value="">Sélectionnez une ordonnance type</option>';
+    
+    const nomsTries = Object.keys(ordonnancesTypes).sort((a, b) => a.localeCompare(b, 'fr', { sensitivity: 'base' }));
+    
+    const sourcesData = JSON.parse(localStorage.getItem('ordonnancesTypesSources') || '{}');
+    
+    nomsTries.forEach(nom => {
+        const option = document.createElement('option');
+        option.value = nom;
+        option.textContent = nom;
+        
+        if (sourcesData[nom] === 'localStorage') {
+            option.style.color = '#2563eb';
+            option.style.fontWeight = '500';
+        } else if (sourcesData[nom] === 'file') {
+            option.style.color = '#059669';
+            option.style.fontWeight = '500';
+        }
+        
+        select.appendChild(option);
+    });
+};
+
+document.addEventListener('DOMContentLoaded', async function() {
+    // Charger les ordonnances types plus tard, après la définition de toutes les fonctions
+    setTimeout(chargerOrdonnancesTypesDuFichier, 100);
+    const leftColumn = document.getElementById('leftColumn');
+    const rightColumn = document.getElementById('rightColumn');
+    const resizeDivider = document.getElementById('resizeDivider');
+    const toggleButton = document.getElementById('toggleButton');
+    const returnButton = document.getElementById('returnButton');
+
+    function waitForMedicaments() {
+        return new Promise((resolve) => {
+            if (window.medicamentsLoaded) {
+                resolve();
+            } else {
+                const checkInterval = setInterval(() => {
+                    if (window.medicamentsLoaded) {
+                        clearInterval(checkInterval);
+                        resolve();
+                    }
+                }, 100);
+            }
+        });
+    }
+
+    await waitForMedicaments();
+
+    // Fonction pour basculer entre mode normal et plein écran
+    function toggleColumns() {
+        const resizeDivider = document.getElementById('resizeDivider');
+
+        leftColumn.classList.toggle('collapsed');
+        rightColumn.classList.toggle('expanded');
+
+        // Masquer/afficher le diviseur de redimensionnement
+        if (resizeDivider) {
+            if (leftColumn.classList.contains('collapsed')) {
+                // Mode plein écran : masquer le diviseur
+                resizeDivider.style.display = 'none';
+            } else {
+                // Mode normal : afficher le diviseur
+                resizeDivider.style.display = 'block';
+            }
+        }
+
+        // Changer le texte et l'icône du bouton
+        if (leftColumn.classList.contains('collapsed')) {
+            // État étendu (mode plein écran)
+            toggleButton.innerHTML = '<i class="fas fa-compress-arrows-alt"></i> Écran principal';
+        } else {
+            // Retour à l'état normal
+            toggleButton.innerHTML = '<i class="fas fa-expand-arrows-alt"></i> Mode plein écran';
+        }
+
+        console.log('Toggle clicked');
+    }
+
+    // Ajouter les écouteurs d'événements
+    if (toggleButton) {
+        toggleButton.addEventListener('click', toggleColumns);
+    }
+    
+    if (returnButton) {
+        returnButton.addEventListener('click', toggleColumns);
+    }
+
+    // Functionality for resizable divider
+    function initResizableDivider() {
+        if (!leftColumn || !rightColumn || !resizeDivider) {
+            console.error('Éléments manquants pour le redimensionnement');
+            return;
+        }
+
+        let isResizing = false;
+        let startX = 0;
+        let startLeftWidth = 0;
+
+        resizeDivider.addEventListener('mousedown', (e) => {
+            isResizing = true;
+            startX = e.clientX;
+            startLeftWidth = leftColumn.offsetWidth;
+
+            resizeDivider.classList.add('dragging');
+            document.body.style.cursor = 'col-resize';
+            document.body.style.userSelect = 'none';
+
+            e.preventDefault();
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            if (!isResizing) return;
+
+            const deltaX = e.clientX - startX;
+            const newLeftWidth = startLeftWidth + deltaX;
+
+            // Contraintes de largeur minimum et maximum
+            const minLeftWidth = 300;
+            const maxLeftWidth = window.innerWidth - 400; // Garde au moins 400px pour la colonne droite
+
+            if (newLeftWidth >= minLeftWidth && newLeftWidth <= maxLeftWidth) {
+                leftColumn.style.flex = `0 0 ${newLeftWidth}px`;
+                leftColumn.style.width = `${newLeftWidth}px`;
+            }
+        });
+
+        const stopResizing = () => {
+            if (isResizing) {
+                isResizing = false;
+                resizeDivider.classList.remove('dragging');
+                document.body.style.cursor = '';
+                document.body.style.userSelect = '';
+                
+                // Sauvegarder la largeur préférée dans localStorage
+                const currentWidth = leftColumn.offsetWidth;
+                localStorage.setItem('leftColumnWidth', currentWidth.toString());
+            }
+        };
+        
+        document.addEventListener('mouseup', stopResizing);
+        document.addEventListener('mouseleave', stopResizing);
+
+        // Restaurer la largeur sauvegardée
+        const savedWidth = localStorage.getItem('leftColumnWidth');
+        if (savedWidth) {
+            const width = parseInt(savedWidth, 10);
+            if (width >= 300 && width <= window.innerWidth - 400) {
+                leftColumn.style.flex = `0 0 ${width}px`;
+                leftColumn.style.width = `${width}px`;
+            }
+        }
+    }
+
+    // Initialiser le redimensionnement
+    initResizableDivider();
+
+    const etablissemntBtn = document.getElementById('etablissemnt');
+    if (etablissemntBtn) {
+        etablissemntBtn.addEventListener('click', function() {
+            alert('Fonctionnalité à implémenter: Insérer depuis DEM');
+        });
+    }
+
+    const savePolycliniqueDocteurBtn = document.getElementById('savePolycliniqueDocteur');
+    if (savePolycliniqueDocteurBtn) {
+        savePolycliniqueDocteurBtn.addEventListener('click', function() {
+            const polyclinique = document.getElementById('polyclinique').value;
+            const polycliniqueAr = document.getElementById('polyclinique-ar').value;
+            const docteur = document.getElementById('docteur').value;
+
+            localStorage.setItem('polyclinique', polyclinique);
+            localStorage.setItem('polyclinique-ar', polycliniqueAr);
+            localStorage.setItem('docteur', docteur);
+
+            afficherInfosEtablissement();
+            alert('Informations sauvegardées !');
+        });
+    }
+
+    // Charger le choix de header-option depuis localStorage
+    const savedHeaderOption = localStorage.getItem('header-option');
+    if (savedHeaderOption) {
+        const radioToCheck = document.querySelector(`input[name="header-option"][value="${savedHeaderOption}"]`);
+        if (radioToCheck) {
+            radioToCheck.checked = true;
+        }
+    }
+
+    // Sauvegarder le choix de header-option dans localStorage quand il change
+    document.querySelectorAll('input[name="header-option"]').forEach(radio => {
+        radio.addEventListener('change', function() {
+            localStorage.setItem('header-option', this.value);
+        });
+    });
+
+    // Ajouter les écouteurs d'événements pour tous les champs de posologie
+    const posologieQte = document.getElementById('posologie-qte');
+    const posologieForme = document.getElementById('posologie-forme');
+    const posologieNombre = document.getElementById('posologie-nombre');
+    const posologieFrequence = document.getElementById('posologie-frequence');
+    const quantiteNombre = document.getElementById('quantite-nombre');
+    const quantiteUnite = document.getElementById('quantite-unite');
+
+    if (posologieQte) posologieQte.addEventListener('input', construirePosologie);
+    if (posologieForme) posologieForme.addEventListener('change', construirePosologie);
+    if (posologieNombre) posologieNombre.addEventListener('input', construirePosologie);
+    if (posologieFrequence) posologieFrequence.addEventListener('change', construirePosologie);
+    
+    if (quantiteNombre) quantiteNombre.addEventListener('input', construireQuantite);
+    if (quantiteUnite) quantiteUnite.addEventListener('change', construireQuantite);
+
+    const ajouterPersonnelBtn = document.getElementById('ajouter-personnel');
+    if (ajouterPersonnelBtn) {
+        ajouterPersonnelBtn.addEventListener('click', async function() {
+            const medicament = prompt('Nom du médicament personnalisé:');
+            if (medicament) {
+                const meds = await chargerMedicaments();
+                if (!meds.includes(medicament.trim())) {
+                    sauvegarderMedicamentPersonnalise(medicament.trim());
+                }
+                await ajouterMedicamentALaListe(medicament.trim());
+            }
+        });
+    }
+
+    const ouvrirOptionsBtn = document.getElementById('ouvrir-options');
+    if (ouvrirOptionsBtn) {
+        ouvrirOptionsBtn.addEventListener('click', function() {
+            window.open('options.html', '_blank');
+        });
+    }
+
+    const resetListeBtn = document.getElementById('reset-liste');
+    if (resetListeBtn) {
+        resetListeBtn.addEventListener('click', async function() {
+            if (confirm('Voulez-vous vraiment réinitialiser la liste ?')) {
+                ordonnanceList.length = 0;
+                await mettreAJourTableau();
+            }
+        });
+    }
+
+    const certificatBtn = document.getElementById('certificat');
+    if (certificatBtn) {
+        certificatBtn.addEventListener('click', function() {
+            window.location.href = '../certificat.html';
+        });
+    }
+
+    const certdeceBtn = document.getElementById('certdece');
+    if (certdeceBtn) {
+        certdeceBtn.addEventListener('click', function() {
+            genererCertificat(true);
+        });
+    }
+
+    const ajouterBtn = document.getElementById('ajouter');
+    if (ajouterBtn) {
+        ajouterBtn.addEventListener('click', async function() {
+            const medicament = document.getElementById('medicament').value.trim();
+            
+            // Construire la posologie et la quantité avant de les récupérer
+            construirePosologie();
+            construireQuantite();
+            
+            const posologie = document.getElementById('posologie').value.trim();
+            const quantite = document.getElementById('quantite').value.trim();
+
+            if (!medicament) {
+                return;
+            }
+
+            const meds = await chargerMedicaments();
+            if (!meds.includes(medicament)) {
+                sauvegarderMedicamentPersonnalise(medicament);
+            }
+
+            ordonnanceList.push({
+                medicament: medicament,
+                posologie: posologie,
+                quantite: quantite
+            });
+
+            // Réinitialiser tous les champs
+            document.getElementById('medicament').value = '';
+            document.getElementById('posologie-qte').value = '01';
+            document.getElementById('posologie-forme').value = 'CP';
+            document.getElementById('posologie-nombre').value = '01';
+            document.getElementById('posologie-frequence').value = ' * * par jour';
+            document.getElementById('quantite-nombre').value = '01';
+            document.getElementById('quantite-unite').value = 'Bte';
+            document.getElementById('posologie').value = '';
+            document.getElementById('quantite').value = '';
+
+            await mettreAJourTableau();
+        });
+    }
+
+    const genererPdfBtn = document.getElementById('generer-pdf');
+    if (genererPdfBtn) {
+        genererPdfBtn.addEventListener('click', function() {
+            const headerOption = document.querySelector('input[name="header-option"]:checked');
+            if (headerOption) {
+                const optionValue = headerOption.value;
+                if (optionValue === 'DEM-header') {
+                    ordonnancedem();
+                } else if (optionValue === 'perso-header') {
+                    ordonnanceperso();
+                } else {
+                    ordonnance();
+                }
+            }
+        });
+    }
+    const enregistrerTypeBtn = document.getElementById('enregistrer-type');
+
+    const rechercheOrdonnancesInput = document.getElementById('recherche-ordonnances-types');
+    const selectOrdonnances = document.getElementById('liste-ordonnances-types');
+    
+    if (rechercheOrdonnancesInput && selectOrdonnances) {
+        rechercheOrdonnancesInput.addEventListener('input', function() {
+            const valeur = this.value.trim().toUpperCase();
+            const options = selectOrdonnances.getElementsByTagName('option');
+            
+            let nbVisible = 0;
+            
+            for (let i = 0; i < options.length; i++) {
+                const option = options[i];
+                if (option.value === '') {
+                    option.style.display = '';
+                    continue;
+                }
+                
+                if (valeur === '' || option.text.toUpperCase().startsWith(valeur)) {
+                    option.style.display = '';
+                    nbVisible++;
+                } else {
+                    option.style.display = 'none';
+                }
+            }
+
+            if (valeur.length > 0) {
+                selectOrdonnances.size = Math.min(5, nbVisible + 1);
+            } else {
+                selectOrdonnances.size = 1;
+            }
+        });
+
+        rechercheOrdonnancesInput.addEventListener('focus', function() {
+            selectOrdonnances.size = 5;
+            rechercheOrdonnancesInput.focus();
+        });
+
+        selectOrdonnances.addEventListener('blur', function() {
+            selectOrdonnances.size = 1;
+        });
+    }
+
+    const chargerOrdonnanceTypeBtn = document.getElementById('charger-ordonnance-type');
+    if (chargerOrdonnanceTypeBtn) {
+        chargerOrdonnanceTypeBtn.addEventListener('click', async function() {
+            const selectedType = selectOrdonnances.value;
+            
+            if (selectedType && ordonnancesTypesChargees[selectedType]) {
+                ordonnanceList.length = 0;
+                ordonnanceList.push(...ordonnancesTypesChargees[selectedType]);
+                await mettreAJourTableau();
+                
+                if (rechercheOrdonnancesInput) {
+                    rechercheOrdonnancesInput.value = '';
+                    selectOrdonnances.size = 1;
+                }
+            }
+        });
+    }
+
+    if (enregistrerTypeBtn) {
+        enregistrerTypeBtn.addEventListener('click', function() {
+            const nomType = prompt('Nom de cette ordonnance type:');
+            if (nomType && ordonnanceList.length > 0) {
+                let ordonnancesTypes = JSON.parse(localStorage.getItem('ordonnancesTypesPourOrd') || '{}');
+                let sourcesData = JSON.parse(localStorage.getItem('ordonnancesTypesSources') || '{}');
+                ordonnancesTypes[nomType] = ordonnanceList;
+                sourcesData[nomType] = 'localStorage';
+                localStorage.setItem('ordonnancesTypesPourOrd', JSON.stringify(ordonnancesTypes));
+                localStorage.setItem('ordonnancesTypesSources', JSON.stringify(sourcesData));
+                window.ordonnancesTypesSources = sourcesData;
+                
+                ordonnancesTypesChargees = ordonnancesTypes;
+                mettreAJourListeOrdonnancesTypes(ordonnancesTypes);
+                alert('Ordonnance type enregistrée !');
+            }
+        });
+    }
+
+    const supprimerOrdonnanceBtn = document.getElementById('supprimer-ordonnance');
+    if (supprimerOrdonnanceBtn) {
+        supprimerOrdonnanceBtn.addEventListener('click', function() {
+            const select = document.getElementById('liste-ordonnances-types');
+            const selectedType = select.value;
+            
+            if (selectedType && confirm('Voulez-vous vraiment supprimer cette ordonnance type ?')) {
+                let ordonnancesTypes = JSON.parse(localStorage.getItem('ordonnancesTypes') || '{}');
+                delete ordonnancesTypes[selectedType];
+                localStorage.setItem('ordonnancesTypes', JSON.stringify(ordonnancesTypes));
+                
+                mettreAJourListeOrdonnancesTypes();
+            }
+        });
+    }
+
+    window.mettreAJourTableau = async function() {
+        const tbody = document.querySelector('#ordonnance-table tbody');
+        tbody.innerHTML = '';
+
+        const tousLesMeds = await chargerMedicaments();
+
+        ordonnanceList.forEach((item, index) => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td>
+                    <input type="text" class="med-input" value="${item.medicament}" list="medicaments-table-${index}" onchange="modifierMedicament(${index}, 'medicament', this.value)">
+                    <datalist id="medicaments-table-${index}"></datalist>
+                </td>
+                <td><input type="text" class="poso-input" value="${item.posologie}" onchange="modifierMedicament(${index}, 'posologie', this.value)"></td>
+                <td><input type="text" class="qt-input" value="${item.quantite}" onchange="modifierMedicament(${index}, 'quantite', this.value)"></td>
+                <td class="no-print">
+                    <button class="btn-danger" style="padding: 0.25rem 0.5rem; font-size: 0.75rem;" onclick="supprimerMedicament(${index})">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </td>
+            `;
+            tbody.appendChild(tr);
+
+            const medInput = tr.querySelector('.med-input');
+            const dataList = tr.querySelector(`#medicaments-table-${index}`);
+            
+            tousLesMeds.forEach(med => {
+                const option = document.createElement('option');
+                option.value = med;
+                dataList.appendChild(option);
+            });
+
+            medInput.addEventListener('input', function() {
+                const valeur = this.value.trim().toUpperCase();
+                
+                if (valeur === '') {
+                    dataList.innerHTML = '';
+                    tousLesMeds.forEach(med => {
+                        const option = document.createElement('option');
+                        option.value = med;
+                        dataList.appendChild(option);
+                    });
+                } else {
+                    const medsFiltres = tousLesMeds.filter(med => 
+                        med.toUpperCase().startsWith(valeur)
+                    );
+                    
+                    dataList.innerHTML = '';
+                    medsFiltres.forEach(med => {
+                        const option = document.createElement('option');
+                        option.value = med;
+                        dataList.appendChild(option);
+                    });
+                }
+            });
+        });
+    }
+
+    window.modifierMedicament = async function(index, champ, valeur) {
+        if (index >= 0 && index < ordonnanceList.length) {
+            if (champ === 'medicament') {
+                const meds = await chargerMedicaments();
+                if (!meds.includes(valeur.trim())) {
+                    sauvegarderMedicamentPersonnalise(valeur.trim());
+                }
+            }
+            ordonnanceList[index][champ] = valeur.trim();
+        }
+    };
+
+    window.supprimerMedicament = async function(index) {
+        ordonnanceList.splice(index, 1);
+        await mettreAJourTableau();
+    };
+
+    function afficherInfosEtablissement() {
+        const polyclinique = localStorage.getItem('polyclinique') || '';
+        const polycliniqueAr = localStorage.getItem('polyclinique-ar') || '';
+        const docteur = localStorage.getItem('docteur') || '';
+
+        document.getElementById('polyclinique').value = polyclinique;
+        document.getElementById('polyclinique-ar').value = polycliniqueAr;
+        document.getElementById('docteur').value = docteur;
+
+        const affichagePolyclinique = document.getElementById('affichage-polyclinique');
+        const affichageDocteur = document.getElementById('affichage-docteur');
+
+        if (affichagePolyclinique) {
+            affichagePolyclinique.innerHTML = `<p><strong>Polyclinique:</strong> ${polyclinique}</p>`;
+        }
+        if (affichageDocteur) {
+            affichageDocteur.innerHTML = `<p><strong>Docteur:</strong> ${docteur}</p>`;
+        }
+    }
+
+    function generateHeader() {
+      return `
+    <div id="head" style="border: 1px solid #000; padding: 10px; margin-bottom: 20px;">
+        <table style="width: 100%;">
+            <tbody>
+                <tr>
+                    <td colspan="4">
+                        <div style="text-align: center; width: 100%;">REPUBLIQUE ALGERIENNE DEMOCRATIQUE ET POPULAIRE</div>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="4">
+                        <div style="text-align: center; width: 100%;">MINISTERE DE LA SANTE</div>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <div style="width: 100%; font-size: 12px; white-space: pre-wrap;">${localStorage.getItem('polyclinique') || ''}</div>
+                    </td>
+                    <td colspan="2" style="text-align: right;">
+                        <div style="text-align: right; width: 100%; font-size: 12px; white-space: pre-wrap;" class="arabic-text">${localStorage.getItem('polyclinique-ar') || ''}</div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    `;
+    }
+
+    function generateHeaderDem() {
+       return `
+    <div id="head" style="border: 1px solid #000; padding: 10px; margin-bottom: 20px;">
+        <table style="width: 100%;">
+            <tbody>
+                <tr>
+                    <td colspan="4">
+                        <div style="text-align: center; width: 100%; font-size: 12px;">REPUBLIQUE ALGERIENNE DEMOCRATIQUE ET POPULAIRE</div>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="4">
+                        <div style="text-align: center; width: 100%; font-size: 12px;">MINISTERE DE LA SANTE</div>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <div style="width: 100%; font-size: 12px; white-space: pre-wrap;">${localStorage.getItem('polyclinique') || ''}</div>
+                    </td>
+                    <td colspan="2" style="text-align: right;">
+                        <div style="text-align: right; width: 100%; font-size: 12px; white-space: pre-wrap;" class="arabic-text">${localStorage.getItem('polyclinique-ar') || ''}</div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    `;
+    }
+
+    function ordonnance() {
+        const headerContent = generateHeader();
+        const nom = capitalizeNames(document.getElementById("nom").value.trim());
+        const prenom = capitalizeNames(document.getElementById("prenom").value.trim());
+        const dateNaissance = document.getElementById("date-naissance").value;
+        const age = document.getElementById("age").value;
+        const numero = document.getElementById("numero").value;
+        const poids = document.getElementById("poids").value.trim();
+
+        const dateConsultation = document.querySelector('input[name="date-consultation"]').value;
+        let formattedDate = '';
+        if (dateConsultation) {
+            const [year, month, day] = dateConsultation.split('-');
+            formattedDate = `${day}/${month}/${year}`;
+        } // Si la date n'est pas définie, on laisse formattedDate vide
+
+        let itemsContent = '';
+        const taillePolice = '12';
+
+        ordonnanceList.forEach((item, index) => {
+            const med = item.medicament;
+            const poso = item.posologie;
+            const qt = item.quantite;
+            const nbr = index + 1;
+
+            itemsContent += `
+                <div style="margin-bottom: 15px;">
+                    <div style="display: flex; justify-content: space-between; align-items: baseline;">
+                        <span style="flex: 1;">
+                            <span style="font-weight: bold; min-width: 20px; display: inline-block;" class="med-font">${nbr}.</span>
+                            <span style="white-space: normal;" class="med-font">${med}</span>
+                        </span>
+                        <span style="margin-left: 20px; white-space: nowrap;" class="med-font">${qt}</span>
+                    </div>
+                    <div style="margin-left: 30px; color: #555; font-style: italic; margin-top: 5px;" class="med-font">${poso}</div>
+                </div>`;
+        });
+
+        const avecEntete = document.querySelector('input[name="header-option"][value="with-header"]').checked;
+
+        let enteteContent = '';
+        if (avecEntete) {
+            enteteContent = generateHeader();
+        } else {
+            enteteContent = '<div style="height: 155px;"></div>';
+        }
+
+        const certificatContent = `
+        <!DOCTYPE html>
+        <html lang="fr">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Ordonnance Medicale</title>
+            <style>
+                :root {
+                    --med-font-size: 12px;
+                }
+                body {
+                    font-family: Arial, sans-serif;
+                    padding: 20px;
+                    background-color: #f9f9f9;
+                }
+                .certificat {
+                    background-color: white;
+                    border: 1px solid #ddd;
+                    padding: 20px;
+                    max-width: 600px;
+                    margin: 0 auto;
+                    margin-top: 60px;
+                    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                    position: relative;
+                }
+                
+                .info {
+                    position: absolute;
+                }
+                .info.nom { top: 60px; left: 20px; }
+                .info.prenom { top: 90px; left: 20px; }
+                .info.date-naissance { top: 120px; left: 20px; }
+                .info.today { top: 90px; left: 270px; }
+                .info.numero { top: 60px; left: 270px; }
+                .info.poids { top: 120px; left: 270px; }
+                .info.barcode { 
+                    top: 20px; 
+                    left: 420px;
+                    display: none !important;
+                }
+                .info.barcode svg {
+                    height: 50%;
+                    width: 80%;
+                }
+                
+                h1 {
+                    text-align: center;
+                    color: #333;
+                    text-decoration: underline;
+                    font-size: 20px;
+                    margin: 10px 0 20px 0;
+                }
+                
+                .medication-list {
+                    margin-top: 150px;
+                    margin-bottom: 20px;
+                    margin-right: 14px;
+                }
+                
+                .barcode-section {
+                    text-align: center;
+                    margin-top: 20px;
+                }
+                
+                .barcode-section svg {
+                    height: 50px;
+                    width: 200px;
+                }
+                
+                .print-button {
+                    text-align: center;
+                    margin-top: 20px;
+                }
+                .print-button button {
+                    padding: 10px 20px;
+                    font-size: 16px;
+                    background-color: #007bff;
+                    color: white;
+                    border: none;
+                    border-radius: 5px;
+                    cursor: pointer;
+                }
+                .print-button button:hover {
+                    background-color: #0056b3;
+                }
+                @media print {
+                    @page {
+                        size: A5;
+                        margin: 0.2cm 0.2cm 0.2cm 0.2cm;
+                    }
+                    
+                    body {
+                        margin: 0 !important;
+                        padding: 0 !important;
+                        font-size: 10pt !important;
+                        line-height: 1.2 !important;
+                        background-color: white;
+                    }
+                    
+                    .certificat {
+                        border: none;
+                        box-shadow: none;
+                        margin: 0 !important;
+                        padding: 2px !important;
+                        max-width: 100% !important;
+                    }
+                    
+                    h1 {
+                        font-size: 14pt !important;
+                        margin: 5px 0 !important;
+                    }
+                    
+                    .info {
+                        font-size: 9pt !important;
+                    }
+                    
+                    .info.barcode {
+                        display: block !important;
+                    }
+                    
+                    .info.barcode svg {
+                        height: 30px !important;
+                        width: 150px !important;
+                    }
+                    
+                    div[style*="margin-bottom: 15px"] {
+                        margin-bottom: 5px !important;
+                    }
+                    
+                    .medication-list span,
+                    .medication-list div[style*="margin-left: 30px"] {
+                        font-size: var(--med-font-size) !important;
+                    }
+                    
+                    .print-button {
+                        display: none;
+                    }
+                }
+            </style>
+        </head>
+        <body>
+            ${enteteContent}
+            <div class="certificat">
+                <h1>Ordonnance Medicale</h1>
+                <div class="info nom"><strong>Nom :</strong> ${nom}</div>
+                <div class="info prenom"><strong>Prenom :</strong> ${prenom}</div>
+                <div class="info date-naissance"><strong>Date de naissance :</strong> ${dateNaissance} (${age})</div>
+                <div class="info today"><strong>La date :</strong> ${formattedDate}</div>
+                <div class="info numero"><strong>Numero :</strong> ${numero}</div>
+                ${poids ? `<div class="info poids" style="top: 120px; left: 400px;"><strong>Poids :</strong> ${poids}</div>` : ''}
+                <div class="info barcode">
+                    <svg id="barcode" data-numero="${numero}"></svg>
+                </div>
+                <div class="medication-list">
+                    ${itemsContent}
+                </div>
+            </div>
+            <div class="print-button">
+                <div style="display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 10px;">
+                    <label for="numero-police-impression" style="font-size: 14px; font-weight: bold;">Taille police:</label>
+                    <input type="number" id="numero-police-impression" min="8" max="24" value="14" style="width: 80px; padding: 5px; font-size: 14px; border: 1px solid #ccc; border-radius: 4px;">
+                </div>
+                <button id="printButton">Imprimer l'ordonnance</button>
+            </div>
+            
+            <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.0/dist/JsBarcode.all.min.js"></script>
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    const printBtn = document.getElementById('printButton');
+                    if (printBtn) {
+                        printBtn.addEventListener('click', function() {
+                            const fontSizeInput = document.getElementById('numero-police-impression');
+                            if (fontSizeInput) {
+                                const fontSize = fontSizeInput.value;
+                                document.documentElement.style.setProperty('--med-font-size', fontSize + 'px');
+                                document.querySelectorAll('.med-font').forEach(el => {
+                                    el.style.fontSize = fontSize + 'px';
+                                });
+                            }
+                            window.print();
+                        });
+                    }
+                    
+                    const barcode = document.getElementById('barcode');
+                    if (barcode && typeof JsBarcode !== 'undefined') {
+                        const numero = barcode.getAttribute('data-numero');
+                        if (numero && numero !== '0' && numero !== '') {
+                            try {
+                                JsBarcode("#barcode", numero, {
+                                    format: "CODE128",
+                                    width: 2,
+                                    height: 50,
+                                    displayValue: false
+                                });
+                            } catch (e) {
+                            }
+                        }
+                    }
+                });
+            </script>
+        </body>
+        </html>`;
+
+        if (typeof openWindowWithContent === 'function') {
+            openWindowWithContent(certificatContent, 'certificat_window');
+        } else {
+            const newWindow = window.open("", "_blank");
+            if (newWindow) {
+                safeDocumentWrite(newWindow, certificatContent);
+            } else {
+                alert("Le popup a ete bloque par votre navigateur. Veuillez autoriser les popups pour ce site.");
+            }
+        }
+    }
+
+    function ordonnancedem(taillePolice = '14') {
+        const nom = capitalizeNames(document.getElementById("nom").value.trim());
+        const prenom = capitalizeNames(document.getElementById("prenom").value.trim());
+        const dateNaissance = document.getElementById("date-naissance").value;
+        const age = document.getElementById("age").value;
+        const numero = document.getElementById("numero").value;
+        const poids = document.getElementById("poids").value.trim();
+
+        const dateConsultation = document.querySelector('input[name="date-consultation"]').value;
+        let formattedDate = '';
+        if (dateConsultation) {
+            const [year, month, day] = dateConsultation.split('-');
+            formattedDate = `${day}/${month}/${year}`;
+        } // Si la date n'est pas définie, on laisse formattedDate vide
+
+        let itemsContent = '';
+
+        ordonnanceList.forEach((item, index) => {
+            const med = item.medicament;
+            const poso = item.posologie;
+            const qt = item.quantite;
+            const nbr = index + 1;
+
+            itemsContent += `
+                <div style="margin-bottom: 15px;">
+                    <div style="display: flex; justify-content: space-between; align-items: baseline;">
+                        <span style="flex: 1;">
+                            <span style="font-weight: bold; min-width: 20px; display: inline-block;" class="med-font">${nbr}.</span>
+                            <span style="white-space: normal;" class="med-font">${med}</span>
+                        </span>
+                        <span style="margin-left: 20px; white-space: nowrap;" class="med-font">${qt}</span>
+                    </div>
+                    <div style="margin-left: 30px; color: #555; font-style: italic; margin-top: 5px;" class="med-font">${poso}</div>
+                </div>`;
+        });
+
+        const enteteContent = generateHeaderDem();
+
+        const certificatContent = `
+        <!DOCTYPE html>
+        <html lang="fr">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Ordonnance Medicale</title>
+            <style>
+                :root {
+                    --med-font-size: 12px;
+                }
+                body {
+                    font-family: Arial, sans-serif;
+                    padding: 20px;
+                    background-color: #f9f9f9;
+                }
+                .certificat {
+                    background-color: white;
+                    border: 1px solid #ddd;
+                    padding: 200px 20px 20px 20px;
+                    max-width: 600px;
+                    margin: 0 auto;
+                    margin-top: 60px;
+                    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                    position: relative;
+                }
+                .info {
+                    position: absolute;
+                }
+                .info.nom { top: 10px; left: 20px; }
+                .info.prenom { top: 40px; left: 20px; }
+                .info.date-naissance { top: 70px; left: 20px; }
+                .info.today { top: 40px; left: 270px; }
+                .info.numero { 
+                    top: 10px; 
+                    left: 270px; 
+                    color: transparent;
+                }
+                .info.poids { top: 70px; left: 270px; }
+                .info.barcode {
+                    top: 40px;
+                    left: 350px;
+                    display: none !important;
+                }
+                .info.barcode svg {
+                    height: 50%;
+                    width: 80%;
+                }
+                h1 {
+                    text-align: center;
+                    color: #333;
+                    text-decoration: underline;
+                    font-size: 20px;
+                    margin-top: 80px;
+                }
+                .medication-list {
+                    margin-top: 5px;
+                    margin-bottom: 20px;
+                    margin-right: 14px;
+                }
+                .print-button {
+                    text-align: center;
+                    margin-top: 20px;
+                }
+                .print-button button {
+                    padding: 10px 20px;
+                    font-size: 16px;
+                    background-color: #007bff;
+                    color: white;
+                    border: none;
+                    border-radius: 5px;
+                    cursor: pointer;
+                }
+                .print-button button:hover {
+                    background-color: #0056b3;
+                }
+                @media print {
+                    @page {
+                        size: A5;
+                        margin: 0.2cm 0.2cm 0.2cm 0.2cm;
+                    }
+                    
+                    body {
+                        margin: 0 !important;
+                        padding: 0 !important;
+                        font-size: 10pt !important;
+                        line-height: 1.2 !important;
+                        background-color: white;
+                    }
+                    
+                    .certificat {
+                        border: none;
+                        box-shadow: none;
+                        margin: 0 !important;
+                        padding: 2px !important;
+                        max-width: 100% !important;
+                    }
+                    
+                    h1 {
+                        font-size: 14pt !important;
+                        margin: 5px 0 !important;
+                    }
+                    
+                    .info {
+                        font-size: 9pt !important;
+                    }
+                    
+                    .info.numero {
+                        color: inherit !important;
+                    }
+                    
+                    .info.barcode {
+                        display: block !important;
+                        top: 40px !important;
+                        left: 350px !important;
+                    }
+                    
+                    .info.barcode svg {
+                        height: 30px !important;
+                        width: 150px !important;
+                    }
+                    
+                    .medication-list {
+                        margin-top: 120px !important;
+                        margin-bottom: 10px !important;
+                        margin-right: 14px !important;
+                    }
+                    
+                    div[style*="margin-bottom: 15px"] {
+                        margin-bottom: 5px !important;
+                    }
+                    
+                    .medication-list span,
+                    .medication-list div[style*="margin-left: 30px"] {
+                        font-size: var(--med-font-size) !important;
+                    }
+                    
+                    .print-button {
+                        display: none;
+                    }
+                }
+            </style>
+        </head>
+        <body>
+            ${enteteContent}
+            <div style="
+                width: calc(100% - 5px);
+                text-align: center;
+                border: 1px solid #000;
+                padding: 5px 0;
+                font-size: 20px;
+                font-weight: normal;
+                margin-top: 20px;
+                margin-bottom: 5px;
+                margin-right: 10px;
+                background-color: transparent;
+            ">
+                ORDONNANCE
+            </div>
+            <div class="certificat">
+                <div class="info nom"><strong>Nom :</strong> ${nom}</div>
+                <div class="info prenom"><strong>Prenom :</strong> ${prenom}</div>
+                <div class="info date-naissance"><strong>Date de naissance :</strong> ${dateNaissance} (${age})</div>
+                <div class="info today"><strong>La date :</strong> ${formattedDate}</div>
+                <div class="info numero"><strong>Numero :</strong> ${numero}</div>
+                ${poids ? `<div class="info poids" style="top: 70px; left: 400px;"><strong>Poids :</strong> ${poids}</div>` : ''}
+                <div class="info barcode">
+                    <svg id="barcode" data-numero="${numero || '0'}"></svg>
+                </div>
+                <div class="medication-list">
+                    ${itemsContent}
+                </div>
+            </div>
+            <div class="print-button">
+                <div style="display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 10px;">
+                    <label for="numero-police-impression" style="font-size: 14px; font-weight: bold;">Taille police:</label>
+                    <select id="numero-police-impression" style="width: 80px; padding: 5px; font-size: 14px; border: 1px solid #ccc; border-radius: 4px;">
+                        <option value="10">10</option>
+                        <option value="11">11</option>
+                        <option value="12" selected>12</option>
+                        <option value="14">14</option>
+                        <option value="16">16</option>
+                        <option value="18">18</option>
+                        <option value="20">20</option>
+                        <option value="22">22</option>
+                    </select>
+                </div>
+                <button id="printButton">Imprimer l'ordonnance</button>
+            </div>
+            <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.0/dist/JsBarcode.all.min.js"></script>
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    const printBtn = document.getElementById('printButton');
+                    if (printBtn) {
+                        printBtn.addEventListener('click', function() {
+                            const fontSizeSelect = document.getElementById('numero-police-impression');
+                            if (fontSizeSelect) {
+                                const fontSize = fontSizeSelect.value;
+                                document.documentElement.style.setProperty('--med-font-size', fontSize + 'px');
+                                document.querySelectorAll('.med-font').forEach(el => {
+                                    el.style.fontSize = fontSize + 'px';
+                                });
+                            }
+                            window.print();
+                        });
+                    }
+                    
+                    const barcode = document.getElementById('barcode');
+                    if (barcode && typeof JsBarcode !== 'undefined') {
+                        const numero = barcode.getAttribute('data-numero');
+                        if (numero && numero !== '0' && numero !== '') {
+                            try {
+                                JsBarcode("#barcode", numero, {
+                                    format: "CODE128",
+                                    width: 2,
+                                    height: 50,
+                                    displayValue: false
+                                });
+                            } catch (e) {
+                            }
+                        }
+                    }
+                });
+            </script>
+        </body>
+        </html>`;
+
+        if (typeof openWindowWithContent === 'function') {
+            openWindowWithContent(certificatContent, 'certificat_window_2');
+        } else {
+            const newWindow = window.open("", "_blank");
+            if (newWindow) {
+                safeDocumentWrite(newWindow, certificatContent);
+            } else {
+                alert("Le popup a ete bloque par votre navigateur. Veuillez autoriser les popups pour ce site.");
+            }
+        }
+    }
+
+    async function ajouterMedicamentALaListe(medicament) {
+        ordonnanceList.push({
+            medicament: medicament,
+            posologie: '',
+            quantite: ''
+        });
+        await mettreAJourTableau();
+    }
+
+    
+
+    function chargerMedicaments() {
+        return JSON.parse(localStorage.getItem('medicaments') || '[]');
+    }
+
+    function chargerMedicamentsJSON() {
+        if (typeof medicamentsData !== 'undefined' && Array.isArray(medicamentsData)) {
+            return Promise.resolve(medicamentsData);
+        }
+        return Promise.resolve([]);
+    }
+
+    async function chargerMedicaments() {
+        const medsJSON = await chargerMedicamentsJSON();
+        const medsLocalStorage = JSON.parse(localStorage.getItem('medicamentsPersonnalises') || '[]');
+        
+        const tousLesMeds = [...new Set([...medsJSON, ...medsLocalStorage])];
+        return tousLesMeds;
+    }
+
+    function sauvegarderMedicamentPersonnalise(medicament) {
+        let medsPersonnalises = JSON.parse(localStorage.getItem('medicamentsPersonnalises') || '[]');
+        if (!medsPersonnalises.includes(medicament)) {
+            medsPersonnalises.push(medicament);
+            localStorage.setItem('medicamentsPersonnalises', JSON.stringify(medsPersonnalises));
+        }
+    }
+
+    async     function remplirDatalistMedicaments() {
+        const datalist = document.getElementById('medicaments');
+        const meds = await chargerMedicaments();
+        
+        datalist.innerHTML = '';
+        meds.forEach(med => {
+            const option = document.createElement('option');
+            option.value = med;
+            datalist.appendChild(option);
+        });
+
+        const medicamentInput = document.getElementById('medicament');
+        if (medicamentInput) {
+            medicamentInput.addEventListener('input', async function() {
+                const valeur = this.value.trim().toUpperCase();
+                const datalist = document.getElementById('medicaments');
+                const tousLesMeds = await chargerMedicaments();
+                
+                if (valeur === '') {
+                    datalist.innerHTML = '';
+                    tousLesMeds.forEach(med => {
+                        const option = document.createElement('option');
+                        option.value = med;
+                        datalist.appendChild(option);
+                    });
+                } else {
+                    const medsFiltres = tousLesMeds.filter(med => 
+                        med.toUpperCase().startsWith(valeur)
+                    );
+                    
+                    datalist.innerHTML = '';
+                    medsFiltres.forEach(med => {
+                        const option = document.createElement('option');
+                        option.value = med;
+                        datalist.appendChild(option);
+                    });
+                }
+            });
+
+            medicamentInput.addEventListener('keydown', async function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    const medicament = this.value.trim();
+                    if (!medicament) {
+                        return;
+                    }
+                    
+                    // Construire la posologie et la quantité avant de les récupérer
+                    construirePosologie();
+                    construireQuantite();
+                    
+                    const meds = await chargerMedicaments();
+                    if (!meds.includes(medicament)) {
+                        sauvegarderMedicamentPersonnalise(medicament);
+                    }
+                    
+                    ordonnanceList.push({
+                        medicament: medicament,
+                        posologie: document.getElementById('posologie').value.trim(),
+                        quantite: document.getElementById('quantite').value.trim()
+                    });
+                    
+                    // Réinitialiser tous les champs
+                    this.value = '';
+                    document.getElementById('posologie-qte').value = '01';
+                    document.getElementById('posologie-forme').value = 'CP';
+                    document.getElementById('posologie-nombre').value = '01';
+                    document.getElementById('posologie-frequence').value = ' * * par jour';
+                    document.getElementById('quantite-nombre').value = '01';
+                    document.getElementById('quantite-unite').value = 'Bte';
+                    document.getElementById('posologie').value = '';
+                    document.getElementById('quantite').value = '';
+                    
+                    await mettreAJourTableau();
+                }
+            });
+        }
+    }
+
+    async function validerMedicament(medicament) {
+        const meds = await chargerMedicamentsJSON();
+        const medicamentNormalise = medicament.trim().toUpperCase();
+        return meds.some(med => med.toUpperCase() === medicamentNormalise);
+    }
+
+    function genererOrdonnance() {
+        const nom = document.getElementById('nom').value;
+        const prenom = document.getElementById('prenom').value;
+        const dateNaissance = document.getElementById('date-naissance').value;
+        const numero = document.getElementById('numero').value;
+        const poids = document.getElementById('poids').value;
+        
+        const docteur = localStorage.getItem('docteur') || 'Dr Daoudi';
+        const polyclinique = localStorage.getItem('polyclinique') || '';
+        const polycliniqueAr = localStorage.getItem('polyclinique-ar') || '';
+        
+        const dateConsultation = document.querySelector('input[name="date-consultation"]').value;
+        const dateCourante = dateConsultation || convertArabicNumeralsToEuropean(new Date().toLocaleDateString('fr-FR'));
+
+        if (!nom || !prenom) {
+            alert('Veuillez remplir au moins le nom et le prénom du patient');
+            return;
+        }
+
+        if (ordonnanceList.length === 0) {
+            alert('Veuillez ajouter au moins un médicament à l\'ordonnance');
+            return;
+        }
+
+        const headerOption = document.querySelector('input[name="header-option"]:checked').value;
+        
+        let headerHTML = '';
+        if (headerOption === 'with-header' || headerOption === 'DEM-header') {
+            headerHTML = `
+                <div class="ordonnance-header">
+                    <div class="header-top">
+                        <div class="polyclinique-fr">${polyclinique}</div>
+                        <div class="docteur-info">Dr ${docteur}</div>
+                    </div>
+                    ${polycliniqueAr ? `<div class="polyclinique-ar" dir="rtl">${polycliniqueAr}</div>` : ''}
+                </div>
+            `;
+        }
+
+        const medicamentsHTML = ordonnanceList.map((med, index) => `
+            <div class="medication-row">
+                <div class="medication-number">${index + 1}.</div>
+                <div class="medication-info">
+                    <div class="medication-name"><strong>${med.medicament}</strong></div>
+                    ${med.posologie ? `<div class="medication-posologie">Posologie: ${med.posologie}</div>` : ''}
+                    ${med.quantite ? `<div class="medication-quantite">Quantité: ${med.quantite}</div>` : ''}
+                </div>
+            </div>
+        `).join('');
+
+        const newWindow = window.open('', '_blank', 'width=800,height=1000');
+        newWindow.document.write(`
+            <!DOCTYPE html>
+            <html lang="fr">
+            <head>
+                <meta charset="UTF-8">
+                <title>Ordonnance - ${nom} ${prenom}</title>
+                <style>
+                    @page {
+                        size: A5;
+                        margin: 1cm;
+                    }
+                    * {
+                        margin: 0;
+                        padding: 0;
+                        box-sizing: border-box;
+                    }
+                    body {
+                        font-family: 'Times New Roman', serif;
+                        font-size: 12pt;
+                        line-height: 1.4;
+                        color: #000;
+                        background: white;
+                        padding: 20px;
+                    }
+                    .ordonnance-container {
+                        max-width: 700px;
+                        margin: 0 auto;
+                    }
+                    .ordonnance-header {
+                        text-align: center;
+                        margin-bottom: 30px;
+                        padding-bottom: 15px;
+                        border-bottom: 2px solid #000;
+                    }
+                    .header-top {
+                        margin-bottom: 10px;
+                    }
+                    .polyclinique-fr {
+                        font-size: 14pt;
+                        font-weight: bold;
+                        margin-bottom: 5px;
+                    }
+                    .polyclinique-ar {
+                        font-size: 14pt;
+                        font-weight: bold;
+                        direction: rtl;
+                        margin-bottom: 10px;
+                    }
+                    .docteur-info {
+                        font-size: 13pt;
+                        font-style: italic;
+                    }
+                    .titre-ordonnance {
+                        text-align: center;
+                        font-size: 16pt;
+                        font-weight: bold;
+                        margin: 20px 0;
+                        text-transform: uppercase;
+                        text-decoration: underline;
+                    }
+                    .patient-info {
+                        background: #f9f9f9;
+                        padding: 10px;
+                        margin-bottom: 20px;
+                        border-left: 3px solid #000;
+                    }
+                    .patient-info p {
+                        margin: 3px 0;
+                    }
+                    .patient-info strong {
+                        font-weight: bold;
+                    }
+                    .date-consultation {
+                        text-align: right;
+                        margin-bottom: 20px;
+                        font-style: italic;
+                    }
+                    .medication-list {
+                        margin: 20px 0;
+                    }
+                    .medication-row {
+                        display: flex;
+                        margin-bottom: 15px;
+                        padding: 10px;
+                        background: white;
+                        border-bottom: 1px solid #ddd;
+                    }
+                    .medication-number {
+                        font-weight: bold;
+                        min-width: 30px;
+                        font-size: 14pt;
+                    }
+                    .medication-info {
+                        flex: 1;
+                    }
+                    .medication-name {
+                        font-size: 13pt;
+                        font-weight: bold;
+                        margin-bottom: 5px;
+                    }
+                    .medication-posologie {
+                        font-size: 11pt;
+                        color: #333;
+                        margin-bottom: 3px;
+                    }
+                    .medication-quantite {
+                        font-size: 11pt;
+                        color: #666;
+                    }
+                    .signature-section {
+                        margin-top: 50px;
+                        text-align: right;
+                    }
+                    .signature-line {
+                        display: inline-block;
+                        width: 200px;
+                        border-top: 1px solid #000;
+                        padding-top: 10px;
+                        text-align: center;
+                    }
+                    .date-signature {
+                        margin-top: 20px;
+                        text-align: right;
+                    }
+                    .print-button {
+                        position: fixed;
+                        top: 10px;
+                        right: 10px;
+                        padding: 10px 20px;
+                        background: #2563eb;
+                        color: white;
+                        border: none;
+                        border-radius: 5px;
+                        cursor: pointer;
+                        font-size: 14px;
+                        z-index: 1000;
+                    }
+                    .print-button:hover {
+                        background: #1d4ed8;
+                    }
+                    @media print {
+                        .print-button {
+                            display: none !important;
+                        }
+                        body {
+                            padding: 0;
+                        }
+                        .ordonnance-container {
+                            max-width: 100%;
+                        }
+                    }
+                </style>
+            </head>
+            <body>
+                <button class="print-button" onclick="window.print()">📄 Imprimer / Enregistrer PDF</button>
+                
+                <div class="ordonnance-container">
+                    ${headerHTML}
+                    
+                    <div class="titre-ordonnance">Ordonnance Médicale</div>
+                    
+                    <div class="patient-info">
+                        <p><strong>Nom:</strong> ${nom}</p>
+                        <p><strong>Prénom:</strong> ${prenom}</p>
+                        ${dateNaissance ? `<p><strong>Date de naissance:</strong> ${dateNaissance}</p>` : ''}
+                        ${numero ? `<p><strong>Numéro Patient:</strong> ${numero}</p>` : ''}
+                        ${poids ? `<p><strong>Poids:</strong> ${poids} kg</p>` : ''}
+                    </div>
+                    
+                    <div class="date-consultation">Fait le ${dateCourante}</div>
+                    
+                    <div class="medication-list">
+                        <h3 style="margin-bottom: 15px; text-decoration: underline;">Prescription:</h3>
+                        ${medicamentsHTML}
+                    </div>
+                    
+                    <div class="signature-section">
+                        <div class="signature-line">
+                            <strong>Dr ${docteur}</strong>
+                        </div>
+                        <div class="date-signature">Signature et Cachet</div>
+                    </div>
+                </div>
+                
+                <script>
+                    setTimeout(function() {
+                        window.focus();
+                    }, 100);
+                </script>
+            </body>
+            </html>
+        `);
+        newWindow.document.close();
+    }
+
+    function calculerAge(dateNaissance) {
+        if (!dateNaissance) return '';
+        
+        const aujourdhui = new Date();
+        const naissance = new Date(dateNaissance);
+        
+        const differenceTemps = aujourdhui - naissance;
+        const differenceJours = Math.floor(differenceTemps / (1000 * 60 * 60 * 24));
+        
+        if (differenceJours >= 365) {
+            let ans = Math.floor(differenceJours / 365);
+            return ans + ' an' + (ans > 1 ? 's' : '');
+        } else if (differenceJours >= 30) {
+            let mois = Math.floor(differenceJours / 30);
+            return mois + ' mois';
+        } else {
+            return differenceJours + ' jour' + (differenceJours > 1 ? 's' : '');
+        }
+    }
+
+    const dateNaissanceInput = document.getElementById('date-naissance');
+    const ageInput = document.getElementById('age');
+    
+    if (dateNaissanceInput && ageInput) {
+        dateNaissanceInput.addEventListener('input', function() {
+            const dateNaissance = this.value;
+            const age = calculerAge(dateNaissance);
+            ageInput.value = age;
+        });
+        
+        dateNaissanceInput.addEventListener('change', function() {
+            const dateNaissance = this.value;
+            const age = calculerAge(dateNaissance);
+            ageInput.value = age;
+        });
+    }
+
+    afficherInfosEtablissement();
+    await remplirDatalistMedicaments();
+});
+
+function chargerOrdonnancesTypesDuFichier() {
+    const fromLocalStorage = JSON.parse(localStorage.getItem('ordonnancesTypesPourOrd') || '{}');
+    
+    if (typeof ordonnancesTypesData !== 'undefined' && Object.keys(ordonnancesTypesData).length > 0) {
+        const sourcesData = JSON.parse(localStorage.getItem('ordonnancesTypesSources') || '{}');
+        const fusion = { ...ordonnancesTypesData };
+        let nbAjoutes = 0;
+        let nbRemplaces = 0;
+        
+        Object.keys(ordonnancesTypesData).forEach(nom => {
+            sourcesData[nom] = 'file';
+        });
+        
+        Object.keys(fromLocalStorage).forEach(nom => {
+            if (!fusion[nom]) {
+                fusion[nom] = fromLocalStorage[nom];
+                sourcesData[nom] = 'localStorage';
+                nbAjoutes++;
+            } else {
+                fusion[nom] = fromLocalStorage[nom];
+                nbRemplaces++;
+            }
+        });
+        
+        localStorage.setItem('ordonnancesTypesSources', JSON.stringify(sourcesData));
+        window.ordonnancesTypesSources = sourcesData;
+        
+        ordonnancesTypesChargees = fusion;
+        localStorage.setItem('ordonnancesTypesPourOrd', JSON.stringify(fusion));
+        mettreAJourListeOrdonnancesTypes(fusion);
+    } else {
+        if (Object.keys(fromLocalStorage).length > 0) {
+            ordonnancesTypesChargees = fromLocalStorage;
+            const sourcesData = {};
+            Object.keys(fromLocalStorage).forEach(nom => {
+                sourcesData[nom] = 'localStorage';
+            });
+            localStorage.setItem('ordonnancesTypesSources', JSON.stringify(sourcesData));
+            window.ordonnancesTypesSources = sourcesData;
+            mettreAJourListeOrdonnancesTypes(fromLocalStorage);
+        }
+    }
+}
+
+// Fonctions pour gérer les ordonnances archivées par patient
+window.showPatientNameDialog = function() {
+    const nomInput = document.getElementById('nom');
+    const prenomInput = document.getElementById('prenom');
+    const currentPatientNameSpan = document.getElementById('current-patient-name');
+    
+    if (nomInput && prenomInput && currentPatientNameSpan) {
+        const nom = nomInput.value.trim();
+        const prenom = prenomInput.value.trim();
+        
+        if (nom && prenom) {
+            currentPatientNameSpan.textContent = nom + ' ' + prenom;
+        } else if (nom) {
+            currentPatientNameSpan.textContent = nom;
+        } else if (prenom) {
+            currentPatientNameSpan.textContent = prenom;
+        } else {
+            currentPatientNameSpan.textContent = '-';
+        }
+    }
+    
+    document.getElementById('patientNameModal').style.display = 'block';
+}
+
+window.closePatientNameModal = function() {
+    document.getElementById('patientNameModal').style.display = 'none';
+    // Réinitialiser le formulaire
+    document.getElementById('patient-name-input').value = '';
+    document.getElementById('use-current-patient').checked = false;
+}
+
+window.togglePatientNameInput = function(checkbox) {
+    const input = document.getElementById('patient-name-input');
+    if (checkbox.checked) {
+        const nomInput = document.getElementById('nom');
+        const prenomInput = document.getElementById('prenom');
+        
+        if (nomInput && prenomInput) {
+            const nom = nomInput.value.trim();
+            const prenom = prenomInput.value.trim();
+            
+            if (nom && prenom) {
+                input.value = nom + ' ' + prenom;
+            } else if (nom) {
+                input.value = nom;
+            } else if (prenom) {
+                input.value = prenom;
+            }
+        }
+        input.disabled = true;
+    } else {
+        input.disabled = false;
+    }
+}
+
+// Sauvegarder l'ordonnance dans le dossier du patient
+window.savePatientPrescription = async function() {
+    const patientNameInput = document.getElementById('patient-name-input');
+    let patientName = patientNameInput.value.trim();
+    
+    if (!patientName) {
+        alert('Veuillez entrer un nom de patient ou cocher "Utiliser le nom actuel du patient"');
+        return;
+    }
+    
+    if (ordonnanceList.length === 0) {
+        alert('Aucune ordonnance à enregistrer');
+        return;
+    }
+    
+    // Sauvegarder l'ordonnance avec le nom du patient
+    let patientPrescriptions = JSON.parse(localStorage.getItem('ordonnancesPatients') || '{}');
+    patientPrescriptions[patientName] = {
+        ordonnance: [...ordonnanceList],
+        date: new Date().toISOString(),
+        nom: document.getElementById('nom').value,
+        prenom: document.getElementById('prenom').value,
+        dateNaissance: document.getElementById('date-naissance').value,
+        numero: document.getElementById('numero').value
+    };
+    
+    localStorage.setItem('ordonnancesPatients', JSON.stringify(patientPrescriptions));
+    
+    // Mettre à jour la liste des ordonnances archivées
+    mettreAJourListeOrdonnancesArchivees(patientPrescriptions);
+    
+    alert('Ordonnance enregistrée dans le dossier du patient !');
+    
+    // Fermer la modale
+    closePatientNameModal();
+}
+
+window.mettreAJourListeOrdonnancesArchivees = async function(prescriptions = null) {
+    await new Promise(resolve => setTimeout(resolve, 100));
+    
+    const select = document.getElementById('liste-ordonnances-archivee');
+    
+    if (!prescriptions) {
+        let rawData = localStorage.getItem('ordonnancesPatients');
+        
+        if (!rawData) {
+            prescriptions = {};
+        } else {
+            try {
+                prescriptions = JSON.parse(rawData);
+            } catch (e) {
+                prescriptions = {};
+            }
+        }
+    }
+    
+    if (select) {
+        select.innerHTML = '<option value="">Sélectionnez une ordonnance archivée</option>';
+        
+        const nomsTries = Object.keys(prescriptions).sort((a, b) => a.localeCompare(b, 'fr', { sensitivity: 'base' }));
+        
+        nomsTries.forEach(nom => {
+            const option = document.createElement('option');
+            option.value = nom;
+            option.textContent = nom;
+            select.appendChild(option);
+        });
+    }
+};
+
+// Charger une ordonnance archivée
+async function chargerOrdonnanceArchivee() {
+    const select = document.getElementById('liste-ordonnances-archivee');
+    const selectedPatient = select.value;
+    
+    if (!selectedPatient) {
+        alert('Veuillez sélectionner une ordonnance archivée');
+        return;
+    }
+    
+    const patientPrescriptions = JSON.parse(localStorage.getItem('ordonnancesPatients') || '{}');
+    const prescription = patientPrescriptions[selectedPatient];
+    
+    if (prescription) {
+        // Charger les informations du patient
+        if (prescription.nom) document.getElementById('nom').value = prescription.nom;
+        if (prescription.prenom) document.getElementById('prenom').value = prescription.prenom;
+        if (prescription.dateNaissance) document.getElementById('date-naissance').value = prescription.dateNaissance;
+        if (prescription.numero) document.getElementById('numero').value = prescription.numero;
+        
+        // Calculer l'âge si la date de naissance est présente
+        if (prescription.dateNaissance) {
+            const age = calculerAge(prescription.dateNaissance);
+            document.getElementById('age').value = age;
+        }
+        
+        // Charger l'ordonnance
+        ordonnanceList.length = 0;
+        ordonnanceList.push(...prescription.ordonnance);
+        await mettreAJourTableau();
+        
+        alert('Ordonnance chargée avec succès !');
+    }
+}
+
+// Fonction pour filtrer les ordonnances archivées
+function setupPatientPrescriptionFilter() {
+    const rechercheInput = document.getElementById('recherche-ordonnances-archivee');
+    const selectOrdonnances = document.getElementById('liste-ordonnances-archivee');
+    
+    if (rechercheInput && selectOrdonnances) {
+        rechercheInput.addEventListener('input', function() {
+            const valeur = this.value.trim().toUpperCase();
+            const options = selectOrdonnances.getElementsByTagName('option');
+            
+            let nbVisible = 0;
+            
+            for (let i = 0; i < options.length; i++) {
+                const option = options[i];
+                if (option.value === '') {
+                    option.style.display = '';
+                    continue;
+                }
+                
+                if (valeur === '' || option.text.toUpperCase().startsWith(valeur)) {
+                    option.style.display = '';
+                    nbVisible++;
+                } else {
+                    option.style.display = 'none';
+                }
+            }
+
+            if (valeur.length > 0) {
+                selectOrdonnances.size = Math.min(5, nbVisible + 1);
+            } else {
+                selectOrdonnances.size = 1;
+            }
+        });
+
+        rechercheInput.addEventListener('focus', function() {
+            selectOrdonnances.size = 5;
+            rechercheInput.focus();
+        });
+
+        selectOrdonnances.addEventListener('blur', function() {
+            selectOrdonnances.size = 1;
+        });
+    }
+}
+
+// Charger les événements pour les nouveaux boutons
+function initPatientPrescriptionEvents() {
+    // Événements pour charger les ordonnances archivées
+    const chargerOrdonnanceArchiveeBtn = document.getElementById('charger-ordonnance-archivee');
+    if (chargerOrdonnanceArchiveeBtn) {
+        chargerOrdonnanceArchiveeBtn.addEventListener('click', chargerOrdonnanceArchivee);
+    }
+    
+    const actualiserBtn = document.getElementById('actualiser-ordonnances-archivees');
+    if (actualiserBtn) {
+        actualiserBtn.addEventListener('click', async () => {
+            await mettreAJourListeOrdonnancesArchivees();
+            alert('Liste actualisée !');
+        });
+    }
+    
+    setupPatientPrescriptionFilter();
+    
+    setTimeout(async () => {
+        await mettreAJourListeOrdonnancesArchivees();
+    }, 200);
+}
+
+// Appeler la fonction d'initialisation des événements après le chargement complet de la page
+setTimeout(initPatientPrescriptionEvents, 300);
+
+// Créer un canal de communication pour recevoir les notifications des autres onglets
+const channel = typeof BroadcastChannel !== 'undefined' ? new BroadcastChannel('ordonnances_storage') : null;
+
+if (channel) {
+    channel.addEventListener('message', function(e) {
+        if (e.data.type === 'ordonnancesPatientsUpdated') {
+            setTimeout(() => {
+                mettreAJourListeOrdonnancesArchivees();
+            }, 100);
+        }
+    });
+}
+
+window.addEventListener('storage', function(e) {
+    if (e.key === 'ordonnancesPatients') {
+        setTimeout(() => {
+            mettreAJourListeOrdonnancesArchivees();
+        }, 500);
+    }
+});
+
+let lastStoredData = localStorage.getItem('ordonnancesPatients') || '{}';
+setInterval(async () => {
+    const currentStoredData = localStorage.getItem('ordonnancesPatients') || '{}';
+    
+    if (currentStoredData !== lastStoredData) {
+        await mettreAJourListeOrdonnancesArchivees();
+        lastStoredData = currentStoredData;
+    }
+}, 3000);
+
+setTimeout(() => {
+    const testOptions = localStorage.getItem('test_options_html');
+    
+    if (!testOptions) {
+        const warningDiv = document.createElement('div');
+        warningDiv.style.cssText = 'background: #fff3cd; color: #856404; padding: 10px; margin: 10px 0; border-radius: 5px; font-size: 0.9rem;';
+        warningDiv.innerHTML = `
+            <strong>⚠️ Attention :</strong> Le navigateur ne partage pas le localStorage entre les fichiers.<br>
+            Après avoir importé des données dans <em>options.html</em>, cliquez sur le bouton <span style="background: #6c757d; color: white; padding: 2px 6px; border-radius: 3px;">🔄</span> pour actualiser la liste.
+        `;
+        
+        const archivedCard = document.querySelector('#right-column .card:nth-child(3) .card-content');
+        if (archivedCard) {
+            archivedCard.insertBefore(warningDiv, archivedCard.firstChild);
+        }
+    }
+}, 500);

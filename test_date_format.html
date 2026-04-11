@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Test Format Date</title>
+</head>
+<body>
+    <h1>Test du formatage des dates</h1>
+    <div id="resultats"></div>
+
+    <script>
+        // Copie des fonctions depuis certificat.js
+        function formatDateFr(dateString) {
+            const date = new Date(dateString);
+            
+            // Vérifier si la date est valide
+            if (isNaN(date.getTime())) {
+                return '';
+            }
+            
+            const formatted = date.toLocaleDateString('fr-FR', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric'
+            });
+            
+            return formatted;
+        }
+
+        function getTodayFormatted() {
+            return formatDateFr(new Date());
+        }
+
+        // Test des fonctions
+        const resultats = document.getElementById('resultats');
+        
+        const aujourdHui = getTodayFormatted();
+        const dateTest = formatDateFr('2026-01-16');
+        
+        resultats.innerHTML = `
+            <p><strong>Date d'aujourd'hui formatée:</strong> ${aujourdHui}</p>
+            <p><strong>Date de test (16/01/2026) formatée:</strong> ${dateTest}</p>
+            <p><strong>Vérification:</strong> Le format attendu est DD/MM/YYYY</p>
+        `;
+        
+        console.log('Tests terminés:');
+        console.log('Aujourd\'hui:', aujourdHui);
+        console.log('Date test:', dateTest);
+    </script>
+</body>
+</html>

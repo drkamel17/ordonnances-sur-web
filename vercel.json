@@ -2,22 +2,177 @@
   "version": 2,
   "builds": [
     {
-      "src": "**/*",
+      "src": "*.html",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "*.js",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "*.css",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "styles/**/*.css",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "dece/**/*.js",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "dece/**/*.css",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "dece/**/*.html",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "dece/**/*.json",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "ordonnance/**/*.js",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "ordonnance/**/*.css",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "ordonnance/**/*.html",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "score/**/*.js",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "score/**/*.css",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "score/**/*.html",
+      "use": "@vercel/static"
+    },
+	 {
+      "src": "score/**/*.png",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "score/**/_scripts.js.تنزيل",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "medicamentdz/**/*.js",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "medicamentdz/**/*.css",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "medicamentdz/**/*.html",
+      "use": "@vercel/static"
+    },
+{
+      "src": "medicamentdz/**/*.json",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "templates/*.pdf",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "ordonnance type/**/*",
       "use": "@vercel/static"
     }
   ],
   "routes": [
     {
-      "src": "/(.+\\.(js|css|json|png|jpg|jpeg|gif|svg|ico|woff|woff2|ttf|eot|txt|pdf|zip|map))$",
-      "dest": "/$1"
+      "src": "/styles/(.*)",
+      "dest": "/styles/$1"
     },
     {
-      "src": "/options.html",
-      "dest": "/options.html"
+      "src": "/dece/(.*)",
+      "dest": "/dece/$1"
     },
     {
-      "src": "/(.*)",
-      "dest": "/index.html"
+      "src": "/ordonnance/(.*)",
+      "dest": "/ordonnance/$1"
+    },
+    {
+      "src": "/score/(.*)",
+      "dest": "/score/$1"
+    },
+{
+      "src": "/medicamentdz/(.*)",
+      "dest": "/medicamentdz/$1"
+    },
+    {
+      "src": "/ordonnance type/(.*)",
+      "dest": "/ordonnance type/$1"
+    },
+    {
+      "src": "/(.*)\\.json",
+      "dest": "/$1.json"
+    },
+    {
+      "src": "/api/lister_dece",
+      "dest": "/api/lister_dece.js"
+    },
+    {
+      "src": "/api/supprimer_dece",
+      "dest": "/api/supprimer_dece.js"
+    },
+    {
+      "src": "/api/ajouter_dece",
+      "dest": "/api/ajouter_dece.js"
+    },
+    {
+      "src": "/api/modifier_dece",
+      "dest": "/api/modifier_dece.js"
+    },
+    {
+      "src": "/api/recuperer_donnees",
+      "dest": "/api/recuperer_donnees.js"
+    },
+    {
+      "src": "(.*)",
+      "dest": "/$1.html"
+    }
+  ],
+   "env": {
+    "WRITE_PASSWORD": "DAOUDI",
+    "SUPABASE_URL": "https://nlvrgabznsmzodnylyly.supabase.co",
+    "SUPABASE_KEY": "sb_secret_Tb8bBtKCx2bS7L2me8boZA_pHZintts"
+  },
+"rewrites": [
+    { "source": "/ordonnance type/api/config.js", "destination": "/ordonnance type/api/config.js" },
+    { "source": "/ordonnance type/api/save-supabase", "destination": "/ordonnance type/api/save-supabase.js" },
+    { "source": "/ordonnances-types.json", "destination": "/ordonnances-types.json" }
+  ],
+"headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "Access-Control-Allow-Origin", "value": "*" }
+      ]
+    },
+    {
+      "source": "/(.*)\\.js",
+      "headers": [
+        { "key": "Content-Type", "value": "application/javascript; charset=utf-8" }
+      ]
+    },
+    {
+      "source": "/(.*)\\.json",
+      "headers": [
+        { "key": "Content-Type", "value": "application/json; charset=utf-8" }
+      ]
     }
   ]
+
 }

@@ -1,111 +1,152 @@
-// --- Service pour gérer la mémoire locale ---
-const storageService = {
-    getTerms: function () {
-        return new Promise((resolve) => {
-            chrome.storage.local.get(['medicalTerms'], (result) => {
-                const terms = result.medicalTerms || [];
-                console.log('Loaded terms:', terms);
-                resolve(terms);
-            });
-        });
-    },
+// Background script pour l'extension Chrome
 
-    saveTerms: function (terms) {
-        return new Promise((resolve) => {
-            if (!Array.isArray(terms)) {
-                console.error('Invalid terms format:', terms);
-                resolve(false);
-                return;
-            }
+let db = null;
 
-            const uniqueTerms = [...new Set(terms)].sort();
-
-            chrome.storage.local.set({ medicalTerms: uniqueTerms }, () => {
-                console.log('Saved terms:', uniqueTerms);
-                resolve(true);
-            });
-        });
-    }
-};
-
-// --- Quand on clique sur l’icône ---
-chrome.action.onClicked.addListener(() => {
-    chrome.tabs.create({
-        url: chrome.runtime.getURL("popup.html")
-    });
-});
-
-// --- Listener messages ---
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-    if (request.action === 'getTerms') {
-        storageService.getTerms().then(terms => {
-            sendResponse({ terms: terms });
-        });
-        return true;
-
-    } else if (request.action === 'saveTerms') {
-        if (request.terms) {
-            storageService.saveTerms(request.terms).then(success => {
-                sendResponse({ success: success });
-            });
-            return true;
-        }
-
-    } else if (request.action === 'extractInfo' && request.tabId) {
-        chrome.scripting.executeScript(
-            {
-                target: { tabId: request.tabId },
-                func: extractAndStoreInfo
-            },
-            (results) => {
-                if (chrome.runtime.lastError) {
-                    console.error("Erreur injection:", chrome.runtime.lastError.message);
-                    sendResponse({ data: null });
-                    return;
-                }
-                if (results && results[0] && results[0].result) {
-                    sendResponse({ data: results[0].result });
-                } else {
-                    sendResponse({ data: null });
-                }
-            }
-        );
-        return true; // async
-    }
-
-    return false;
-});
-
-// --- Fonction injectée dans la page active ---
-function extractAndStoreInfo() {
-    const nom = document.querySelector("c[type='nom']")?.innerText || "";
-    const prenom = document.querySelector("c[type='prenom']")?.innerText || "";
-    const dobElement = document.querySelector(".widget-user-desc");
-    const dob = dobElement ? dobElement.innerText.replace("Date de naissance : ", "").trim() : "";
-
-    let numero = "";
-    document.querySelectorAll("td").forEach(td => {
-        if (td.textContent.includes("Numero :")) {
-            numero = td.nextElementSibling ? td.nextElementSibling.innerText : "";
-        }
-    });
-
-    let etablissementFr = 'Nom français non trouvé';
-    let etablissementAr = 'Nom arabe non trouvé';
-
-    const scriptTags = document.getElementsByTagName('script');
-    for (let i = 0; i < scriptTags.length; i++) {
-        const script = scriptTags[i];
-        if (script.textContent) {
-            const regex = /<tr>.*?<td[^>]*colspan="2"[^>]*>(.*?)<\/td>.*?<td[^>]*colspan="2"[^>]*rowspan="3"[^>]*>(.*?)<\/td>.*?<\/tr>/is;
-            const match = script.textContent.match(regex);
-            if (match) {
-                etablissementFr = match[1].trim();
-                etablissementAr = match[2].trim();
-                break;
-            }
-        }
-    }
-
-    return { nom, prenom, dob, numero, etablissementFr, etablissementAr };
+// Initialiser la base de données IndexedDB
+function initDB() {
+  return new Promise((resolve, reject) => {
+    const request = indexedDB.open('CertificatsDB', 1);
+    
+    request.onerror = () => reject(request.error);
+    request.onsuccess = () => {
+      db = request.result;
+      resolve(db);
+    };
+    
+    request.onupgradeneeded = (event) => {
+      db = event.target.result;
+      
+      // Créer les object stores pour différents types de certificats
+      if (!db.objectStoreNames.contains('arretsTravail')) {
+        db.createObjectStore('arretsTravail', { keyPath: 'id', autoIncrement: true });
+      }
+      if (!db.objectStoreNames.contains('prolongations')) {
+        db.createObjectStore('prolongations', { keyPath: 'id', autoIncrement: true });
+      }
+      if (!db.objectStoreNames.contains('cbv')) {
+        db.createObjectStore('cbv', { keyPath: 'id', autoIncrement: true });
+      }
+      if (!db.objectStoreNames.contains('antirabiques')) {
+        db.createObjectStore('antirabiques', { keyPath: 'id', autoIncrement: true });
+      }
+      if (!db.objectStoreNames.contains('deces')) {
+        db.createObjectStore('deces', { keyPath: 'id', autoIncrement: true });
+      }
+    };
+  });
 }
+
+// Sauvegarder un certificat dans IndexedDB
+function saveCertificate(storeName, data) {
+  return new Promise((resolve, reject) => {
+    const transaction = db.transaction([storeName], 'readwrite');
+    const store = transaction.objectStore(storeName);
+    const request = store.add({
+      ...data,
+      date_sauvegarde: new Date().toISOString()
+    });
+    
+    request.onsuccess = () => resolve(request.result);
+    request.onerror = () => reject(request.error);
+  });
+}
+
+// Récupérer tous les certificats d'un type
+function getCertificates(storeName) {
+  return new Promise((resolve, reject) => {
+    const transaction = db.transaction([storeName], 'readonly');
+    const store = transaction.objectStore(storeName);
+    const request = store.getAll();
+    
+    request.onsuccess = () => resolve(request.result);
+    request.onerror = () => reject(request.error);
+  });
+}
+
+// Initialiser la base de données au démarrage
+initDB().then(() => {
+  console.log('Base de données initialisée avec succès');
+}).catch(error => {
+  console.error('Erreur lors de l\'initialisation de la base de données:', error);
+});
+
+// Écouter les messages des pages web externes
+chrome.runtime.onMessageExternal.addListener((request, sender, sendResponse) => {
+  console.log('Message reçu de:', sender.origin, request);
+  console.log('URL de l\'expéditeur:', sender.url);
+  
+  // Traiter différentes actions
+  if (request.action === 'getArretsTravail') {
+    console.log('Traitement de getArretsTravail');
+    getCertificates('arretsTravail')
+      .then(data => {
+        console.log('Données récupérées:', data);
+        sendResponse({ success: true, data: data });
+      })
+      .catch(error => {
+        console.error('Erreur lors de la récupération:', error);
+        sendResponse({ success: false, error: error.message });
+      });
+    return true; // Garder le canal de réponse ouvert
+  }
+  
+  if (request.action === 'addArretTravail') {
+    console.log('Traitement de addArretTravail avec données:', request.arretData);
+    saveCertificate('arretsTravail', request.arretData)
+      .then(id => {
+        console.log('Certificat sauvegardé avec ID:', id);
+        sendResponse({ success: true, data: { id } });
+      })
+      .catch(error => {
+        console.error('Erreur lors de la sauvegarde:', error);
+        sendResponse({ success: false, error: error.message });
+      });
+    return true;
+  }
+  
+  // Ajouter d'autres actions selon les besoins
+  if (request.action === 'ajouter_arret_travail') {
+    console.log('Traitement de ajouter_arret_travail avec données:', request);
+    saveCertificate('arretsTravail', request)
+      .then(id => {
+        console.log('Arrêt de travail sauvegardé avec ID:', id);
+        sendResponse({ success: true, data: { id } });
+      })
+      .catch(error => {
+        console.error('Erreur lors de la sauvegarde:', error);
+        sendResponse({ success: false, error: error.message });
+      });
+    return true;
+  }
+  
+  console.log('Action non reconnue:', request.action);
+  // Action par défaut
+  sendResponse({ success: false, error: 'Action non reconnue: ' + request.action });
+});
+
+// Écouter les messages internes (popup, content script)
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  console.log('Message interne reçu:', request);
+  
+  if (request.action === 'getData') {
+    Promise.all([
+      getCertificates('arretsTravail'),
+      getCertificates('prolongations'),
+      getCertificates('cbv')
+    ]).then(([arrets, prolongations, cbv]) => {
+      sendResponse({
+        success: true,
+        data: {
+          arretsTravail: arrets,
+          prolongations: prolongations,
+          cbv: cbv
+        }
+      });
+    }).catch(error => {
+      sendResponse({ success: false, error: error.message });
+    });
+    return true;
+  }
+  
+  sendResponse({ success: false, error: 'Action interne non reconnue' });
+});

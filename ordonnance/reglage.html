@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Réglages des Coordonnées - Ordonnance</title>
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary-color: #059669;
+            --background-color: #f8fafc;
+            --surface-color: #ffffff;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --border-color: #e2e8f0;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            --border-radius: 12px;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+            padding: 2rem;
+            margin: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: var(--text-primary);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: var(--surface-color);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            box-shadow: var(--shadow-md);
+        }
+
+        h1 {
+            text-align: center;
+            color: var(--primary-color);
+            margin-bottom: 2rem;
+            font-size: 1.5rem;
+        }
+
+        h2 {
+            color: var(--text-primary);
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .coord-row {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            align-items: center;
+            padding: 1rem;
+            background: #f8fafc;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+
+        .coord-label {
+            flex: 0 0 200px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .coord-inputs {
+            display: flex;
+            gap: 0.75rem;
+            flex: 1;
+        }
+
+        .coord-inputs label {
+            display: flex;
+            flex-direction: column;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        input[type="number"] {
+            width: 80px;
+            padding: 0.5rem;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 0.9rem;
+            text-align: center;
+        }
+
+        input[type="number"]:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgb(37 99 235 / 0.1);
+        }
+
+        .preview-section {
+            margin-top: 2rem;
+            padding: 1rem;
+            background: #f1f5f9;
+            border-radius: 8px;
+            border: 2px dashed var(--border-color);
+        }
+
+        .preview-area {
+            position: relative;
+            width: 100%;
+            height: 300px;
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 1rem;
+            user-select: none;
+        }
+
+        .preview-item {
+            position: absolute;
+            padding: 4px 8px;
+            background: rgba(37, 99, 235, 0.1);
+            border: 1px solid var(--primary-color);
+            border-radius: 4px;
+            font-size: 0.8rem;
+            color: var(--primary-color);
+            cursor: move;
+            white-space: nowrap;
+            transition: box-shadow 0.2s, transform 0.1s;
+        }
+
+        .preview-item:hover {
+            box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
+        }
+
+        .preview-item.dragging {
+            opacity: 0.8;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.5);
+            z-index: 1000;
+            transform: scale(1.05);
+        }
+
+        .preview-item.selected {
+            background: rgba(37, 99, 235, 0.2);
+            border: 2px solid var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+        }
+
+        .help-text {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            text-align: center;
+            margin-top: 0.5rem;
+            font-style: italic;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 0.75rem;
+            margin-top: 2rem;
+            justify-content: center;
+        }
+
+        button {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: var(--secondary-color);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #047857;
+            transform: translateY(-1px);
+        }
+
+        .btn-danger {
+            background: #dc2626;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #b91c1c;
+            transform: translateY(-1px);
+        }
+
+        .status-message {
+            text-align: center;
+            padding: 0.75rem;
+            margin-top: 1rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            display: none;
+        }
+
+        .status-message.success {
+            background: #dcfce7;
+            color: #166534;
+            border: 1px solid #86efac;
+        }
+
+        .status-message.error {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fca5a5;
+        }
+
+        .unit {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-left: 0.25rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Réglage des Coordonnées - En-tête Personnalisé</h1>
+
+        <h2>Position des Informations Patient</h2>
+        
+        <div class="form-group">
+            <div class="coord-row">
+                <div class="coord-label">Nom</div>
+                <div class="coord-inputs">
+                    <label>
+                        Position X
+                        <input type="number" id="nom-x" value="50" min="0" max="500">
+                        <span class="unit">px</span>
+                    </label>
+                    <label>
+                        Position Y
+                        <input type="number" id="nom-y" value="100" min="0" max="700">
+                        <span class="unit">px</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="coord-row">
+                <div class="coord-label">Prénom</div>
+                <div class="coord-inputs">
+                    <label>
+                        Position X
+                        <input type="number" id="prenom-x" value="50" min="0" max="500">
+                        <span class="unit">px</span>
+                    </label>
+                    <label>
+                        Position Y
+                        <input type="number" id="prenom-y" value="130" min="0" max="700">
+                        <span class="unit">px</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="coord-row">
+                <div class="coord-label">Âge</div>
+                <div class="coord-inputs">
+                    <label>
+                        Position X
+                        <input type="number" id="age-x" value="300" min="0" max="500">
+                        <span class="unit">px</span>
+                    </label>
+                    <label>
+                        Position Y
+                        <input type="number" id="age-y" value="100" min="0" max="700">
+                        <span class="unit">px</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="coord-row">
+                <div class="coord-label">Date de naissance</div>
+                <div class="coord-inputs">
+                    <label>
+                        Position X
+                        <input type="number" id="date-naissance-x" value="300" min="0" max="500">
+                        <span class="unit">px</span>
+                    </label>
+                    <label>
+                        Position Y
+                        <input type="number" id="date-naissance-y" value="130" min="0" max="700">
+                        <span class="unit">px</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="coord-row">
+                <div class="coord-label">Date de consultation</div>
+                <div class="coord-inputs">
+                    <label>
+                        Position X
+                        <input type="number" id="date-consultation-x" value="50" min="0" max="500">
+                        <span class="unit">px</span>
+                    </label>
+                    <label>
+                        Position Y
+                        <input type="number" id="date-consultation-y" value="170" min="0" max="700">
+                        <span class="unit">px</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="coord-row">
+                <div class="coord-label">Numéro patient</div>
+                <div class="coord-inputs">
+                    <label>
+                        Position X
+                        <input type="number" id="numero-x" value="300" min="0" max="500">
+                        <span class="unit">px</span>
+                    </label>
+                    <label>
+                        Position Y
+                        <input type="number" id="numero-y" value="170" min="0" max="700">
+                        <span class="unit">px</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <div class="preview-section">
+            <h2>Aperçu visuel</h2>
+            <div class="preview-area" id="preview-area">
+                <div class="preview-item" id="preview-nom" data-target="nom" style="left: 50px; top: 100px;">Nom</div>
+                <div class="preview-item" id="preview-prenom" data-target="prenom" style="left: 50px; top: 130px;">Prénom</div>
+                <div class="preview-item" id="preview-age" data-target="age" style="left: 300px; top: 100px;">Âge</div>
+                <div class="preview-item" id="preview-date-naissance" data-target="date-naissance" style="left: 300px; top: 130px;">Date naissance</div>
+                <div class="preview-item" id="preview-date-consultation" data-target="date-consultation" style="left: 50px; top: 170px;">Date consultation</div>
+                <div class="preview-item" id="preview-numero" data-target="numero" style="left: 300px; top: 170px;">Numéro</div>
+            </div>
+            <p class="help-text">Glissez-déposez les éléments pour ajuster leur position, ou modifiez les valeurs ci-dessus</p>
+        </div>
+
+        <div class="button-group">
+            <button class="btn-primary" id="btn-sauvegarder">
+                Sauvegarder
+            </button>
+            <button class="btn-secondary" id="btn-appliquer">
+                Appliquer
+            </button>
+            <button class="btn-danger" id="btn-reinitialiser">
+                Réinitialiser
+            </button>
+            <button class="btn-secondary" id="btn-fermer">
+                Fermer
+            </button>
+        </div>
+
+        <div id="status-message" class="status-message"></div>
+    </div>
+
+    <script src="reglage.js"></script>
+</body>
+</html>
