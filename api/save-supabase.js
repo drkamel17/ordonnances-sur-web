@@ -134,6 +134,7 @@ export async function POST(request) {
     // Sans mot de passe → sauvegarder comme pending (nouvelle ordonnance uniquement)
     if (!password && username) {
       console.log('Sauvegarde pending avec username:', username);
+      console.log('Data a sauvegarder:', Object.keys(data).length, 'ordonnances');
       
       // Créer un ID unique pour cet utilisateur
       const pendingId = `pending_${username.toLowerCase().replace(/\s+/g, '_')}`;
@@ -149,49 +150,26 @@ export async function POST(request) {
       });
       
       let pendingData = {};
+      let method = 'POST';
+      let url = `${supabaseUrl}/rest/v1/ordonnances`;
       
       if (existingResponse.ok) {
         const existing = await existingResponse.json();
         if (existing.length > 0) {
+          // Utilisateur a déjà un pending, on récupère ses données
           pendingData = existing[0].data || {};
+          method = 'PATCH';
+          url = `${supabaseUrl}/rest/v1/ordonnances?id=eq.${pendingId}`;
+          console.log('Pending existant trouvé, données:', Object.keys(pendingData).length);
         }
       }
       
-      // Ajouter seulement les nouvelles ordonnances (pas celles qui existent déjà dans default)
-      const defaultResponse = await fetch(`${supabaseUrl}/rest/v1/ordonnances?id=eq.default`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          'apikey': supabaseKey,
-          'Authorization': `Bearer ${supabaseKey}`
-        }
-      });
-      
-      let confirmedData = {};
-      if (defaultResponse.ok) {
-        const confirmed = await defaultResponse.json();
-        if (confirmed.length > 0) {
-          confirmedData = confirmed[0].data || {};
-        }
-      }
-      
-      // Ajouter seulement les ordonnances qui ne sont pas dans default
+      // Ajouter toutes les données envoyées (sans filtrage)
       Object.keys(data).forEach(key => {
-        if (!confirmedData[key]) {
-          pendingData[key] = data[key];
-        }
+        pendingData[key] = data[key];
       });
       
-      // Maintenant mettre à jour ou créer pending pour cet utilisateur
-      let method = 'POST';
-      let url = `${supabaseUrl}/rest/v1/ordonnances`;
-      
-      // Vérifier si ce user a déjà un pending
-      if (Object.keys(pendingData).length > 0) {
-        // Mettre à jour le pending existant de cet utilisateur
-        method = 'PATCH';
-        url = `${supabaseUrl}/rest/v1/ordonnances?id=eq.${pendingId}`;
-      }
+      console.log('Pending final:', Object.keys(pendingData).length, 'ordonnances');
       
       const finalData = {
         ...(method === 'PATCH' ? {} : { id: pendingId }),
@@ -224,6 +202,7 @@ export async function POST(request) {
       }
       
       const error = await response.text();
+      console.log('Erreur:', error);
       return new Response(JSON.stringify({ success: false, message: error }), { status: 500, headers: { 'Content-Type': 'application/json' } });
     }
     
