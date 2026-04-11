@@ -96,7 +96,6 @@
   ],
   "routes": [
     {
-    {
       "src": "/styles/(.*)",
       "dest": "/styles/$1"
     },
