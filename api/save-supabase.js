@@ -131,6 +131,55 @@ export async function POST(request) {
       return new Response(JSON.stringify({ success: response.ok, message: response.ok ? 'Rejete' : 'Erreur' }), { headers: { 'Content-Type': 'application/json' } });
     }
     
+    // Action: Modifier (admin modifie les medicaments d'un pending)
+    if (action === 'modify' && pendingId && titre && nouveauxMedicaments) {
+      if (!password || password !== writePassword) {
+        return new Response(JSON.stringify({ success: false, message: 'Mot de passe admin requis' }), { status: 401, headers: { 'Content-Type': 'application/json' } });
+      }
+      
+      // Récupérer le pending actuel
+      const pendingResponse = await fetch(`${supabaseUrl}/rest/v1/ordonnances?id=eq.${pendingId}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': supabaseKey,
+          'Authorization': `Bearer ${supabaseKey}`
+        }
+      });
+      
+      if (!pendingResponse.ok) {
+        return new Response(JSON.stringify({ success: false, message: 'Pending non trouvé' }), { status: 404, headers: { 'Content-Type': 'application/json' } });
+      }
+      
+      const pendingResult = await pendingResponse.json();
+      if (pendingResult.length === 0) {
+        return new Response(JSON.stringify({ success: false, message: 'Aucune donnée pending' }), { status: 404, headers: { 'Content-Type': 'application/json' } });
+      }
+      
+      // Modifier les médicaments
+      const pendingData = pendingResult[0].data || {};
+      if (pendingData[titre]) {
+        pendingData[titre] = nouveauxMedicaments;
+      }
+      
+      // Sauvegarder
+      const updateResponse = await fetch(`${supabaseUrl}/rest/v1/ordonnances?id=eq.${pendingId}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': supabaseKey,
+          'Authorization': `Bearer ${supabaseKey}`,
+          'Prefer': 'return=minimal'
+        },
+        body: JSON.stringify({
+          data: pendingData,
+          updated_at: new Date().toISOString()
+        })
+      });
+      
+      return new Response(JSON.stringify({ success: updateResponse.ok, message: updateResponse.ok ? 'Modifie' : 'Erreur' }), { headers: { 'Content-Type': 'application/json' } });
+    }
+    
     // Sans mot de passe → sauvegarder comme pending (nouvelle ordonnance uniquement)
     if (!password && username) {
       console.log('Sauvegarde pending avec username:', username);
@@ -164,11 +213,32 @@ export async function POST(request) {
         }
       }
       
-      // Ajouter toutes les données envoyées (sans filtrage)
+      // Récupérer les données default pour éviter les doublons
+      const defaultResponse = await fetch(`${supabaseUrl}/rest/v1/ordonnances?id=eq.default`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': supabaseKey,
+          'Authorization': `Bearer ${supabaseKey}`
+        }
+      });
+      
+      let defaultData = {};
+      if (defaultResponse.ok) {
+        const defaultResult = await defaultResponse.json();
+        if (defaultResult.length > 0) {
+          defaultData = defaultResult[0].data || {};
+        }
+      }
+      
+      // Ajouter seulement les nouvelles ordonnances (pas celles qui sont déjà dans default)
       Object.keys(data).forEach(key => {
         // Ajouter le nom d'utilisateur au titre
         const newKey = `${key} (par ${username})`;
-        pendingData[newKey] = data[key];
+        // Ne pas ajouter si cette clé existe déjà dans default
+        if (!defaultData[key]) {
+          pendingData[newKey] = data[key];
+        }
       });
       
       console.log('Pending final:', Object.keys(pendingData).length, 'ordonnances');

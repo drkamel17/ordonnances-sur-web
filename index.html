@@ -254,18 +254,23 @@
                     // Afficher chaque ordonnance avec ses médicaments
                     let ordonnancesHTML = '';
                     if (user.data) {
-                        Object.keys(user.data).forEach(titre => {
+                        Object.keys(user.data).forEach((titre, index) => {
                             const meds = user.data[titre];
                             let medsList = '';
                             if (Array.isArray(meds)) {
-                                meds.forEach(m => {
-                                    medsList += `<li>${m.medicament} - ${m.posologie} - ${m.quantite}</li>`;
+                                meds.forEach((m, mIndex) => {
+                                    medsList += `<li>
+                                        <input type="text" value="${m.medicament}" id="med_${index}_${mIndex}_med" style="width:120px"> - 
+                                        <input type="text" value="${m.posologie}" id="med_${index}_${mIndex}_pos" style="width:100px"> - 
+                                        <input type="text" value="${m.quantite}" id="med_${index}_${mIndex}_qte" style="width:50px">
+                                    </li>`;
                                 });
                             }
                             ordonnancesHTML += `
                                 <div style="margin: 10px 0; padding: 10px; background: white; border-radius: 5px;">
                                     <strong style="color: #1976d2;">${titre}</strong>
                                     <ul style="margin: 5px 0; padding-left: 20px; font-size: 0.9em;">${medsList}</ul>
+                                    <button onclick="modifierPending('${user.id}', '${titre}', ${index})" style="background: #2196F3; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer;">Enregistrer Modifications</button>
                                 </div>
                             `;
                         });
@@ -285,6 +290,57 @@
         } catch (e) {
             console.error(e);
             document.getElementById('pending-list').innerHTML = '<p>Erreur de chargement</p>';
+        }
+    }
+    
+    async function modifierPending(userId, titre, index) {
+        const password = prompt('Entrez le mot de passe admin pour modifier:');
+        if (password !== 'DAOUDI') {
+            alert('Mot de passe incorrect');
+            return;
+        }
+        
+        // Récupérer toutes les données de l'utilisateur
+        try {
+            const response = await fetch('/api/save-supabase?pending=true');
+            const result = await response.json();
+            
+            const user = result.users.find(u => u.id === userId);
+            if (!user || !user.data[titre]) {
+                alert('Ordonnance non trouvée');
+                return;
+            }
+            
+            // Récupérer les valeurs modifiées
+            const meds = user.data[titre];
+            const medsModifies = meds.map((m, mIndex) => ({
+                medicament: document.getElementById(`med_${index}_${mIndex}_med`).value,
+                posologie: document.getElementById(`med_${index}_${mIndex}_pos`).value,
+                quantite: document.getElementById(`med_${index}_${mIndex}_qte`).value
+            }));
+            
+            // Sauvegarder les modifications
+            const saveResponse = await fetch('/api/save-supabase', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    action: 'modify',
+                    password: password,
+                    pendingId: userId,
+                    titre: titre,
+                    nouveauxMedicaments: medsModifies
+                })
+            });
+            
+            const saveResult = await saveResponse.json();
+            if (saveResult.success) {
+                alert('Modifications enregistrées!');
+                await chargerPending();
+            } else {
+                alert('Erreur: ' + saveResult.message);
+            }
+        } catch (e) {
+            alert('Erreur');
         }
     }
     
