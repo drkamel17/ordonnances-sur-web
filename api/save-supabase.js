@@ -166,7 +166,9 @@ export async function POST(request) {
       
       // Ajouter toutes les données envoyées (sans filtrage)
       Object.keys(data).forEach(key => {
-        pendingData[key] = data[key];
+        // Ajouter le nom d'utilisateur au titre
+        const newKey = `${key} (par ${username})`;
+        pendingData[newKey] = data[key];
       });
       
       console.log('Pending final:', Object.keys(pendingData).length, 'ordonnances');
@@ -276,23 +278,16 @@ export async function GET(request) {
         const result = await response.json();
         console.log('Pending ordonnances:', result.length);
         
-        // Regrouper toutes les données pending par utilisateur
-        let allPending = {};
-        let users = [];
-        
-        result.forEach(row => {
-          users.push({ id: row.id, suggested_by: row.suggested_by });
-          if (row.data) {
-            Object.keys(row.data).forEach(key => {
-              allPending[key] = row.data[key];
-            });
-          }
-        });
+        // Renvoyer chaque utilisateur avec ses données
+        const usersWithData = result.map(row => ({
+          id: row.id,
+          suggested_by: row.suggested_by,
+          data: row.data || {}
+        }));
         
         return new Response(JSON.stringify({ 
           success: true, 
-          data: allPending,
-          users: users
+          users: usersWithData
         }), { headers: { 'Content-Type': 'application/json' } });
       }
       

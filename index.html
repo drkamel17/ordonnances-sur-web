@@ -251,9 +251,29 @@
                     
                     const username = user.suggested_by || user.id.replace('pending_', '');
                     
+                    // Afficher chaque ordonnance avec ses médicaments
+                    let ordonnancesHTML = '';
+                    if (user.data) {
+                        Object.keys(user.data).forEach(titre => {
+                            const meds = user.data[titre];
+                            let medsList = '';
+                            if (Array.isArray(meds)) {
+                                meds.forEach(m => {
+                                    medsList += `<li>${m.medicament} - ${m.posologie} - ${m.quantite}</li>`;
+                                });
+                            }
+                            ordonnancesHTML += `
+                                <div style="margin: 10px 0; padding: 10px; background: white; border-radius: 5px;">
+                                    <strong style="color: #1976d2;">${titre}</strong>
+                                    <ul style="margin: 5px 0; padding-left: 20px; font-size: 0.9em;">${medsList}</ul>
+                                </div>
+                            `;
+                        });
+                    }
+                    
                     div.innerHTML = `
                         <h4 style="margin: 0 0 10px 0; color: #e65100;">Utilisateur: ${username}</h4>
-                        <p style="color: #666;">ID: ${user.id}</p>
+                        <div style="margin: 10px 0;">${ordonnancesHTML}</div>
                         <button onclick="confirmer('${user.id}')" style="background: #4CAF50; color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer; margin-right: 10px;">Confirmer</button>
                         <button onclick="rejeter('${user.id}')" style="background: #f44336; color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer;">Rejeter</button>
                     `;
