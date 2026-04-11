@@ -90,38 +90,26 @@
       "use": "@vercel/static"
     },
     {
-      "src": "ordonnance type/api/config.js",
-      "use": "@vercel/node"
+      "src": "ordonnance%20type/**/*",
+      "use": "@vercel/static"
     },
-    {
-      "src": "ordonnance type/api/save-supabase.js",
-      "use": "@vercel/node"
-    },
-    {
-      "src": "ordonnance type/api/save.js",
-      "use": "@vercel/node"
-    },
-    {
-      "src": "ordonnance type/api/save-github.js",
-      "use": "@vercel/node"
-    }
-  ],
+    ],
 "routes": [
     {
       "src": "/api/config.js",
-      "dest": "/ordonnance type/api/config.js"
+      "dest": "/ordonnance%20type/api/config.js"
     },
     {
       "src": "/api/save-supabase",
-      "dest": "/ordonnance type/api/save-supabase.js"
+      "dest": "/ordonnance%20type/api/save-supabase.js"
     },
     {
       "src": "/api/save",
-      "dest": "/ordonnance type/api/save.js"
+      "dest": "/ordonnance%20type/api/save.js"
     },
     {
       "src": "/api/save-github",
-      "dest": "/ordonnance type/api/save-github.js"
+      "dest": "/ordonnance%20type/api/save-github.js"
     },
     {
       "src": "/styles/(.*)",
@@ -143,32 +131,32 @@
       "src": "/medicamentdz/(.*)",
       "dest": "/medicamentdz/$1"
     },
-    {
-      "src": "/ordonnance type/(.*)",
-      "dest": "/ordonnance type/$1"
-    },
-    {
-      "src": "/ordonnance type/api/config.js",
-      "dest": "/ordonnance type/api/config.js"
-    },
-    {
-      "src": "/ordonnance type/api/save-supabase.js",
-      "dest": "/ordonnance type/api/save-supabase.js"
-    },
 {
-      "src": "/ordonnance type/api/save.js",
-      "dest": "/ordonnance type/api/save.js"
+      "src": "/ordonnance%20type/(.*)",
+      "dest": "/ordonnance%20type/$1"
     },
     {
-      "src": "/ordonnance type/api/save-github.js",
-      "dest": "/ordonnance type/api/save-github.js"
+      "src": "/ordonnance%20type/api/config.js",
+      "dest": "/ordonnance%20type/api/config.js"
     },
     {
-      "src": "/ordonnance type/ordonnances-types.json",
+      "src": "/ordonnance%20type/api/save-supabase.js",
+      "dest": "/ordonnance%20type/api/save-supabase.js"
+    },
+    {
+      "src": "/ordonnance%20type/api/save.js",
+      "dest": "/ordonnance%20type/api/save.js"
+    },
+    {
+      "src": "/ordonnance%20type/api/save-github.js",
+      "dest": "/ordonnance%20type/api/save-github.js"
+    },
+    {
+      "src": "/ordonnance%20type/ordonnances-types.json",
       "dest": "/ordonnance/ordonnances-types.json"
     },
     {
-      "src": "/ordonnance type/medicaments.json",
+      "src": "/ordonnance%20type/medicaments.json",
       "dest": "/ordonnance/medicaments.json"
     },
     {
@@ -206,8 +194,8 @@
     "SUPABASE_KEY": "sb_secret_Tb8bBtKCx2bS7L2me8boZA_pHZintts"
   },
 "rewrites": [
-    { "source": "/ordonnance type/api/config.js", "destination": "/ordonnance type/api/config.js" },
-    { "source": "/ordonnance type/api/save-supabase", "destination": "/ordonnance type/api/save-supabase.js" },
+    { "source": "/ordonnance%20type/api/config.js", "destination": "/ordonnance%20type/api/config.js" },
+    { "source": "/ordonnance%20type/api/save-supabase", "destination": "/ordonnance%20type/api/save-supabase.js" },
     { "source": "/ordonnances-types.json", "destination": "/ordonnances-types.json" }
   ],
 "headers": [
