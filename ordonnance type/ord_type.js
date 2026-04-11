@@ -17,13 +17,14 @@ async function loadConfig() {
         const match = script.match(/window\.ENV\s*=\s*(\{[^}]+\})/);
         if (match) {
             const env = JSON.parse(match[1]);
-            console.log('Config chargee:', env);
+            console.log('Config chargee:', { SUPABASE_URL: env.SUPABASE_URL, configured: env.configured });
             
-            supabaseConfig = {
-                url: env.SUPABASE_URL || '',
-                key: env.SUPABASE_KEY || ''
-            };
-            console.log('Supabase config:', supabaseConfig);
+            if (env.configured) {
+                supabaseConfig = {
+                    url: env.SUPABASE_URL || '',
+                    key: 'configured'
+                };
+            }
         }
     } catch (err) {
         console.log('Config non chargee:', err);
