@@ -237,33 +237,34 @@
             const response = await fetch('/api/save-supabase?pending=true');
             const result = await response.json();
             
-            if (result.success && result.data) {
-                const list = document.getElementById('pending-list');
-                list.innerHTML = '';
-                
-                Object.keys(result.data).forEach(titre => {
+            const list = document.getElementById('pending-list');
+            list.innerHTML = '';
+            
+            if (result.success && result.users && result.users.length > 0) {
+                result.users.forEach(user => {
                     const div = document.createElement('div');
-                    div.style.padding = '10px';
+                    div.style.padding = '15px';
                     div.style.margin = '10px 0';
-                    div.style.border = '1px solid #ccc';
-                    div.style.borderRadius = '5px';
+                    div.style.border = '2px solid #ff9800';
+                    div.style.borderRadius = '8px';
+                    div.style.background = '#fff3e0';
                     
-                    const titreDisplay = result.suggested_by ? `${titre} (par ${result.suggested_by})` : titre;
+                    const username = user.suggested_by || user.id.replace('pending_', '');
                     
                     div.innerHTML = `
-                        <p><strong>${titreDisplay}</strong></p>
-                        <button onclick="confirmer('${titre}')" style="background: #4CAF50; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer;">Confirmer</button>
-                        <button onclick="rejeter('${titre}')" style="background: #f44336; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; margin-left: 10px;">Rejeter</button>
+                        <h4 style="margin: 0 0 10px 0; color: #e65100;">Utilisateur: ${username}</h4>
+                        <p style="color: #666;">ID: ${user.id}</p>
+                        <button onclick="confirmer('${user.id}')" style="background: #4CAF50; color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer; margin-right: 10px;">Confirmer</button>
+                        <button onclick="rejeter('${user.id}')" style="background: #f44336; color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer;">Rejeter</button>
                     `;
                     list.appendChild(div);
                 });
-                
-                if (Object.keys(result.data).length === 0) {
-                    list.innerHTML = '<p>Aucune ordonnance en attente</p>';
-                }
+            } else {
+                list.innerHTML = '<p>Aucune ordonnance en attente</p>';
             }
         } catch (e) {
             console.error(e);
+            document.getElementById('pending-list').innerHTML = '<p>Erreur de chargement</p>';
         }
     }
     

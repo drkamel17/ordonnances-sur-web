@@ -37,8 +37,11 @@ export async function POST(request) {
         return new Response(JSON.stringify({ success: false, message: 'Mot de passe admin requis' }), { status: 401, headers: { 'Content-Type': 'application/json' } });
       }
       
-      // Récupérer les données pending
-      const pendingResponse = await fetch(`${supabaseUrl}/rest/v1/ordonnances?id=eq.pending`, {
+      // Le pendingKey contient l'ID complet comme "pending_ahmed"
+      const pendingId = pendingKey;
+      
+      // Récupérer les données pending pour cet utilisateur
+      const pendingResponse = await fetch(`${supabaseUrl}/rest/v1/ordonnances?id=eq.${pendingId}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -98,8 +101,8 @@ export async function POST(request) {
         })
       });
       
-      // Supprimer le pending
-      await fetch(`${supabaseUrl}/rest/v1/ordonnances?id=eq.pending`, {
+      // Supprimer le pending de cet utilisateur
+      await fetch(`${supabaseUrl}/rest/v1/ordonnances?id=eq.${pendingId}`, {
         method: 'DELETE',
         headers: {
           'apikey': supabaseKey,
@@ -116,8 +119,8 @@ export async function POST(request) {
         return new Response(JSON.stringify({ success: false, message: 'Mot de passe admin requis' }), { status: 401, headers: { 'Content-Type': 'application/json' } });
       }
       
-      // Supprimer la ligne pending
-      const response = await fetch(`${supabaseUrl}/rest/v1/ordonnances?id=eq.pending`, {
+      // Supprimer la ligne pending pour cet utilisateur
+      const response = await fetch(`${supabaseUrl}/rest/v1/ordonnances?id=eq.${pendingKey}`, {
         method: 'DELETE',
         headers: {
           'apikey': supabaseKey,
@@ -132,8 +135,11 @@ export async function POST(request) {
     if (!password && username) {
       console.log('Sauvegarde pending avec username:', username);
       
-      // Chercher si existe déjà un pending
-      const existingResponse = await fetch(`${supabaseUrl}/rest/v1/ordonnances?id=eq.pending`, {
+      // Créer un ID unique pour cet utilisateur
+      const pendingId = `pending_${username.toLowerCase().replace(/\s+/g, '_')}`;
+      
+      // Chercher si cet utilisateur a déjà un pending
+      const existingResponse = await fetch(`${supabaseUrl}/rest/v1/ordonnances?id=eq.${pendingId}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -176,19 +182,19 @@ export async function POST(request) {
         }
       });
       
-      // Maintenant mettre à jour ou créer pending
+      // Maintenant mettre à jour ou créer pending pour cet utilisateur
       let method = 'POST';
       let url = `${supabaseUrl}/rest/v1/ordonnances`;
       
-      // Vérifier si un pending existe déjà
+      // Vérifier si ce user a déjà un pending
       if (Object.keys(pendingData).length > 0) {
-        // Mettre à jour le pending existant
+        // Mettre à jour le pending existant de cet utilisateur
         method = 'PATCH';
-        url = `${supabaseUrl}/rest/v1/ordonnances?id=eq.pending`;
+        url = `${supabaseUrl}/rest/v1/ordonnances?id=eq.${pendingId}`;
       }
       
       const finalData = {
-        ...(method === 'PATCH' ? {} : { id: 'pending' }),
+        ...(method === 'PATCH' ? {} : { id: pendingId }),
         data: pendingData,
         status: 'pending',
         suggested_by: username,
@@ -274,11 +280,11 @@ export async function GET(request) {
       return new Response(JSON.stringify({ success: false, message: 'Supabase config not set' }), { status: 400, headers: { 'Content-Type': 'application/json' } });
     }
     
-    // Demander pending (pour admin)
+    // Demander pending (pour admin) - récupérer toutes les lignes avec status=pending
     if (pending === 'true') {
       console.log('Chargement pending...');
       
-      const response = await fetch(`${supabaseUrl}/rest/v1/ordonnances?id=eq.pending`, {
+      const response = await fetch(`${supabaseUrl}/rest/v1/ordonnances?status=eq.pending`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -290,10 +296,24 @@ export async function GET(request) {
       if (response.ok) {
         const result = await response.json();
         console.log('Pending ordonnances:', result.length);
+        
+        // Regrouper toutes les données pending par utilisateur
+        let allPending = {};
+        let users = [];
+        
+        result.forEach(row => {
+          users.push({ id: row.id, suggested_by: row.suggested_by });
+          if (row.data) {
+            Object.keys(row.data).forEach(key => {
+              allPending[key] = row.data[key];
+            });
+          }
+        });
+        
         return new Response(JSON.stringify({ 
           success: true, 
-          data: result.length > 0 ? result[0].data : {},
-          suggested_by: result.length > 0 ? result[0].suggested_by : null
+          data: allPending,
+          users: users
         }), { headers: { 'Content-Type': 'application/json' } });
       }
       
