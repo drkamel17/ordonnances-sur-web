@@ -44,6 +44,17 @@ async function sendBrevoEmail(to, subject, type, nom, situation, lien1, lien2) {
   
   try {
     console.log('[DEBUG] Debut du fetch vers Brevo...');
+    console.log('[DEBUG] Sender email:', senderEmail);
+    console.log('[DEBUG] Destinataire:', to);
+    
+    const requestBody = {
+      sender: { email: senderEmail, name: 'Dr Daoudi - Notifications' },
+      to: [{ email: to }],
+      subject: subject,
+      htmlContent: htmlContent
+    };
+    
+    console.log('[DEBUG] Body JSON:', JSON.stringify(requestBody).substring(0, 100) + '...');
     
     const brevoResponse = await fetch('https://api.brevo.com/v3/smtp/email', {
       method: 'POST',
@@ -52,12 +63,7 @@ async function sendBrevoEmail(to, subject, type, nom, situation, lien1, lien2) {
         'Content-Type': 'application/json',
         'api-key': apiKey
       },
-      body: JSON.stringify({
-        sender: { email: senderEmail, name: 'Dr Daoudi - Notifications' },
-        to: [{ email: to }],
-        subject: subject,
-        htmlContent: htmlContent
-      })
+      body: JSON.stringify(requestBody)
     });
     
     console.log('[DEBUG] Apres fetch, status:', brevoResponse.status);
@@ -265,7 +271,7 @@ export async function POST(request) {
         const adminEmail = process.env.ADMIN_EMAIL || 'drkamel17@gmail.com';
         console.log('[DEBUG] Envoi email notification a:', adminEmail);
         
-        sendBrevoEmail(
+        const emailResult = await sendBrevoEmail(
           adminEmail,
           `Nouvelle ordonnance en attente - ${username}`,
           'Ordonnance',
@@ -273,9 +279,9 @@ export async function POST(request) {
           null,
           'https://ordonnances-sur-web.vercel.app/admin.html',
           'https://certificats-medicaux.vercel.app/admin.html'
-        ).then(emailResult => {
-          console.log('[DEBUG] Resultat email:', emailResult);
-        });
+        );
+        
+        console.log('[DEBUG] Resultat email:', emailResult);
         
         return new Response(JSON.stringify({ 
           success: true, 
