@@ -6,17 +6,16 @@ const DEFAULT_CONFIG = {
   WRITE_PASSWORD: 'DAOUDI'
 };
 
-async function sendBrevoEmail(to, subject, type, nom, situation, lien1, lien2) {
-  const apiKey = process.env.BREVO_API_KEY;
-  const senderEmail = process.env.BREVO_EMAIL || 'drkamel17@gmail.com';
+async function sendResendEmail(to, subject, type, nom, situation, lien1, lien2) {
+  const apiKey = process.env.RESEND_API_KEY;
   
-  console.log('[DEBUG] sendBrevoEmail - API key presente:', !!apiKey);
-  console.log('[DEBUG] sendBrevoEmail - Destinataire:', to);
-  console.log('[DEBUG] sendBrevoEmail - Sujet:', subject);
+  console.log('[DEBUG] sendResendEmail - API key presente:', !!apiKey);
+  console.log('[DEBUG] sendResendEmail - Destinataire:', to);
+  console.log('[DEBUG] sendResendEmail - Sujet:', subject);
   
   if (!apiKey) {
-    console.log('[DEBUG] ERREUR: BREVO_API_KEY non configuree dans Vercel');
-    return { success: false, message: 'BREVO_API_KEY non configuree' };
+    console.log('[DEBUG] ERREUR: RESEND_API_KEY non configuree dans Vercel');
+    return { success: false, message: 'RESEND_API_KEY non configuree' };
   }
   
   const bgColor = type === 'Ordonnance' ? '#ff9800' : '#9C27B0';
@@ -39,53 +38,35 @@ async function sendBrevoEmail(to, subject, type, nom, situation, lien1, lien2) {
     </div>
   `;
   
-  console.log('[DEBUG] Envoi requete vers Brevo API...');
-  console.log('[DEBUG] API key premiere:', apiKey.substring(0, 10) + '...');
+  console.log('[DEBUG] Envoi requete vers Resend API...');
   
   try {
-    console.log('[DEBUG] Debut du fetch vers Brevo...');
-    console.log('[DEBUG] Sender email:', senderEmail);
-    console.log('[DEBUG] Destinataire:', to);
-    
-    const requestBody = {
-      sender: { email: senderEmail, name: 'Dr Daoudi - Notifications' },
-      to: [{ email: to }],
-      subject: subject,
-      htmlContent: htmlContent
-    };
-    
-    console.log('[DEBUG] Body JSON:', JSON.stringify(requestBody).substring(0, 100) + '...');
-    
-    const brevoResponse = await fetch('https://api.brevo.com/v3/smtp/email', {
+    const resendResponse = await fetch('https://api.resend.com/emails', {
       method: 'POST',
       headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        'api-key': apiKey
+        'Authorization': `Bearer ${apiKey}`,
+        'Content-Type': 'application/json'
       },
-      body: JSON.stringify(requestBody)
+      body: JSON.stringify({
+        from: 'Dr Daoudi Notifications <onboarding@resend.dev>',
+        to: to,
+        subject: subject,
+        html: htmlContent
+      })
     });
     
-    console.log('[DEBUG] Apres fetch, status:', brevoResponse.status);
+    console.log('[DEBUG] Resend response status:', resendResponse.status);
     
-    if (brevoResponse.ok) {
+    if (resendResponse.ok) {
       console.log('[DEBUG] Email envoye avec succes!');
       return { success: true };
     } else {
-      const errorText = await brevoResponse.text();
-      console.log('[DEBUG] ERREUR Brevo status 400:', errorText);
-      try {
-        const errJson = JSON.parse(errorText);
-        console.log('[DEBUG] ERREUR Brevo code:', errJson.code);
-        console.log('[DEBUG] ERREUR Brevo message:', errJson.message);
-      } catch(e) {
-        console.log('[DEBUG] ERREUR Brevo text brut:', errorText);
-      }
+      const errorText = await resendResponse.text();
+      console.log('[DEBUG] ERREUR Resend:', errorText);
       return { success: false, message: errorText };
     }
   } catch (error) {
     console.log('[DEBUG] ERREUR exception:', error.message);
-    console.log('[DEBUG] ERREUR stack:', error.stack);
     return { success: false, message: error.message };
   }
 }
@@ -271,7 +252,7 @@ export async function POST(request) {
         const adminEmail = process.env.ADMIN_EMAIL || 'drkamel17@gmail.com';
         console.log('[DEBUG] Envoi email notification a:', adminEmail);
         
-        const emailResult = await sendBrevoEmail(
+        const emailResult = await sendResendEmail(
           adminEmail,
           `Nouvelle ordonnance en attente - ${username}`,
           'Ordonnance',
