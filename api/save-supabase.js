@@ -6,6 +6,70 @@ const DEFAULT_CONFIG = {
   WRITE_PASSWORD: 'DAOUDI'
 };
 
+async function sendBrevoEmail(to, subject, type, nom, situation, lien1, lien2) {
+  const apiKey = process.env.BREVO_API_KEY;
+  const senderEmail = process.env.BREVO_EMAIL || 'drkamel17@gmail.com';
+  
+  console.log('[DEBUG] sendBrevoEmail - API key presente:', !!apiKey);
+  console.log('[DEBUG] sendBrevoEmail - Destinataire:', to);
+  
+  if (!apiKey) {
+    console.log('[DEBUG] ERREUR: BREVO_API_KEY non configuree dans Vercel');
+    return { success: false, message: 'BREVO_API_KEY non configuree' };
+  }
+  
+  const bgColor = type === 'Ordonnance' ? '#ff9800' : '#9C27B0';
+  const htmlContent = `
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+      <div style="background: ${bgColor}; color: white; padding: 20px; border-radius: 10px 10px 0 0; text-align: center;">
+        <h2 style="margin: 0;">📩 Nouveau message en attente</h2>
+      </div>
+      <div style="background: #f5f5f5; padding: 20px; border-radius: 0 0 10px 10px;">
+        <p style="font-size: 16px;"><strong>Type:</strong> ${type}</p>
+        <p style="font-size: 16px;"><strong>Nom:</strong> ${nom}</p>
+        ${situation ? `<p style="font-size: 16px;"><strong>Situation:</strong> ${situation}</p>` : ''}
+        <p style="margin-top: 20px;">Cliquez sur un des liens ci-dessous pour gerer ce message:</p>
+        <div style="text-align: center; margin: 20px 0;">
+          <a href="${lien1}" style="display: inline-block; background: #667eea; color: white; padding: 12px 24px; text-decoration: none; border-radius: 8px; margin: 5px;">🔧 Ordonnances Sur Web</a>
+          <br>
+          <a href="${lien2}" style="display: inline-block; background: #4CAF50; color: white; padding: 12px 24px; text-decoration: none; border-radius: 8px; margin: 5px;">🔧 Certificats Medicaux</a>
+        </div>
+      </div>
+    </div>
+  `;
+  
+  try {
+    const response = await fetch('https://api.brevo.com/v3/smtp/email', {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'api-key': apiKey
+      },
+      body: JSON.stringify({
+        sender: { email: senderEmail, name: 'Dr Daoudi - Notifications' },
+        to: [{ email: to }],
+        subject: subject,
+        htmlContent: htmlContent
+      })
+    });
+    
+    console.log('[DEBUG] Brevo response status:', response.status);
+    
+    if (response.ok) {
+      console.log('[DEBUG] Email envoye avec succes!');
+      return { success: true };
+    } else {
+      const errorText = await response.text();
+      console.log('[DEBUG] ERREUR Brevo:', errorText);
+      return { success: false, message: errorText };
+    }
+  } catch (error) {
+    console.log('[DEBUG] ERREUR exception:', error.message);
+    return { success: false, message: error.message };
+  }
+}
+
 export async function POST(request) {
   console.log('=== SUPABASE POST: Debut ===');
   
@@ -184,28 +248,20 @@ export async function POST(request) {
       if (response.ok) {
         console.log('=== SUPABASE POST: Pending saved ===');
         
-        // Envoyer email de notification (sans await pour ne pas bloquer)
-        console.log('[DEBUG] Preparation envoi email notification...');
         const adminEmail = process.env.ADMIN_EMAIL || 'drkamel17@gmail.com';
-        console.log('[DEBUG] Email admin:', adminEmail);
+        console.log('[DEBUG] Envoi email notification a:', adminEmail);
         
-        fetch('/api/send-email', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            to: adminEmail,
-            subject: `Nouvelle ordonnance en attente - ${username}`,
-            type: 'Ordonnance',
-            nom: username,
-            lien1: 'https://ordonnances-sur-web.vercel.app/admin.html',
-            lien2: 'https://certificats-medicaux.vercel.app/admin.html'
-          })
-        }).then(res => {
-          console.log('[DEBUG] Reponse send-email status:', res.status);
-          return res.json();
-        }).then(data => {
-          console.log('[DEBUG] Reponse send-email data:', data);
-        }).catch(e => console.log('[DEBUG] Email error:', e));
+        sendBrevoEmail(
+          adminEmail,
+          `Nouvelle ordonnance en attente - ${username}`,
+          'Ordonnance',
+          username,
+          null,
+          'https://ordonnances-sur-web.vercel.app/admin.html',
+          'https://certificats-medicaux.vercel.app/admin.html'
+        ).then(emailResult => {
+          console.log('[DEBUG] Resultat email:', emailResult);
+        });
         
         return new Response(JSON.stringify({ 
           success: true, 
