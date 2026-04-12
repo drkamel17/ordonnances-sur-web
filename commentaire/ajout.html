@@ -121,12 +121,16 @@
       
       <div class="form-group">
         <label for="situation"><i class="fas fa-briefcase"></i> Votre situation</label>
-        <select id="situation" name="situation" required>
+        <select id="situation" name="situation" required onchange="toggleAutreChamp()">
           <option value="">Sélectionnez...</option>
           <option value="Médecin">Médecin</option>
+          <option value="Médecin Spécialiste">Médecin Spécialiste</option>
+          <option value="Sage-femme">Sage-femme</option>
+          <option value="Infirmier">Infirmier/Infirmière</option>
           <option value="Étudiant">Étudiant</option>
           <option value="Autre">Autre</option>
         </select>
+        <input type="text" id="situation-autre" name="situation-autre" placeholder="Précisez votre situation..." style="display:none; margin-top: 10px;">
       </div>
       
       <div class="form-group">
@@ -141,12 +145,31 @@
   </div>
   
   <script>
+    function toggleAutreChamp() {
+      const situation = document.getElementById('situation').value;
+      const autreChamp = document.getElementById('situation-autre');
+      if (situation === 'Autre') {
+        autreChamp.style.display = 'block';
+        autreChamp.required = true;
+      } else {
+        autreChamp.style.display = 'none';
+        autreChamp.required = false;
+        autreChamp.value = '';
+      }
+    }
+    
     document.getElementById('form-commentaire').addEventListener('submit', async (e) => {
       e.preventDefault();
       
       const nom = document.getElementById('nom').value.trim();
-      const situation = document.getElementById('situation').value;
+      let situation = document.getElementById('situation').value;
+      const situationAutre = document.getElementById('situation-autre').value.trim();
       const message = document.getElementById('message').value.trim();
+      
+      // Si "Autre" est sélectionné, utiliser le texte tapé par l'utilisateur
+      if (situation === 'Autre' && situationAutre) {
+        situation = situationAutre;
+      }
       
       if (!nom || !situation || !message) {
         alert('Veuillez remplir tous les champs');
