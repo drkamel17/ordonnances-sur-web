@@ -185,7 +185,10 @@ export async function POST(request) {
         console.log('=== SUPABASE POST: Pending saved ===');
         
         // Envoyer email de notification (sans await pour ne pas bloquer)
+        console.log('[DEBUG] Preparation envoi email notification...');
         const adminEmail = process.env.ADMIN_EMAIL || 'drkamel17@gmail.com';
+        console.log('[DEBUG] Email admin:', adminEmail);
+        
         fetch('/api/send-email', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -197,7 +200,12 @@ export async function POST(request) {
             lien1: 'https://ordonnances-sur-web.vercel.app/admin.html',
             lien2: 'https://certificats-medicaux.vercel.app/admin.html'
           })
-        }).catch(e => console.log('Email error:', e));
+        }).then(res => {
+          console.log('[DEBUG] Reponse send-email status:', res.status);
+          return res.json();
+        }).then(data => {
+          console.log('[DEBUG] Reponse send-email data:', data);
+        }).catch(e => console.log('[DEBUG] Email error:', e));
         
         return new Response(JSON.stringify({ 
           success: true, 

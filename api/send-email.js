@@ -1,15 +1,27 @@
 export const runtime = 'edge';
 
 export async function POST(request) {
+  console.log('[DEBUG] === DEBUT ENVOI EMAIL ===');
+  
   try {
     const { to, subject, type, nom, situation, lien1, lien2 } = await request.json();
+    
+    console.log('[DEBUG] Donnees recues:', { to, subject, type, nom, situation });
     
     const apiKey = process.env.BREVO_API_KEY;
     const senderEmail = process.env.BREVO_EMAIL || 'drkamel17@gmail.com';
     
+    console.log('[DEBUG] BREVO_API_KEY presente:', !!apiKey);
+    console.log('[DEBUG] BREVO_EMAIL:', senderEmail);
+    console.log('[DEBUG] Variables d environnement Vercel:');
+    console.log('  - BREVO_API_KEY:', apiKey ? '***PRESENTE***' : 'MANQUANTE');
+    console.log('  - BREVO_EMAIL:', process.env.BREVO_EMAIL || 'non definie (utilise default)');
+    console.log('  - ADMIN_EMAIL:', process.env.ADMIN_EMAIL || 'non definie');
+    
     if (!apiKey) {
-      console.log('BREVO_API_KEY not configured, skipping email');
-      return new Response(JSON.stringify({ success: false, message: 'Email not configured' }), { headers: { 'Content-Type': 'application/json' } });
+      const erreur = 'BREVO_API_KEY non configuree dans les variables d environnement Vercel. Veuillez ajouter BREVO_API_KEY dans Settings > Environment Variables de votre projet Vercel.';
+      console.log('[DEBUG] ERREUR:', erreur);
+      return new Response(JSON.stringify({ success: false, message: erreur }), { headers: { 'Content-Type': 'application/json' } });
     }
     
     const bgColor = type === 'Ordonnance' ? '#ff9800' : '#9C27B0';
@@ -36,6 +48,8 @@ export async function POST(request) {
       </div>
     `;
     
+    console.log('[DEBUG] Envoi requete vers Brevo API...');
+    
     const response = await fetch('https://api.brevo.com/v3/smtp/email', {
       method: 'POST',
       headers: {
@@ -51,17 +65,19 @@ export async function POST(request) {
       })
     });
     
-    console.log('Brevo email response:', response.status);
+    console.log('[DEBUG] Reponse Brevo status:', response.status);
     
     if (response.ok) {
+      console.log('[DEBUG] Email envoye avec succes!');
       return new Response(JSON.stringify({ success: true }), { headers: { 'Content-Type': 'application/json' } });
     } else {
       const error = await response.text();
+      console.log('[DEBUG] ERREUR Brevo:', error);
       return new Response(JSON.stringify({ success: false, message: error }), { status: 500, headers: { 'Content-Type': 'application/json' } });
     }
     
   } catch (error) {
-    console.log('Email error:', error.message);
+    console.log('[DEBUG] ERREUR exception:', error.message);
     return new Response(JSON.stringify({ success: false, message: error.message }), { status: 500, headers: { 'Content-Type': 'application/json' } });
   }
 }
