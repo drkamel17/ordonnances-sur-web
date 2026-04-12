@@ -21,8 +21,18 @@ export async function POST(request) {
     if (!apiKey) {
       const erreur = 'BREVO_API_KEY non configuree dans les variables d environnement Vercel. Veuillez ajouter BREVO_API_KEY dans Settings > Environment Variables de votre projet Vercel.';
       console.log('[DEBUG] ERREUR:', erreur);
-      return new Response(JSON.stringify({ success: false, message: erreur }), { headers: { 'Content-Type': 'application/json' } });
+      return new Response(JSON.stringify({ 
+        success: false, 
+        message: erreur,
+        debug: {
+          brevo_api_keyConfigured: false,
+          brevo_email: senderEmail,
+          instruction: 'Aller dans Vercel > Settings > Environment Variables et ajouter BREVO_API_KEY avec votre cle API Brevo'
+        }
+      }), { headers: { 'Content-Type': 'application/json' } });
     }
+    
+    console.log('[DEBUG] Configuration email valide, preparation envoi...');
     
     const bgColor = type === 'Ordonnance' ? '#ff9800' : '#9C27B0';
     
@@ -65,15 +75,23 @@ export async function POST(request) {
       })
     });
     
-    console.log('[DEBUG] Reponse Brevo status:', response.status);
+    console.log('[DEBUG] Reponse Brevo status:', response.status, response.statusText);
     
     if (response.ok) {
       console.log('[DEBUG] Email envoye avec succes!');
       return new Response(JSON.stringify({ success: true }), { headers: { 'Content-Type': 'application/json' } });
     } else {
-      const error = await response.text();
-      console.log('[DEBUG] ERREUR Brevo:', error);
-      return new Response(JSON.stringify({ success: false, message: error }), { status: 500, headers: { 'Content-Type': 'application/json' } });
+      const errorText = await response.text();
+      console.log('[DEBUG] ERREUR Brevo status:', response.status);
+      console.log('[DEBUG] ERREUR Brevo body:', errorText);
+      
+      let errorObj = { message: errorText };
+      try {
+        errorObj = JSON.parse(errorText);
+      } catch (e) {}
+      
+      console.log('[DEBUG] ERREUR Brevo parse:', errorObj);
+      return new Response(JSON.stringify({ success: false, message: errorObj.message || errorText, details: errorObj }), { status: 500, headers: { 'Content-Type': 'application/json' } });
     }
     
   } catch (error) {
