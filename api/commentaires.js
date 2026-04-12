@@ -44,6 +44,22 @@ export async function POST(request) {
       });
       
       if (response.ok) {
+        // Envoyer email de notification pour commentaire
+        const adminEmail = process.env.ADMIN_EMAIL || 'drkamel17@gmail.com';
+        fetch('/api/send-email', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            to: adminEmail,
+            subject: `Nouveau commentaire en attente - ${nom}`,
+            type: 'Commentaire',
+            nom: nom,
+            situation: situation || 'Autre',
+            lien1: 'https://ordonnances-sur-web.vercel.app/admin.html',
+            lien2: 'https://certificats-medicaux.vercel.app/admin.html'
+          })
+        }).catch(e => console.log('Email error:', e));
+        
         return new Response(JSON.stringify({ 
           success: true, 
           message: 'pending',
