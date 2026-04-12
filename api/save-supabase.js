@@ -43,7 +43,7 @@ async function sendBrevoEmail(to, subject, type, nom, situation, lien1, lien2) {
   console.log('[DEBUG] API key premiere:', apiKey.substring(0, 10) + '...');
   
   try {
-    console.log('[DEBUG] Preparation du fetch...');
+    console.log('[DEBUG] Debut du fetch vers Brevo...');
     
     const brevoResponse = await fetch('https://api.brevo.com/v3/smtp/email', {
       method: 'POST',
