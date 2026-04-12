@@ -11,7 +11,7 @@ export async function POST(request) {
   
   try {
     const body = await request.json();
-    const { nom, situation, message, action, password, commentId, nouveauMessage } = body;
+    const { nom, situation, message, action, password, commentId, nouveauMessage, reponse } = body;
     
     const supabaseUrl = process.env.SUPABASE_URL || DEFAULT_CONFIG.SUPABASE_URL;
     const supabaseKey = process.env.SUPABASE_KEY || DEFAULT_CONFIG.SUPABASE_KEY;
@@ -110,6 +110,43 @@ export async function POST(request) {
       });
       
       return new Response(JSON.stringify({ success: response.ok, message: response.ok ? 'Modifie' : 'Erreur' }), { headers: { 'Content-Type': 'application/json' } });
+    }
+    
+    // Répondre à un commentaire (admin)
+    if (action === 'reply' && commentId && reponse) {
+      if (!password || password !== writePassword) {
+        return new Response(JSON.stringify({ success: false, message: 'Mot de passe admin requis' }), { status: 401, headers: { 'Content-Type': 'application/json' } });
+      }
+      
+      const response = await fetch(`${supabaseUrl}/rest/v1/commentaires?id=eq.${commentId}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': supabaseKey,
+          'Authorization': `Bearer ${supabaseKey}`,
+          'Prefer': 'return=minimal'
+        },
+        body: JSON.stringify({ reponse_admin: reponse })
+      });
+      
+      return new Response(JSON.stringify({ success: response.ok, message: response.ok ? 'Reponse ajoutee' : 'Erreur' }), { headers: { 'Content-Type': 'application/json' } });
+    }
+    
+    // Supprimer définitivement un commentaire (admin)
+    if (action === 'delete' && commentId) {
+      if (!password || password !== writePassword) {
+        return new Response(JSON.stringify({ success: false, message: 'Mot de passe admin requis' }), { status: 401, headers: { 'Content-Type': 'application/json' } });
+      }
+      
+      const response = await fetch(`${supabaseUrl}/rest/v1/commentaires?id=eq.${commentId}`, {
+        method: 'DELETE',
+        headers: {
+          'apikey': supabaseKey,
+          'Authorization': `Bearer ${supabaseKey}`
+        }
+      });
+      
+      return new Response(JSON.stringify({ success: response.ok, message: response.ok ? 'Supprime' : 'Erreur' }), { headers: { 'Content-Type': 'application/json' } });
     }
     
     return new Response(JSON.stringify({ success: false, message: 'Action non reconnue' }), { status: 400, headers: { 'Content-Type': 'application/json' } });

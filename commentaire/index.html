@@ -147,6 +147,66 @@
       color: #555;
       line-height: 1.6;
     }
+    .admin-buttons {
+      margin-top: 10px;
+      display: flex;
+      gap: 10px;
+    }
+    .btn-admin-action {
+      padding: 5px 12px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.85em;
+    }
+    .btn-reply {
+      background: #2196F3;
+      color: white;
+    }
+    .btn-delete {
+      background: #f44336;
+      color: white;
+    }
+    .reply-section {
+      margin-top: 15px;
+      padding: 10px;
+      background: #e3f2fd;
+      border-radius: 6px;
+      border-left: 3px solid #2196F3;
+    }
+    .reply-label {
+      font-weight: 600;
+      color: #1976d2;
+      font-size: 0.9em;
+    }
+    .reply-text {
+      color: #333;
+      margin-top: 5px;
+    }
+    .reply-form {
+      margin-top: 10px;
+    }
+    .reply-form textarea {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      min-height: 80px;
+      font-family: inherit;
+    }
+    .reply-form button {
+      margin-top: 8px;
+      padding: 8px 16px;
+      background: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .reply-form button.cancel {
+      background: #999;
+      margin-left: 10px;
+    }
     .no-comments {
       text-align: center;
       color: #999;
@@ -264,6 +324,8 @@
         return;
       }
       
+      const isAdmin = sessionStorage.getItem('adminPassword');
+      
       let html = '';
       filtered.forEach(c => {
         const date = new Date(c.created_at).toLocaleDateString('fr-FR', {
@@ -274,8 +336,39 @@
           minute: '2-digit'
         });
         
+        // Afficher la réponse de l'admin si elle existe
+        let replyHTML = '';
+        if (c.reponse_admin) {
+          replyHTML = `
+            <div class="reply-section">
+              <div class="reply-label">✉ Réponse de l'admin:</div>
+              <div class="reply-text">${c.reponse_admin}</div>
+            </div>
+          `;
+        }
+        
+        // Boutons admin (Répondre et Supprimer)
+        let adminButtons = '';
+        if (isAdmin) {
+          adminButtons = `
+            <div class="admin-buttons">
+              <button class="btn-admin-action btn-reply" onclick="showReplyForm('${c.id}')">
+                <i class="fas fa-reply"></i> Répondre
+              </button>
+              <button class="btn-admin-action btn-delete" onclick="deleteComment('${c.id}')">
+                <i class="fas fa-trash"></i> Supprimer
+              </button>
+            </div>
+            <div id="reply-form-${c.id}" class="reply-form" style="display:none;">
+              <textarea id="reply-text-${c.id}" placeholder="Votre réponse..."></textarea>
+              <button onclick="submitReply('${c.id}')">Envoyer la réponse</button>
+              <button class="cancel" onclick="hideReplyForm('${c.id}')">Annuler</button>
+            </div>
+          `;
+        }
+        
         html += `
-          <div class="comment-card">
+          <div class="comment-card" id="comment-${c.id}">
             <div class="comment-header">
               <div>
                 <span class="comment-author">${c.nom}</span>
@@ -284,11 +377,91 @@
               <span class="comment-date">${date}</span>
             </div>
             <div class="comment-message">${c.message}</div>
+            ${replyHTML}
+            ${adminButtons}
           </div>
         `;
       });
       
       container.innerHTML = html;
+    }
+    
+    function showReplyForm(commentId) {
+      document.getElementById(`reply-form-${commentId}`).style.display = 'block';
+    }
+    
+    function hideReplyForm(commentId) {
+      document.getElementById(`reply-form-${commentId}`).style.display = 'none';
+      document.getElementById(`reply-text-${commentId}`).value = '';
+    }
+    
+    async function submitReply(commentId) {
+      const replyText = document.getElementById(`reply-text-${commentId}`).value.trim();
+      if (!replyText) {
+        alert('Veuillez entrer une réponse');
+        return;
+      }
+      
+      const adminPassword = sessionStorage.getItem('adminPassword');
+      if (!adminPassword) {
+        alert('Session expirée');
+        return;
+      }
+      
+      try {
+        const response = await fetch('/api/commentaires', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            action: 'reply',
+            password: adminPassword,
+            commentId: commentId,
+            reponse: replyText
+          })
+        });
+        
+        const result = await response.json();
+        if (result.success) {
+          alert('Réponse enregistrée!');
+          chargerCommentaires();
+        } else {
+          alert('Erreur: ' + result.message);
+        }
+      } catch (e) {
+        alert('Erreur');
+      }
+    }
+    
+    async function deleteComment(commentId) {
+      if (!confirm('Voulez-vous vraiment supprimer ce commentaire?')) return;
+      
+      const adminPassword = sessionStorage.getItem('adminPassword');
+      if (!adminPassword) {
+        alert('Session expirée');
+        return;
+      }
+      
+      try {
+        const response = await fetch('/api/commentaires', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            action: 'delete',
+            password: adminPassword,
+            commentId: commentId
+          })
+        });
+        
+        const result = await response.json();
+        if (result.success) {
+          alert('Commentaire supprimé!');
+          chargerCommentaires();
+        } else {
+          alert('Erreur: ' + result.message);
+        }
+      } catch (e) {
+        alert('Erreur');
+      }
     }
     
     // Charger au démarrage
