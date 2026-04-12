@@ -231,16 +231,33 @@
     <script>
     let adminPassword = sessionStorage.getItem('adminPassword');
     
-    // Vérifier au chargement s'il y a des pending
+    // Vérifier au chargement s'il y a des pending (ordonnances + commentaires)
     window.addEventListener('load', async () => {
         try {
-            const response = await fetch('/api/save-supabase?pending=true');
-            const result = await response.json();
-            if (result.success && result.users && result.users.length > 0) {
+            // Vérifier ordonnances en attente
+            const ordResponse = await fetch('/api/save-supabase?pending=true');
+            const ordResult = await ordResponse.json();
+            
+            // Vérifier commentaires en attente
+            const comResponse = await fetch('/api/commentaires?pending=true');
+            const comResult = await comResponse.json();
+            
+            const hasPendingOrd = ordResult.success && ordResult.users && ordResult.users.length > 0;
+            const hasPendingCom = comResult.success && comResult.pending && comResult.pending.length > 0;
+            
+            if (hasPendingOrd || hasPendingCom) {
                 document.getElementById('admin-icon').style.display = 'inline';
                 document.getElementById('admin-badge').style.display = 'inline';
+                
+                // Mettre à jour le texte du badge
+                let count = 0;
+                if (hasPendingOrd) count += ordResult.users.length;
+                if (hasPendingCom) count += comResult.pending.length;
+                document.getElementById('admin-badge').textContent = count + ' en attente';
             }
-        } catch (e) {}
+        } catch (e) {
+            console.error(e);
+        }
     });
     
     async function demanderAdmin() {
@@ -300,9 +317,8 @@
     }
     
     async function confirmerComment(commentId) {
-        const password = prompt('Entrez le mot de passe admin pour confirmer:');
-        if (password !== 'DAOUDI') {
-            alert('Mot de passe incorrect');
+        if (!adminPassword) {
+            alert('Session expirée. Veuillez vous reconnecter.');
             return;
         }
         
@@ -310,7 +326,7 @@
             const response = await fetch('/api/commentaires', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ action: 'confirm', password: password, commentId: commentId })
+                body: JSON.stringify({ action: 'confirm', password: adminPassword, commentId: commentId })
             });
             
             const result = await response.json();
@@ -326,9 +342,8 @@
     }
     
     async function rejeterComment(commentId) {
-        const password = prompt('Entrez le mot de passe admin pour rejeter:');
-        if (password !== 'DAOUDI') {
-            alert('Mot de passe incorrect');
+        if (!adminPassword) {
+            alert('Session expirée. Veuillez vous reconnecter.');
             return;
         }
         
@@ -338,7 +353,7 @@
             const response = await fetch('/api/commentaires', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ action: 'reject', password: password, commentId: commentId })
+                body: JSON.stringify({ action: 'reject', password: adminPassword, commentId: commentId })
             });
             
             const result = await response.json();
@@ -423,9 +438,8 @@
     }
     
     async function modifierPending(userId, titre, index) {
-        const password = prompt('Entrez le mot de passe admin pour modifier:');
-        if (password !== 'DAOUDI') {
-            alert('Mot de passe incorrect');
+        if (!adminPassword) {
+            alert('Session expirée. Veuillez vous reconnecter.');
             return;
         }
         
@@ -454,7 +468,7 @@
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     action: 'modify',
-                    password: password,
+                    password: adminPassword,
                     pendingId: userId,
                     titre: titre,
                     nouveauxMedicaments: medsModifies
@@ -474,9 +488,8 @@
     }
     
     async function confirmer(titre) {
-        const password = prompt('Entrez le mot de passe admin pour confirmer:');
-        if (password !== 'DAOUDI') {
-            alert('Mot de passe incorrect');
+        if (!adminPassword) {
+            alert('Session expirée. Veuillez vous reconnecter.');
             return;
         }
         
@@ -486,7 +499,7 @@
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ 
                     action: 'confirm', 
-                    password: password,
+                    password: adminPassword,
                     data: {},
                     pendingKey: titre
                 })
@@ -505,9 +518,8 @@
     }
     
     async function rejeter(titre) {
-        const password = prompt('Entrez le mot de passe admin pour rejeter:');
-        if (password !== 'DAOUDI') {
-            alert('Mot de passe incorrect');
+        if (!adminPassword) {
+            alert('Session expirée. Veuillez vous reconnecter.');
             return;
         }
         
@@ -519,7 +531,7 @@
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ 
                     action: 'reject', 
-                    password: password,
+                    password: adminPassword,
                     data: {},
                     pendingKey: titre
                 })
