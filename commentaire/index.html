@@ -324,7 +324,7 @@
         return;
       }
       
-      const isAdmin = sessionStorage.getItem('adminPassword');
+      const isAdmin = sessionStorage.getItem('adminPassword') !== null;
       
       let html = '';
       filtered.forEach(c => {
