@@ -12,6 +12,7 @@ async function sendBrevoEmail(to, subject, type, nom, situation, lien1, lien2) {
   
   console.log('[DEBUG] sendBrevoEmail - API key presente:', !!apiKey);
   console.log('[DEBUG] sendBrevoEmail - Destinataire:', to);
+  console.log('[DEBUG] sendBrevoEmail - Sujet:', subject);
   
   if (!apiKey) {
     console.log('[DEBUG] ERREUR: BREVO_API_KEY non configuree dans Vercel');
@@ -38,6 +39,8 @@ async function sendBrevoEmail(to, subject, type, nom, situation, lien1, lien2) {
     </div>
   `;
   
+  console.log('[DEBUG] Envoi requete vers Brevo API...');
+  
   try {
     const response = await fetch('https://api.brevo.com/v3/smtp/email', {
       method: 'POST',
@@ -55,6 +58,7 @@ async function sendBrevoEmail(to, subject, type, nom, situation, lien1, lien2) {
     });
     
     console.log('[DEBUG] Brevo response status:', response.status);
+    console.log('[DEBUG] Brevo response statusText:', response.statusText);
     
     if (response.ok) {
       console.log('[DEBUG] Email envoye avec succes!');
@@ -62,10 +66,16 @@ async function sendBrevoEmail(to, subject, type, nom, situation, lien1, lien2) {
     } else {
       const errorText = await response.text();
       console.log('[DEBUG] ERREUR Brevo:', errorText);
+      try {
+        const errJson = JSON.parse(errorText);
+        console.log('[DEBUG] ERREUR Brevo code:', errJson.code);
+        console.log('[DEBUG] ERREUR Brevo message:', errJson.message);
+      } catch(e) {}
       return { success: false, message: errorText };
     }
   } catch (error) {
     console.log('[DEBUG] ERREUR exception:', error.message);
+    console.log('[DEBUG] ERREUR stack:', error.stack);
     return { success: false, message: error.message };
   }
 }
