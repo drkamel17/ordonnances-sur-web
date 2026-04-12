@@ -191,6 +191,7 @@
             
             <button id="btn-admin" class="cta-button" style="background-color: #f44336; margin-top: 20px;" onclick="demanderAdmin()">
                 <i class="fas fa-envelope" id="admin-icon" style="display:none;"></i>
+                <span id="admin-badge" style="display:none; background: #ff9800; color: white; font-size: 0.7em; padding: 2px 6px; border-radius: 10px; margin-right: 5px;">en attente</span>
                 <i class="fas fa-admin"></i>
                 Zone Admin
             </button>
@@ -229,6 +230,7 @@
             const result = await response.json();
             if (result.success && result.users && result.users.length > 0) {
                 document.getElementById('admin-icon').style.display = 'inline';
+                document.getElementById('admin-badge').style.display = 'inline';
             }
         } catch (e) {}
     });
