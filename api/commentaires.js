@@ -40,9 +40,12 @@ async function sendBrevoEmail(to, subject, type, nom, situation, lien1, lien2) {
   `;
   
   console.log('[DEBUG] Envoi requete vers Brevo API...');
+  console.log('[DEBUG] API key premiere:', apiKey.substring(0, 10) + '...');
   
   try {
-    const response = await fetch('https://api.brevo.com/v3/smtp/email', {
+    console.log('[DEBUG] Preparation du fetch...');
+    
+    const brevoResponse = await fetch('https://api.brevo.com/v3/smtp/email', {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
@@ -57,20 +60,21 @@ async function sendBrevoEmail(to, subject, type, nom, situation, lien1, lien2) {
       })
     });
     
-    console.log('[DEBUG] Brevo response status:', response.status);
-    console.log('[DEBUG] Brevo response statusText:', response.statusText);
+    console.log('[DEBUG] Apres fetch, status:', brevoResponse.status);
     
-    if (response.ok) {
+    if (brevoResponse.ok) {
       console.log('[DEBUG] Email envoye avec succes!');
       return { success: true };
     } else {
-      const errorText = await response.text();
-      console.log('[DEBUG] ERREUR Brevo:', errorText);
+      const errorText = await brevoResponse.text();
+      console.log('[DEBUG] ERREUR Brevo status 400:', errorText);
       try {
         const errJson = JSON.parse(errorText);
         console.log('[DEBUG] ERREUR Brevo code:', errJson.code);
         console.log('[DEBUG] ERREUR Brevo message:', errJson.message);
-      } catch(e) {}
+      } catch(e) {
+        console.log('[DEBUG] ERREUR Brevo text brut:', errorText);
+      }
       return { success: false, message: errorText };
     }
   } catch (error) {
