@@ -190,6 +190,7 @@
             </a>
             
             <button id="btn-admin" class="cta-button" style="background-color: #f44336; margin-top: 20px;" onclick="demanderAdmin()">
+                <i class="fas fa-envelope" id="admin-icon" style="display:none;"></i>
                 <i class="fas fa-admin"></i>
                 Zone Admin
             </button>
@@ -220,6 +221,17 @@
     
     <script>
     let adminPassword = sessionStorage.getItem('adminPassword');
+    
+    // Vérifier au chargement s'il y a des pending
+    window.addEventListener('load', async () => {
+        try {
+            const response = await fetch('/api/save-supabase?pending=true');
+            const result = await response.json();
+            if (result.success && result.users && result.users.length > 0) {
+                document.getElementById('admin-icon').style.display = 'inline';
+            }
+        } catch (e) {}
+    });
     
     async function demanderAdmin() {
         if (!adminPassword) {
