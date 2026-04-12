@@ -219,17 +219,30 @@
     </div>
     
     <script>
+    let adminPassword = sessionStorage.getItem('adminPassword');
+    
     async function demanderAdmin() {
-        const password = prompt('Entrez le mot de passe admin:');
-        if (password !== 'DAOUDI') {
-            alert('Mot de passe incorrect');
-            return;
+        if (!adminPassword) {
+            adminPassword = prompt('Entrez le mot de passe admin:');
+            if (adminPassword !== 'DAOUDI') {
+                alert('Mot de passe incorrect');
+                adminPassword = null;
+                return;
+            }
+            sessionStorage.setItem('adminPassword', adminPassword);
         }
         
         document.getElementById('admin-section').style.display = 'block';
         document.getElementById('btn-admin').style.display = 'none';
         
         await chargerPending();
+    }
+    
+    function logoutAdmin() {
+        sessionStorage.removeItem('adminPassword');
+        adminPassword = null;
+        document.getElementById('admin-section').style.display = 'none';
+        document.getElementById('btn-admin').style.display = 'inline-block';
     }
     
     async function chargerPending() {
@@ -281,6 +294,7 @@
                         <div style="margin: 10px 0;">${ordonnancesHTML}</div>
                         <button onclick="confirmer('${user.id}')" style="background: #4CAF50; color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer; margin-right: 10px;">Confirmer</button>
                         <button onclick="rejeter('${user.id}')" style="background: #f44336; color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer;">Rejeter</button>
+                        <button onclick="logoutAdmin()" style="background: #607D8B; color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer; margin-left: 20px;">Quitter</button>
                     `;
                     list.appendChild(div);
                 });
