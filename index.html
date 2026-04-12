@@ -195,11 +195,19 @@
                 <i class="fas fa-admin"></i>
                 Zone Admin
             </button>
+            
+            <a href="commentaire/index.html" class="cta-button" style="background-color: #9C27B0; margin-top: 10px;">
+                <i class="fas fa-comment-dots"></i>
+                Propositions & Commentaires
+            </a>
         </div>
         
         <div id="admin-section" style="display:none; margin-top: 30px; padding: 20px; border: 2px solid #f44336; border-radius: 10px;">
             <h3 style="color: #f44336;">Admin - Ordonnances en attente</h3>
             <div id="pending-list"></div>
+            
+            <h3 style="color: #9C27B0; margin-top: 30px;">Admin - Commentaires en attente</h3>
+            <div id="pending-comments-list"></div>
         </div>
         
         <div class="features">
@@ -250,6 +258,99 @@
         document.getElementById('btn-admin').style.display = 'none';
         
         await chargerPending();
+        await chargerPendingComments();
+    }
+    
+    // Charger les commentaires en attente pour l'admin
+    async function chargerPendingComments() {
+        try {
+            const response = await fetch('/api/commentaires?pending=true');
+            const result = await response.json();
+            
+            const list = document.getElementById('pending-comments-list');
+            list.innerHTML = '';
+            
+            if (result.success && result.pending && result.pending.length > 0) {
+                result.pending.forEach(comment => {
+                    const div = document.createElement('div');
+                    div.style.padding = '15px';
+                    div.style.margin = '10px 0';
+                    div.style.border = '2px solid #9C27B0';
+                    div.style.borderRadius = '8px';
+                    div.style.background = '#f3e5f5';
+                    
+                    const date = new Date(comment.created_at).toLocaleDateString('fr-FR');
+                    
+                    div.innerHTML = `
+                        <h4 style="margin: 0 0 10px 0; color: #7B1FA2;">${comment.nom} <span style="background: #9C27B0; color: white; padding: 2px 8px; border-radius: 10px; font-size: 0.8em;">${comment.situation}</span></h4>
+                        <p style="color: #666; font-size: 0.9em;">${date}</p>
+                        <p style="background: white; padding: 10px; border-radius: 5px; margin: 10px 0;">${comment.message}</p>
+                        <button onclick="confirmerComment('${comment.id}')" style="background: #4CAF50; color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer; margin-right: 10px;">Confirmer</button>
+                        <button onclick="rejeterComment('${comment.id}')" style="background: #f44336; color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer;">Rejeter</button>
+                    `;
+                    list.appendChild(div);
+                });
+            } else {
+                list.innerHTML = '<p>Aucun commentaire en attente</p>';
+            }
+        } catch (e) {
+            console.error(e);
+            document.getElementById('pending-comments-list').innerHTML = '<p>Erreur de chargement</p>';
+        }
+    }
+    
+    async function confirmerComment(commentId) {
+        const password = prompt('Entrez le mot de passe admin pour confirmer:');
+        if (password !== 'DAOUDI') {
+            alert('Mot de passe incorrect');
+            return;
+        }
+        
+        try {
+            const response = await fetch('/api/commentaires', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ action: 'confirm', password: password, commentId: commentId })
+            });
+            
+            const result = await response.json();
+            if (result.success) {
+                alert('Commentaire confirmé!');
+                await chargerPendingComments();
+            } else {
+                alert('Erreur: ' + result.message);
+            }
+        } catch (e) {
+            alert('Erreur');
+        }
+    }
+    
+    async function rejeterComment(commentId) {
+        const password = prompt('Entrez le mot de passe admin pour rejeter:');
+        if (password !== 'DAOUDI') {
+            alert('Mot de passe incorrect');
+            return;
+        }
+        
+        if (!confirm('Voulez-vous vraiment rejeter ce commentaire?')) return;
+        
+        try {
+            const response = await fetch('/api/commentaires', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ action: 'reject', password: password, commentId: commentId })
+            });
+            
+            const result = await response.json();
+            if (result.success) {
+                alert('Commentaire rejeté!');
+                await chargerPendingComments();
+            } else {
+                alert('Erreur: ' + result.message);
+            }
+        } catch (e) {
+            alert('Erreur');
+        }
     }
     
     function logoutAdmin() {

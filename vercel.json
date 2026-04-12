@@ -86,11 +86,19 @@
       "use": "@vercel/static"
     },
     {
+      "src": "commentaire/**/*",
+      "use": "@vercel/static"
+    },
+    {
       "src": "api/config.js",
       "use": "@vercel/node"
     },
     {
       "src": "api/save-supabase.js",
+      "use": "@vercel/node"
+    },
+    {
+      "src": "api/commentaires.js",
       "use": "@vercel/node"
     }
   ],
@@ -98,6 +106,10 @@
     {
       "src": "/api/save-supabase",
       "dest": "/api/save-supabase.js"
+    },
+    {
+      "src": "/api/commentaires",
+      "dest": "/api/commentaires.js"
     },
     {
       "src": "/styles/(.*)",
