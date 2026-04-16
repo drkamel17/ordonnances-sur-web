@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conduite a Tenir - Medecine</title>
+    <meta name="description" content="Guide des conduites a tenir medicales par specialite">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #9b59b6;
+            --bg-gradient: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+            --card-bg: #ffffff;
+            --text-main: #2c3e50;
+            --text-muted: #7f8c8d;
+        }
+        body {
+            font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: var(--bg-gradient);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            color: var(--text-main);
+        }
+        .container {
+            background-color: var(--card-bg);
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            max-width: 700px;
+            width: 100%;
+        }
+        h1 {
+            text-align: center;
+            color: var(--primary-color);
+        }
+        .subtitle {
+            text-align: center;
+            color: var(--text-muted);
+            margin-bottom: 30px;
+        }
+        .beta-badge {
+            display: inline-block;
+            padding: 5px 12px;
+            background-color: #f39c12;
+            color: white;
+            border-radius: 20px;
+            font-size: 0.8em;
+            margin-bottom: 20px;
+        }
+        .buttons-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+        }
+        .cta-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 25px 20px;
+            background: linear-gradient(135deg, #fff 0%, #f8f9fa 100%);
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            text-decoration: none;
+            color: var(--text-main);
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+        .cta-button:hover {
+            border-color: var(--primary-color);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 20px rgba(155, 89, 182, 0.2);
+        }
+        .cta-button i {
+            font-size: 1.8em;
+            color: var(--primary-color);
+        }
+        .coming-soon {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        
+        
+        <h1><i class="fas fa-stethoscope"></i> Conduite a Tenir</h1>
+        <p class="subtitle">Guide medical par specialite</p>
+        
+        <div class="buttons-grid">
+            <a href="cardiologie/index.html" class="cta-button">
+                <i class="fas fa-heartbeat"></i>
+                Cardiologie
+            </a>
+            
+            <a href="endocrinologie/index.html" class="cta-button">
+                <i class="fas fa-dna"></i>
+                Endocrinologie
+            </a>
+            
+            <a href="dermatologie/index.html" class="cta-button">
+                <i class="fas fa-user-md"></i>
+                Dermatologie
+            </a>
+            
+            <a href="urologie/index.html" class="cta-button">
+                <i class="fas fa-kidney"></i>
+                Urologie
+            </a>
+            
+            <a href="infectiologie/index.html" class="cta-button">
+                <i class="fas fa-virus"></i>
+                Infectiologie
+            </a>
+            
+            <a href="ophtalmologie/index.html" class="cta-button">
+                <i class="fas fa-eye"></i>
+                Ophtalmologie
+            </a>
+            
+            <a href="medecine-interne/index.html" class="cta-button">
+                <i class="fas fa-user-injured"></i>
+                Medecine Interne
+            </a>
+            
+            <a href="pneumologie/index.html" class="cta-button">
+                <i class="fas fa-lungs"></i>
+                Pneumologie
+            </a>
+            
+            <a href="rhumatologie/index.html" class="cta-button">
+                <i class="fas fa-bone"></i>
+                Rhumatologie
+            </a>
+            
+            <a href="ecg/index.html" class="cta-button">
+                <i class="fas fa-heart-pulse"></i>
+                ECG
+            </a>
+            
+            <a href="neurologie/index.html" class="cta-button">
+                <i class="fas fa-brain"></i>
+                Neurologie
+            </a>
+            
+            <a href="#" class="cta-button coming-soon">
+                <i class="fas fa-kidney"></i>
+                Nephrologie
+            </a>
+            
+            <a href="gastrologie/index.html" class="cta-button">
+                <i class="fas fa-stomach"></i>
+                Gastrologie
+            </a>
+            
+            <a href="reanimation/index.html" class="cta-button">
+                <i class="fas fa-user-injured"></i>
+                Reanimation
+            </a>
+            
+            <a href="pediatrie/index.html" class="cta-button">
+                <i class="fas fa-baby"></i>
+                Pediatric
+            </a>
+            
+            <a href="gynecologie/index.html" class="cta-button">
+                <i class="fas fa-venus"></i>
+                Gynecologie
+            </a>
+            
+            <a href="hematologie/index.html" class="cta-button">
+                <i class="fas fa-blood"></i>
+                Hematologie
+            </a>
+            
+            <a href="orl/index.html" class="cta-button">
+                <i class="fas fa-ear"></i>
+                ORL
+            </a>
+            
+            <a href="medicaments-urgence/index.html" class="cta-button">
+                <i class="fas fa-pills"></i>
+                Medicaments Urgence
+            </a>
+            
+            <a href="urgence/index.html" class="cta-button">
+                <i class="fas fa-ambulance"></i>
+                Urgence
+            </a>
+            
+            <a href="ordonnances/index.html" class="cta-button">
+                <i class="fas fa-file-prescription"></i>
+                Ordonnances
+            </a>
+            
+            <a href="cat-consultation/index.html" class="cta-button">
+                <i class="fas fa-stethoscope"></i>
+                CAT Consultation
+            </a>
+            
+            <a href="autres/index.html" class="cta-button">
+                <i class="fas fa-ellipsis"></i>
+                Autres
+            </a>
+        </div>
+        
+        <p style="text-align: center; margin-top: 30px; color: var(--text-muted);">
+            <i class="fas fa-info-circle"></i> Autres specialites a venir...
+        </p>
+        
+        <div style="text-align: center; margin-top: 30px;">
+            <a href="index.html" style="color: #3498db; text-decoration: none;">
+                <i class="fas fa-home"></i> Retour a la page d'accueil
+            </a>
+        </div>
+    </div>
+</body>
+</html>
