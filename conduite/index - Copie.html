@@ -311,28 +311,56 @@
         'autres': 'Autres'
     };
     
-    let pages = [];
-    
-    // Charger les pages depuis le fichier JSON
-    fetch('pages-index.json')
-        .then(response => response.json())
-        .then(data => {
-            pages = data;
-        })
-        .catch(error => console.error('Erreur chargement index:', error));
-    
-    // Fonction de normalisation (supprime accents + minuscules)
-    function normalizeText(text) {
-        return text.toLowerCase()
-                   .normalize('NFD')
-                   .replace(/[\u0300-\u036f]/g, '');
-    }
+    const pages = [
+        { title: 'Infarctus du Myocarde', path: 'cardiologie/index.html', specialty: 'cardiologie' },
+        { title: 'Insuffisance Cardiaque', path: 'cardiologie/index.html', specialty: 'cardiologie' },
+        { title: 'Embolie Pulmonaire', path: 'cardiologie/index.html', specialty: 'cardiologie' },
+        { title: 'Fibrillation Auriculaire', path: 'cardiologie/index.html', specialty: 'cardiologie' },
+        { title: 'Hypotension', path: 'cardiologie/index.html', specialty: 'cardiologie' },
+        { title: 'Diabète Type 1', path: 'endocrinologie/index.html', specialty: 'endocrinologie' },
+        { title: 'Diabète Type 2', path: 'endocrinologie/index.html', specialty: 'endocrinologie' },
+        { title: 'Hypothyroidie', path: 'endocrinologie/index.html', specialty: 'endocrinologie' },
+        { title: 'Hyperthyroidie', path: 'endocrinologie/index.html', specialty: 'endocrinologie' },
+        { title: 'Psoriasis', path: 'dermatologie/index.html', specialty: 'dermatologie' },
+        { title: 'Eczéma', path: 'dermatologie/index.html', specialty: 'dermatologie' },
+        { title: 'Acné', path: 'dermatologie/index.html', specialty: 'dermatologie' },
+        { title: 'Infection Urinaire', path: 'urologie/index.html', specialty: 'urologie' },
+        { title: 'Colique Nephretique', path: 'urologie/index.html', specialty: 'urologie' },
+        { title: 'Tuberculose', path: 'infectiologie/index.html', specialty: 'infectiologie' },
+        { title: 'Conjonctivite', path: 'ophtalmologie/index.html', specialty: 'ophtalmologie' },
+        { title: 'Glaucome', path: 'ophtalmologie/index.html', specialty: 'ophtalmologie' },
+        { title: 'Asthme', path: 'pneumologie/index.html', specialty: 'pneumologie' },
+        { title: 'BPCO', path: 'pneumologie/index.html', specialty: 'pneumologie' },
+        { title: 'Arthrose', path: 'rhumatologie/index.html', specialty: 'rhumatologie' },
+        { title: 'Arthrite', path: 'rhumatologie/index.html', specialty: 'rhumatologie' },
+        { title: 'Lombalgie', path: 'rhumatologie/index.html', specialty: 'rhumatologie' },
+        { title: 'Sciatique', path: 'rhumatologie/index.html', specialty: 'rhumatologie' },
+        { title: 'AVC', path: 'neurologie/index.html', specialty: 'neurologie' },
+        { title: 'Epilepsie', path: 'neurologie/index.html', specialty: 'neurologie' },
+        { title: 'Ulcère Gastrique', path: 'gastrologie/index.html', specialty: 'gastrologie' },
+        { title: 'Reflux Gastro-oesophagien', path: 'gastrologie/index.html', specialty: 'gastrologie' },
+        { title: 'Pre-Eclampsie', path: 'gynecologie/index.html', specialty: 'gynecologie' },
+        { title: 'Grossesse Extra-uterine', path: 'gynecologie/index.html', specialty: 'gynecologie' },
+        { title: 'Otite', path: 'orl/index.html', specialty: 'orl' },
+        { title: 'Sinusite', path: 'orl/index.html', specialty: 'orl' },
+        { title: 'Angine', path: 'orl/index.html', specialty: 'orl' },
+        { title: 'Anémie', path: 'hematologie/index.html', specialty: 'hematologie' },
+        { title: 'Thrombopénie', path: 'hematologie/index.html', specialty: 'hematologie' },
+        { title: 'Choc Hypovolemique', path: 'reanimation/index.html', specialty: 'reanimation' },
+        { title: 'Polytraumatisme', path: 'reanimation/index.html', specialty: 'reanimation' },
+        { title: 'OAP', path: 'urgence/index.html', specialty: 'urgence' },
+        { title: 'Hyperkaliemie', path: 'urgence/index.html', specialty: 'urgence' },
+        { title: 'Ordonnance Hypertension', path: 'ordonnances/index.html', specialty: 'ordonnances' },
+        { title: 'Ordonnance Diabete', path: 'ordonnances/index.html', specialty: 'ordonnances' },
+        { title: 'CAT Fievre', path: 'cat-consultation/index.html', specialty: 'cat-consultation' },
+        { title: 'CAT Douleur Abdominale', path: 'cat-consultation/index.html', specialty: 'cat-consultation' }
+    ];
     
     const searchInput = document.getElementById('searchInput');
     const searchResults = document.getElementById('searchResults');
     
     searchInput.addEventListener('input', function() {
-        const query = this.value.trim();
+        const query = this.value.toLowerCase().trim();
         
         if (query.length < 2) {
             searchResults.classList.remove('active');
@@ -340,10 +368,8 @@
             return;
         }
         
-        const normalizedQuery = normalizeText(query);
-        
         const results = pages.filter(page => 
-            normalizeText(page.title).includes(normalizedQuery)
+            page.title.toLowerCase().includes(query)
         ).slice(0, 20);
         
         if (results.length === 0) {
