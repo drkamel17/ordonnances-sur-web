@@ -68,57 +68,13 @@
       display: flex;
       gap: 15px;
     }
-    .sidebar {
-      width: 250px;
-      background: white;
-      border-radius: 12px;
-      padding: 15px;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-      height: fit-content;
-      flex-shrink: 0;
-    }
-    .sidebar h3 {
-      margin-top: 0;
-      color: #333;
-      border-bottom: 2px solid #667eea;
-      padding-bottom: 10px;
-      font-size: 1rem;
-    }
-    .user-list {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-    }
-    .user-list li {
-      padding: 10px;
-      margin: 5px 0;
-      border-radius: 6px;
-      cursor: pointer;
-      transition: background 0.3s;
-    }
-    .user-list li:hover {
-      background: #f0f0f0;
-    }
-    .user-list li.active {
-      background: #667eea;
-      color: white;
-    }
-    .user-name {
-      font-weight: 600;
-    }
-    .user-situation {
-      font-size: 0.8em;
-      color: #666;
-    }
-    .user-list li.active .user-situation {
-      color: white;
-    }
     .comments-section {
       flex: 1;
       background: white;
       border-radius: 12px;
       padding: 20px;
       box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      width: 100%;
     }
     .comments-section h2 {
       margin-top: 0;
@@ -272,13 +228,6 @@
     </div>
     
     <div class="main-content">
-      <div class="sidebar">
-        <h3><i class="fas fa-users"></i> Utilisateurs</h3>
-        <ul class="user-list" id="user-list">
-          <li class="active" data-id="all">Tous les commentaires</li>
-        </ul>
-      </div>
-      
       <div class="comments-section">
         <h2><i class="fas fa-list"></i> Liste des Commentaires</h2>
         <div id="comments-container">
@@ -290,7 +239,6 @@
   
   <script>
     let allCommentaires = [];
-    let selectedUser = 'all';
     
     // Charger les commentaires au démarrage
     async function chargerCommentaires() {
@@ -300,7 +248,6 @@
         
         if (result.success && result.commentaires) {
           allCommentaires = result.commentaires;
-          afficherUtilisateurs();
           afficherCommentaires();
         } else {
           document.getElementById('comments-container').innerHTML = `
@@ -315,52 +262,10 @@
       }
     }
     
-    function afficherUtilisateurs() {
-      const userList = document.getElementById('user-list');
-      
-      // Regrouper les utilisateurs uniques
-      const utilisateurs = {};
-      allCommentaires.forEach(c => {
-        if (!utilisateurs[c.nom]) {
-          utilisateurs[c.nom] = c.situation;
-        }
-      });
-      
-      let html = '<li class="active" data-id="all" onclick="filterUser(\'all\')">Tous les commentaires</li>';
-      
-      Object.keys(utilisateurs).forEach(nom => {
-        html += `
-          <li data-id="${nom}" onclick="filterUser('${nom}')">
-            <div class="user-name">${nom}</div>
-            <div class="user-situation">${utilisateurs[nom]}</div>
-          </li>
-        `;
-      });
-      
-      userList.innerHTML = html;
-    }
-    
-    function filterUser(userId) {
-      selectedUser = userId;
-      
-      // Mettre à jour la classe active
-      document.querySelectorAll('.user-list li').forEach(li => {
-        li.classList.remove('active');
-        if (li.dataset.id === userId) {
-          li.classList.add('active');
-        }
-      });
-      
-      afficherCommentaires();
-    }
-    
     function afficherCommentaires() {
       const container = document.getElementById('comments-container');
       
-      let filtered = allCommentaires;
-      if (selectedUser !== 'all') {
-        filtered = allCommentaires.filter(c => c.nom === selectedUser);
-      }
+      const filtered = allCommentaires;
       
       if (filtered.length === 0) {
         container.innerHTML = '<div class="no-comments">Aucun commentaire</div>';
