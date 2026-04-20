@@ -51,6 +51,45 @@
         button:hover {
             background-color: #0056b3;
         }
+
+        /* Responsive styles */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            
+            h1, h2 {
+                font-size: 18px;
+            }
+            
+            .radio-group {
+                width: 100%;
+            }
+            
+            div[style*="display: flex"] {
+                flex-direction: column;
+            }
+            
+            div[style*="margin-bottom: 20px"] {
+                margin-bottom: 15px;
+            }
+            
+            input[type="text"],
+            input[type="radio"] {
+                width: 100%;
+                margin-top: 5px;
+            }
+            
+            label {
+                display: block;
+                margin-bottom: 10px;
+            }
+            
+            button {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+        }
     </style>
 </head>
 <body>

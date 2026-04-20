@@ -183,11 +183,24 @@
             font-weight: 500;
         }
 
-        @media (max-width: 600px) {
+@media (max-width: 600px) {
             .container { padding: 20px; }
             .header h1 { font-size: 1.8em; }
             .buttons-grid { grid-template-columns: 1fr; }
             .admin-section { flex-direction: column; }
+            .header { flex-direction: column; gap: 15px !important; }
+            .header i { font-size: 2.5em !important; }
+            .header h1 { font-size: 1.5em !important; }
+            .subtitle { font-size: 0.9em !important; }
+            .cta-button { padding: 12px; font-size: 0.85em; }
+            .footer { font-size: 0.8em; }
+        }
+
+        @media (max-width: 400px) {
+            .container { padding: 15px; }
+            .header h1 { font-size: 1.3em !important; }
+            .cta-button { flex-direction: column; gap: 5px; }
+            .cta-button i { margin-right: 0 !important; margin-bottom: 5px; }
         }
     </style>
 </head>

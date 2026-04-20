@@ -367,4 +367,61 @@ footer {
     .status-summary {
         grid-template-columns: 1fr;
     }
+    
+    header h1 {
+        font-size: 1.3em;
+    }
+    
+    header p {
+        font-size: 0.9em;
+    }
+    
+    .tabs {
+        flex-direction: column;
+    }
+    
+    .tab-button {
+        padding: 10px;
+        font-size: 0.9em;
+    }
+    
+    .vaccinations-layout {
+        flex-direction: column;
+    }
+    
+    .vaccine-grid {
+        gap: 10px;
+    }
+    
+    .checkbox-group {
+        flex-direction: column;
+    }
+    
+    .action-buttons {
+        grid-template-columns: 1fr;
+    }
+    
+    .modal-content {
+        width: 95%;
+        padding: 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    header h1 {
+        font-size: 1.1em;
+    }
+    
+    .patient-info, .vaccinations-left, .vaccinations-right {
+        padding: 10px;
+    }
+    
+    .vaccine-field {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .vaccine-date {
+        width: 100%;
+    }
 }

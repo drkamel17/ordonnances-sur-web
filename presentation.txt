@@ -1,0 +1,120 @@
+# Programme Conduite a Tenir - Dr. Daoudi
+
+## Description du Programme
+
+Ce programme est une application médicale web contenant des guides de conduite à tenir et des ordonnances types pour diverses spécialités médicales.
+
+---
+
+## 1. Ordonnances Types
+
+### Description
+Cette section contient des **ordonnances pré-définies** pour les pathologies courantes. Elle permet aux médecins de générer rapidement des ordonnances personnalisées.
+
+### Fonctionnalités
+- **38 ordonnances types** couvrant plusieurs spécialités
+- **Génération automatique** des prescriptions avec :
+  - Nom du médicament
+  - Posologie détaillée
+  - Durée du traitement
+- **Interface interactive** avec sélection du type de traitement
+- **Affichage dans la même page** pour un gain de temps
+
+### Exemples d'utilisation
+- Angine bactérienne / virale
+- Cystite
+- Conjonctivite (bactérienne, virale, allergique)
+- Grippe
+- Eczéma atopique
+- et bien d'autres...
+
+---
+
+## 2. Conduite a Tenir (CAT)
+
+### Description
+Cette section est le **coeur du programme**. Elle contient des guides cliniques detalliés pour la prise en charge des patients selon chaque spécialité.
+
+### Contenu
+- **475 pages HTML** réparties sur **22 spécialités**
+- Chaque page contient :
+  - **Clinique** : signes et symptômes
+  - **Bilan** : examens complémentaires
+  - **Traitement** : conduite à tenir
+
+### Spécialités disponibles
+| Spécialité | Nombre de pages |
+|------------|-----------------|
+| Gynecologie | 44 |
+| ORL | 25 |
+| Gastrologie | 28 |
+| Cardiologie | 21 |
+| Infectiologie | 27 |
+| Endocrinologie | 14 |
+| Dermatologie | 43 |
+| CAT Consultation | 43 |
+| Hematologie | 9 |
+| Medicaments Urgence | 38 |
+| Ordonnances | 38 |
+| Pediatrie | 26 |
+| Rhumatologie | 30 |
+| Reanimation | 6 |
+| ECG | 12 |
+| Autres | 6 |
+| Pneumologie | 9 |
+| Neurologie | 17 |
+| Urgence | 5 |
+| Medecine Interne | 7 |
+| Ophtalmologie | 13 |
+| Urologie | 15 |
+
+### Fonctionnalités de recherche
+- **Barre de recherche intelligente** accepts:
+  - Majuscules / Minuscules
+  - Accents / Sans accents
+  - Recherche en temps réel
+- **Lien direct** vers chaque page
+
+---
+
+## 3. Propositions & Commentaires
+
+### Pour les développeurs
+- **Architecture modulaire** : chaque spécialité est un dossier séparé
+- **Mise à jour automatique** : script Python pour régénérer l'index de recherche
+- **Facilité d'extension** : ajouter de nouvelles pages HTML suffit pour les inclure automatiquement
+
+### Pour les utilisateurs
+- **Interface simple et intuitive**
+- **Navigation rapide** par specialties ou recherche
+- **Contenu médical structuré** et facile à consulter
+- **Accessibilité** sur tout appareil (responsive design)
+
+### Points forts du programme
+1. **Base de données médicale complète** : 475 conditions médicales
+2. **Recherche intelligente** : tolerance aux erreurs de frappe et accents
+3. **Mise à jour facile** : un seul script pour ajouter de nouvelles pages
+4. **Format standardisé** : même structure pour toutes les pages
+5. **Code ouvert** : facile à modifier et étendre
+
+### Améliorations possibles
+- Ajout de plus de spécialités
+- Intégration d'images et schémas
+- Version mobile dédiée
+- Export PDF des ordonnances
+
+---
+
+## Résumé
+
+| Section | Contenu | Utilité |
+|---------|---------|---------|
+| **Ordonnances Types** | 38 ordonnances pré-définies | Génération rapide de prescriptions |
+| **Conduite a Tenir** | 475 pages médicales | Guide clinique pour chaque pathologie |
+| **Recherche** | Index intelligent | Accès rapide à n'importe quelle page |
+
+---
+
+**Développé pour :** Dr. Daoudi  
+**Version :** 1.0  
+**Technologie :** HTML, CSS, JavaScript, Python (pour la génération d'index)

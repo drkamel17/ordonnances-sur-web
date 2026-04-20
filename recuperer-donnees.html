@@ -184,12 +184,53 @@ tr:nth-child(even) {
         .modal {
             animation: fadeIn 0.3s ease;
         }
-        @keyframes fadeIn {
+@keyframes fadeIn {
             from {
-                opacity: 0;
+                opacity: 1;
             }
             to {
                 opacity: 1;
+            }
+        }
+
+        /* Responsive styles */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            
+            .container {
+                padding: 15px;
+            }
+            
+            h1 {
+                font-size: 1.3rem;
+            }
+            
+            .form-group {
+                margin-bottom: 12px;
+            }
+            
+            select, input, button {
+                font-size: 14px;
+            }
+            
+            .results {
+                overflow-x: auto;
+            }
+            
+            table {
+                font-size: 12px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.1rem;
+            }
+            
+            button {
+                padding: 10px;
             }
         }
     </style>

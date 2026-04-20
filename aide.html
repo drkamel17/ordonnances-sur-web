@@ -135,8 +135,76 @@
         .nav-button.warning {
             background-color: #FF9800;
         }
-        .nav-button.warning:hover {
+.nav-button.warning:hover {
             background-color: #e68a00;
+        }
+
+        /* Responsive styles */
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+                margin: 15px;
+            }
+            
+            .header {
+                margin-bottom: 20px;
+                padding-bottom: 15px;
+            }
+            
+            .header h1 {
+                font-size: 1.5em;
+            }
+            
+            .header i {
+                font-size: 2em;
+            }
+            
+            .section {
+                padding: 15px;
+            }
+            
+            .section h2 {
+                font-size: 1.2em;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 5px;
+            }
+            
+            .highlight, .important {
+                padding: 15px;
+            }
+            
+            .steps li {
+                flex-direction: column;
+            }
+            
+            .step-number {
+                margin-bottom: 5px;
+            }
+            
+            .nav-buttons {
+                flex-direction: column;
+            }
+            
+            .nav-buttons .nav-button {
+                width: 100%;
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 15px;
+                margin: 10px;
+            }
+            
+            .header h1 {
+                font-size: 1.2em;
+            }
+            
+            .section h2 {
+                font-size: 1em;
+            }
         }
     </style>
 </head>
