@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
   <title>Admin - Gestion des En attente</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <style>
@@ -112,6 +112,29 @@
       border-radius: 8px;
       font-size: 1.1em;
       margin: 15px 0;
+    }
+
+    @media (max-width: 768px) {
+      .container { padding: 10px; }
+      .header {
+        flex-direction: column;
+        gap: 10px;
+        text-align: center;
+        padding: 15px;
+      }
+      .header h1 { font-size: 1.3rem; }
+      .btn { padding: 8px 14px; font-size: 0.9rem; }
+      .section { padding: 12px; }
+      .section h2 { font-size: 1.1rem; }
+      .pending-card { padding: 10px; }
+      .password-box input { font-size: 1rem; padding: 10px; }
+    }
+
+    @media (max-width: 480px) {
+      .header h1 { font-size: 1.1rem; }
+      .btn { padding: 6px 10px; font-size: 0.85rem; }
+      .section { padding: 10px; margin-bottom: 10px; }
+      .pending-card { padding: 8px; font-size: 0.9rem; }
     }
   </style>
 </head>

@@ -101,6 +101,29 @@
       color: #721c24;
       border: 1px solid #f5c6cb;
     }
+
+    @media (max-width: 768px) {
+      body { padding: 10px; }
+      .container {
+        padding: 20px;
+        border-radius: 12px;
+      }
+      h1 { font-size: 1.3rem; }
+      .form-group { margin-bottom: 15px; }
+      label { font-size: 0.95rem; }
+      input, select, textarea {
+        padding: 10px;
+        font-size: 15px;
+      }
+      textarea { min-height: 120px; }
+      .btn { width: 100%; margin-bottom: 10px; }
+      .btn-group { display: flex; flex-direction: column; gap: 10px; }
+    }
+
+    @media (max-width: 480px) {
+      .container { padding: 15px; }
+      h1 { font-size: 1.1rem; margin-bottom: 20px; }
+    }
   </style>
 </head>
 <body>

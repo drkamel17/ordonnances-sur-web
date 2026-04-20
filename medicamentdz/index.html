@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
     <title>Recherche Médicaments - DZ Pharma</title>
     <style>
         * {
@@ -277,6 +277,24 @@
             color: white;
             font-size: 1.2rem;
             margin-top: 50px;
+        }
+        
+        @media (max-width: 768px) {
+            body { padding: 10px; }
+            h1 { font-size: 1.5rem; margin-bottom: 20px; }
+            .search-box { padding: 10px 20px; border-radius: 25px; }
+            .search-input { font-size: 15px; padding: 8px 12px; }
+            .results { padding: 10px; }
+            .med-card { padding: 12px; }
+            .med-name { font-size: 1rem; }
+            .med-info { font-size: 0.9rem; }
+        }
+        
+        @media (max-width: 480px) {
+            h1 { font-size: 1.2rem; }
+            .search-input { font-size: 14px; }
+            .med-card { padding: 10px; }
+            .med-name { font-size: 0.95rem; }
         }
     </style>
 </head>

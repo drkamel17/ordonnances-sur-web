@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
   <title>Gestion des Ordonnances Types</title>
   <style>
     * {
@@ -20,7 +20,55 @@
     .container {
       max-width: 1200px;
       margin: 0 auto;
-      padding: 20px;
+      padding: 10px;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        padding: 8px;
+      }
+      .header {
+        flex-direction: column;
+        gap: 15px;
+        padding: 15px;
+      }
+      .header h1 {
+        font-size: 1.3rem;
+        text-align: center;
+      }
+      .header-actions {
+        width: 100%;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+      .btn {
+        padding: 8px 12px;
+        font-size: 12px;
+      }
+      .panel-gauche {
+        border-radius: 8px;
+        margin-bottom: 10px;
+      }
+      .panel-droit {
+        border-radius: 8px;
+      }
+      .item-ordonnance {
+        padding: 10px 12px;
+        font-size: 13px;
+      }
+      input[type="text"], input[type="search"] {
+        padding: 8px 10px;
+        font-size: 14px;
+      }
+      textarea {
+        padding: 10px;
+        font-size: 14px;
+        min-height: 120px;
+      }
+      select {
+        padding: 8px;
+        font-size: 14px;
+      }
     }
 
     .header {
@@ -116,6 +164,25 @@
       display: flex;
       gap: 0;
       align-items: stretch;
+    }
+
+    @media (max-width: 768px) {
+      .main-content {
+        flex-direction: column;
+      }
+      .panel {
+        flex: none !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 100% !important;
+      }
+      .resize-handle {
+        display: none;
+      }
+      .panel-gauche {
+        max-height: 40vh;
+        overflow-y: auto;
+      }
     }
 
     .panel {

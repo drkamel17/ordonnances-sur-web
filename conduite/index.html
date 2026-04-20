@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
     <title>Conduite a Tenir - Medecine</title>
     <meta name="description" content="Guide des conduites a tenir medicales par specialite">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -142,6 +142,22 @@
         .coming-soon {
             opacity: 0.5;
             cursor: not-allowed;
+        }
+        
+        @media (max-width: 768px) {
+            body { padding: 10px; }
+            .container { padding: 15px; }
+            h1 { font-size: 1.3rem; }
+            .subtitle { font-size: 0.9rem; }
+            .buttons-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+            .cta-button { padding: 12px; font-size: 0.9rem; }
+            .cta-button i { font-size: 1.4em; }
+        }
+        
+        @media (max-width: 480px) {
+            .buttons-grid { grid-template-columns: 1fr; gap: 8px; }
+            .cta-button { padding: 10px; font-size: 0.85rem; }
+            h1 { font-size: 1.1rem; }
         }
     </style>
 </head>
