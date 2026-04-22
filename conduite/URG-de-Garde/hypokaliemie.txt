@@ -1,0 +1,154 @@
+Corps étrangers digestifs
+P31
+protocole
+2/2
+Cas particulier des body packer
+RÉFÉRENCES
+NLNe pas essayer d’extraire les sachets car risque
+Ross E et al. Foreign bodies in sigmoid colon
+de perforation du sachet, de libération de la
+diverticulosis. Clin J Gastroenterol 2017 ; 10 :
+drogue et donc overdose
+491-7.
+NLExtraction en urgence si rupture d’un sac
+Birk M et al. Removal of foreign bodies in the
+upper gastrointestinal tract in adults: European
+LLCORPS ÉTRANGER INTRARECTAL Society of Gastrointestinal Endoscopy (ESGE).
+Clinical Guideline Endoscopy 2016 ; 17 : 13-20.
+Retrait de l’objet par les voies naturelles
+sous MEOPA aux urgences
+Si impossibilité :
+Mise en condition
+NLAbord veineux : sérum physiologique 500 mL/24 h
+NLÀ jeun
+Bilan
+NLNFS, TC, TCA
+NLIonogramme, créatininémie
+NLGroupe, RAI, ± ECG
+Avis chirurgien viscéral
+NLRetrait au bloc opératoire, sous anesthésie
+générale par les voies naturelles
+NLIndications chirurgicales :
+• signe de perforation, de dilacération ou
+d’infection
+• position haute du corps étranger ou échec
+d’extraction
+• objets cassables, friables, acérés ou
+potentiellement dangereux
+54
+W
+CORPS ÉTRANGERS INHALÉS
+P32
+PG. Reuter – Actualisation : 30/9/2018
+protocole
+1/1
+DÉFINITION LLOBSTRUCTION PARTIELLE
+Le plus souvent accidentel, lors de prise alimentaire. BIEN TOLÉRÉE
+Chez l’adulte, les populations à risque sont les per- Imagerie
+sonnes âgées, les patients présentant des troubles
+de la déglutition et les patients alcoolisés.
+NLRadio de thorax (± cervical) : face et profil
+NLTDM cervicothoracique à discuter si doute
+diagnostique avec un objet radiotransparent ou en
+LLPRISE EN CHARGE IAO
+cas de signe de perforation
+Libération des voies aériennes supérieures ATTENTION
+Pour les objets de type pièce, sur la radio de thorax :
+Constantes Si rond de face et linéaire de profil → intra-œsophagien
+Si linéaire de face et rond de profil → intratrachéal
+NLPAS, PAD, FC, T °C, SpO
+2
+, FR, Dextro
+Biologie
+Orientation
+NLBilan préopératoire : NFS, TP, TCA, ionogramme,
+NLSAUV si détresse respiratoire ou arrêt cardiaque créatininémie, ± Groupe et RAI, ECG
+NLBox dans les autres cas NLBilan inflammatoire : CRP
+NLInstaller le patient assis ou demi assis
+Prise en charge
+LLOBSTRUCTION COMPLÈTE AVEC NLInstaller le patient assis, légèrement vers l’avant
+et rester à ces côtés en surveillance
+PATIENT INCONSCIENT OU PATIENT NLMise en place d’un cathéter obturé
+EN ARRÊT CARDIORESPIRATOIRE NLOxygénothérapie si besoin
+NLAvis chirurgien thoracique ou ORL pour la prise
+NLPrise en charge d’un ACR (P15)
+en charge endoscopique
+LLOBSTRUCTION COMPLÈTE LLENDOSCOPIE BRONCHIQUE
+AVEC PATIENT CONSCIENT Indication
+OU PARTIELLE MAL TOLÉRÉE NLSd de pénétration = endoscopie sauf :
+• CE expulsé en entier suite à effort de toux
+Prise en charge
+• CE identifié comme radio-opaque et non
+NLEn extrême urgence car risque imminent d’ACR retrouvé à la radio.
+NLRecherche et extraction de CE intrabuccal si
+patient compliant LLDÉLAIS
+NLDonner 5 claques entre les 2 scapula avec le talon NLSi signe de gravité : en urgence
+d’une main en tenant la face antérieure du thorax NLSi patient stabilisé : à faire dans les 24-36 heures
+avec l’autre main
+NLSi échec : 5 manœuvres d’Heimlich RÉFÉRENCES
+NLSi échec : alterner les claques et la manœuvre Tseng HJ et al. Imaging foreign bodies ingested
+d’Heimlich aspirated and inserted. Ann Emerg Med 2015 ; 66 :
+NLEnvisager prise en charge invasive en cas de 570-82.
+détresse : Blanco Ramos M et al. Update in the extraction
+• sédation rapide et extraction à la pince de Magill of airway foreign bodies in adults. J Thorac Dis
+• cricothyroïdectomie 2016 ; 8 : 3452-6.
+55
+COUP DE CHALEUR
+P33
+protocole
+S. Travers – Actualisation : 20/9/2018
+1/2 �
+DÉFINITION LLPRISE EN CHARGE MÉDICALE
+Le coup de chaleur est défini par l’association d’une Bilan
+hyperthermie supérieure à 40 °C et la présence de
+symptômes neurologiques (troubles de conscience,
+NLNFS, plaquettes (hémoconcentration)
+troubles du comportement, confusion, convulsions,
+NLIono (déshydratation)
+coma…).
+NLBHC (cytolyse)
+On distingue classiquement le « coup de chaleur
+NLCréat (insuffisance rénale)
+classique » dans un contexte de conditions clima-
+NLGDS-lactates
+tiques chaudes et le « coup de chaleur d’exercice »
+NLBilan infectieux (hémocultures, ECBU, PL,
+recherche paludisme, radio thorax) au moindre
+dans un contexte d’épreuve sportive associé souvent
+doute (trouble neurologique)
+à une température de l’air élevée et à un fort taux
+d’humidité. Mise en condition
+Les formes graves peuvent rapidement évoluer vers
+des troubles vasculaires, une défaillance multiviscé- NLScope, PANI, SpO 2 , surveillance diurèse,
+rale et le décès. oxygénothérapie systématique au masque
+haute concentration (6 L/min), VVP avec sérum
+physiologique 1 500 mL/24 h en base
+LLPRISE EN CHARGE IAO
+Traitement
+Bilan
+NLRefroidissement : faire baisser la T° centrale en
+NLT°C, FC, TA, FR, SpO
+2
+, niveau de conscience, dessous de 39,4 °C le plus rapidement possible :
+Dextro, ECG • déshabillage, salle climatisée (à défaut, placer une
+NLDéshabillage du patient, début de refroidissement bassine remplie de glace devant un ventilateur)
+(pièce climatisée, cold pack par-dessus un drap • bains froids : méthode la plus efficace, mais
+sur les plis inguinaux et aisselles…) seulement si l’état du patient le permet (patient
+jeune…)
+Orientation • refroidissement par évaporation (plusieurs
+NLSAUV méthodes) :
+– idéalement « tunnel réfrigérant » associant
+courant d’air sous un tunnel composé de draps
+mouillés et d’arceaux de lits orthopédiques
+provoqué par un ventilateur au pied du lit,
+– association vaporisation des téguments avec
+de l’eau tiède et ventilateur brassant de l’air,
+– application de linges régulièrement
+humidifiés avec de l’eau froide sur
+l’ensemble des téguments et brassage de
+l’air par ventilateur,
+• AINS, aspirine, paracétamol et Dantrolène® :
+non efficaces et déconseillés
+NLOxygénothérapie systématique : masque à haute
+concentration (O 2 6 L/min) •••
+56

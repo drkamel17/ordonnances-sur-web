@@ -1,0 +1,992 @@
+=== Page 21 ===
+W
+ACCÈS PALUSTRE
+P1
+F. Adnet – Actualisation : 20/8/2018
+protocole
+1/3�
+DÉFINITION Biologiques
+Maladie parasitaire (famille des Plasmodium) trans- NLAnémie profonde (Hb < 7 g.dL–1)
+mise par l’anophèle femelle. L’accès palustre se NLHypoglycémie < 2,2 mmol.L–1
+caractérise par une fièvre élevée, des frissons, des NLAcidose métabolique (pH < 7,35)
+tremblements, une sensation de froid avec sueurs NLParasitémie > 4 %
+abondantes et des troubles digestifs. NLHyperlactatémie > 2 mmol.L–1
+NLCréatinémie > 265 µmol.L–1
+NLDiurèse < 400 mL/24 h malgré hydratation
+LLPRISE EN CHARGE IAO NLBilirubine totale > 50 µmol.L
+Bilan
+NLDextro, FR, PAS, PAD, FC, T °C, SpO
+2
+, BU LLPAS DE SIGNE DE GRAVITÉ =
+NLECG (obligatoire) ACCÈS PALUSTRE NON
+COMPLIQUÉ
+Orientation
+NLPatient conscient sans complication : box Traitement
+NLSignes neurologiques : SAUV NLArténimol-pipéraquine (Eurartesim®) :
+• 3 cps (adulte < 75 kg) à H0, H24, H48 (9 cps
+au total à jeun) ou 4 cps (adulte > 75 kg) à H0,
+LLPRISE EN CHARGE MÉDICALE
+H24, H48 (12 cps au total)
+Mise en condition • première prise aux urgences
+• on donne les 6 (ou 8) autres comprimés au patient
+NLAccès veineux avec obturateur
+• CI :
+Bilan – grossesse et allaitement
+– hypokaliémie
+NLNFS, hémostase – QTc long
+NLIono, créatinine, CRP, glycémie NLEn cas de CI :
+NLBilan hépatique • Malarone® : 4 cps en une prise unique par jour
+NLGoutte épaisse ou QBC ou frottis/goutte épaisse au cours d’un repas pendant 3 jours consécutifs
+ou technique de biologie moléculaire rapide à 24 heures d’intervalle (H0, H24, H48)
+ou TDR (test de diagnostic rapide) et frottis • première prise aux urgences
+• on donne les 8 autres comprimés au patient
+• CI :
+LLRECHERCHE DE SIGNES
+– insuffisance rénale sévère (DFG < 30 mL/
+DE GRAVITÉ min)
+Cliniques
+NLEn cas de vomissement = quinine IV :
+• Quinimax® : 8 mg/kg sur 4 heures IVSE dans
+NLTrouble de la conscience (GCS < 11) du G5 toutes les 8 heures (à débuter 4 heures
+NLConvulsion après la fin de la perfusion précédente)
+NLDétresse respiratoire (SpO 2 < 92 %) • surveillance de la glycémie/4 h •••
+NLCollapsus
+NLIctère
+NLSaignement anormal •••
+1
+=== Page 22 ===
+Accès pAlustre
+P1
+protocole
+2/3 �
+Critères de prise en charge ambulatoire NLEn cas de vomissement :
+(tous les critères présents) • Quinine : IV : 8 mg/kg/8 h IVSE sur 4 heures
+puis relais per os.
+NLAbsence de signes de gravité
+NLAbsence de vomissement
+NLParasitémie < 2 % LLACCÈS PALUSTRE GRAVE
+NLPlaquettes > 50 000/mm3
+NLHb > 10 g/dL Définition
+NLCréatininémie < 150 µmol.L–1 Présence d’au moins un signe de gravité (cf. supra).
+NLMise à disposition du traitement
+NLAbsence de facteur de risques : Traitement en urgence
+• mauvaise observance NLArtésunate (Malacef®) :
+• isolement
+• 2,4 mg/kg IVSE (3 mL/min) à H0, H12, H24,
+• grossesse
+puis toutes les 24 heures pendant 7 jours, puis
+• splénectomie, immunodépression relais par Eurartesim® : 3 cps (adulte < 75 kg)
+NLRésidence à proximité d’un établissement hospitalier
+à H0, H24, H48 (9 cps au total) à jeun ou 4 cps
+NLDisponibilité immédiate de l’antipaludéen prescrit
+(adultes > 75 kg) à H0, H24, H48 (12 cps au
+total à jeun)
+Prise en charge ambulatoire
+• sous ATU :
+NLPrendre le numéro de téléphone – information patient
+NLVérifier la première prise médicamenteuse de visu – formulaire ATU
+NLGarder le patient au minimum 2 heures après la • à injecter seul sur voie veineuse spécifique
+première prise médicamenteuse À DÉFAUT :
+NLQuinine (Quinimax®) : 16 mg/kg sur 4 heures IVSE
+Suivi
+dans du G5 (dose de charge)
+NLRDV obligatoire à J3, J7, J28 PUIS :
+NLCourrier au médecin NLQuinine (Quinimax®) : 8 mg/kg sur 4 heures
+NLSi impossibilité pour le patient = ordonnance IVSE dans du G10 toutes les 8 heures à débuter
+de contrôle : 4 heures après la fin de la première perfusion
+• faire pratiquer à J3, J7, J28 : NLDès disparition des signes de gravité :
+– frottis Eurartesim® :
+– goutte épaisse • 3 cps (adulte < 75 kg) à H0, H24, H48 ou 4 cps
+– NFS si adulte > 75 kg à H0, H24, H48
+– plaquettes ET :
+– ALAT NLComa : intubation (F9)
+NLConvulsion (P30)
+Femme enceinte NLRemplissage vasculaire constant : 500 mL de
+NLAu 1er trimestre : sérum physiologique en 15 min
+• Malarone® : 4 cps en une prise/j pendant
+Surveillance
+3 jours
+NLAux 2e trimestre et 3e trimestre : NLDosage de la quininémie (normale entre 10 et
+• Riamet® : 4 cps en une prise à H0, H8, H24, 15 mg.L–1) quotidienne
+H36, H48, H60 ••• NLGlycémie (risque d’hypoglycémie)/4 h
+2
+=== Page 23 ===
+Accès pAlustre
+P1
+protocole
+3/3
+LLACCÈS PALUSTRE NON
+RÉFÉRENCE
+COMPLIQUÉ A VIVAX OU OVALE
+Prise en charge et prévention du paludisme
+OU MALARIAE OU KNOWLESI d’importation. Mise à jour 2017 des RPC 2007.
+Société de pathologie infectieuse de langue
+Traitement
+française. 2017.
+NLNivaquine (chloroquine : 10 mg/kg à J1, 10 mg/kg
+à J2, 5 mg/kg à J3 soit 25 mg/kg en dose totale
+sur 3 jours). En une prise par jour.
+Suivi
+NLLes patients doivent être revus ensuite avec
+vérification de l’absence de déficit en G6PD
+NLTraitement secondaire éventuel pour éviter les
+rechutes : Privaquine : 15 mg/j pendant 15 jours
+3
+=== Page 24 ===
+ACCIDENT D’EXPOSITION AU SANG OU À
+P2 DES LIQUIDES BIOLOGIQUES OU SEXUELS
+protocole
+L. Segura – Actualisation : 28/8/2018
+1/4 �
+DÉFINITION NLOrdonnance patient contact :
+• sérologie VIH, VHC, VHB
+Tout contact accidentel avec un liquide biologique
+• ASAT, ALAT, créatinémie
+potentiellement contaminant par effraction cutanée,
+• BHCG si femme
+projection sur une muqueuse ou sur une peau lésée.
+• VDRL, TPHA si exposition sexuelle
+LLPRISE EN CHARGE IAO
+LLORIENTATION
+Effraction cutanée
+NLSemaine et heures ouvrables : appeler le médecin
+NLNettoyage : eau + savon, rincer abondamment référent hospitalier
+et sécher NLWE et nuit : suivre le protocole (cf. infra)
+NLAntisepsie par trempage pendant au moins
+5 min :
+• Dakin® (Dakin Cooper stabilisé®) LLEXPOSITION AU SANG OU AUX
+ou : LIQUIDES BIOLOGIQUES < 48 H
+• eau de javel à 2,6 % de chlore actif diluée au
+1/5e Risque important : piqûre profonde,
+ou : aiguille creuse, dispositifs
+• Bétadine® intravasculaires
+Projection œil, muqueuse NLPatient source avec charge virale (CV) détectable
+ou patient source de sérologie inconnue
+NLRinçage abondant (5 min)
+➮ Traitement post-exposition (TPE) recommandé
+NLSérum physiologique pendant plus de 5 min
+(cf. infra)
+ET :
+NLHypochlorite de sodium (Amukine®)
+NLP
+➮
+a t
+T
+ie
+P
+n
+E
+t
+n
+s
+o
+o
+n
+u r
+r
+c
+e
+e
+c o
+a
+m
+ve
+m
+c
+a
+C
+n
+V
+d é
+< 50 copies (< 6 mois)
+Contact peau lésée
+Risque intermédiaire : bistouri, aiguille
+NLNettoyage : eau + savon IM ou SC, aiguille pleine, exposition
+NLRinçage abondant à l’eau
+cutanéomuqueuse > 15 min, morsures
+NLTrempage :
+• Dakin® ou : profondes avec saignement
+• eau de javel à 2,6 % de chlore actif diluée au NLPatient source VIH avec CV détectable
+1/5e ou : ➮ TPE recommandé (cf. infra)
+• Bétadine® NLPatient source VIH avec CV indétectable
+➮ TPE non recommandé
+Administratif NLPatient source sérologie inconnue : pas de TPE
+NLFeuille rose de déclaration d’accident de travail (sauf groupe à prévalence élevée [partenaires
+NLStatut du patient source : si patient VIH + traité, sexuels multiples, originaire de région à
+contacter le médecin référent prévalence du VIH > 1 % (cf. infra), usagers de
+NLPrélever patient source : drogue injectable]) •••
+• sérologie VIH rapide
+• sérologie hépatites B et C •••
+4
+=== Page 25 ===
+ACCIDENT D’EXPOSITION AU SANG OU À
+P2
+DES LIQUIDES BIOLOGIQUES OU SEXUELS
+protocole
+2/4 �
+Risque minime : autres cas, ou :
+projection œil, piqûres avec seringues • situation à risque :
+– prise de substances psychoactives
+abandonnées, crachats, morsures
+– partenaires sexuels multiples
+légères, griffures NLSinon : pas de TPE
+Patient source VIH + ou inconnu : pas de TPE
+Conseils
+NLFaire ASAT, ALAT au sujet source en plus des
+LLEXPOSITION SEXUELLE sérologies
+Sujet source VIH+ avec CV détectable
+NLPrescrire contraception si rapport vaginal
+NLDébuter vaccination hépatite B si risque HBs
+➮ TPE recommandé (sauf rapport oral réceptif sans important et discuter des immunoglobulines anti-
+éjaculation ou insertif) (cf. infra) HBs (dans les 72 h)
+Sujet source VIH+ avec CV indétectable
+Viol
+(< 6 mois) et sans conduite à risque :
+➮ TPE non recommandé NLPrescrire pilule du lendemain : Norlevo®, 1 cp
+avant 72 heures après le rapport
+Sujet source sérologie inconnue
+NLPrescrire sérologie HIV et bêta-hCG 15 jours après
+Rapports anaux
+NLTPE systématique (cf. infra)
+NLTPE si :
+• patient source à risque :
+– toxicomane IV LLEXPOSITION DES USAGERS
+– homo ou bisexuel DE DROGUES IV
+– personne appartenant à un groupe avec
+séroprévalence > 1 % (cf. infra) Risque important : partage de l’aiguille,
+ou : de la seringue, de la préparation
+• situation à risque :
+– prise de substances psychoactives
+NLPatient VIH avec CV détectable ou VIH inconnu
+➮ TPE recommandé (cf. infra)
+– partenaires sexuels multiples
+ou :
+NLPatient VIH avec CV indétectable
+➮ TPE non recommandé
+• rapport homosexuel masculin
+NLSinon : pas de TPE Risque intermédiaire : partage du
+Rapports vaginaux ou fellation réceptive avec récipient, de la cuillère, du filtre ou de
+éjaculation l’eau de rinçage
+NLTPE si : NLPatient source VIH+ ou inconnue
+• patient source à risque : ➮ Pas de TPE
+– toxicomane IV
+– homo ou bisexuel
+– personne appartenant à un groupe avec
+séroprévalence > 1 % (cf. infra) •••
+5
+=== Page 26 ===
+ACCIDENT D’EXPOSITION AU SANG OU À
+P2
+DES LIQUIDES BIOLOGIQUES OU SEXUELS
+protocole
+3/4�
+LLTRAITEMENT Présence d’un traitement interagissant
+POST-EXPOSITION VIH (TPE) avec antirétroviraux (contraceptifs,
+antimigraineux, antiépileptiques, AVK,
+À débuter le plus précocement après l’exposition
+(maximum 48 h [si indication]) (cf. supra). BZD, traitements de substitution)
+Avis médecin référent hospitalier
+Patient source VIH+ avec CV détectable
+ou inconnue
+NLEviplera® : 1 cp/j pendant le repas pendant 72 h LLCONSEILS POUR TOUS LES AES
+avant réévaluation NLContraception mécanique pendant toute la durée
+OU du suivi
+NLTruvada® (1 cp/jour) pendant 72 h et : NLPas de dons du sang pendant 3 mois
+NLEdurant® (1 cp/jour) pendant 72 h NLAdresser le patient au médecin du personnel ou
+au médecin référent avant 72 heures pour :
+Patient source traité
+• injection éventuelle d’immunoglobuline anti-HBs
+Demander avis spécialisé (médecin référent • vaccination hépatite B
+hospitalier). • discussion poursuite trithérapie
+Patient source traité avec CV
+indétectable (< 6 mois) LLPAYS ET DROM-COM
+NLAbstention thérapeutique AVEC SÉROPRÉVALENCE > 1 %
+Europe
+Femme enceinte
+NLPrezista® 800 mg : 1 cp/j pendant 3 jours NLRussie
+ET :
+Antilles-Amériques
+NLNorvir® 100 mg : 1 cp/j pendant 3 jours
+ET : NLAnguilla NLÎles Vierges
+NLTruvada® : 1 cp/j pendant 3 jours NLAntigua et Barbuda américaines
+NLAntilles néerlandaises NLÎles Vierges
+NLBahamas britanniques
+LLTRAITEMENT POST-EXPOSITION NLBarbade NLJamaïque
+VHB
+NLBermudes NLMartinique
+NLDominique NLMontserrat
+NLImmunoglobuline anti HBS 500 UI le plus NLGrenade NLRépublique
+précocement possible NLGuadeloupe Dominicaine
+NLVaccination hépatite B dans les 48 h après NLGuyana NLSaint-Kitts-et-Nevis
+l'exposition ••• NLGuyane française NLSainte-Lucie
+NLHaïti NLSaint-Vincent
+NLHonduras et les Grenadines
+NLÎles Caïmans NLSuriname
+NLÎles Turques et Caïques NLTrinité-et-Tobago •••
+6
+=== Page 27 ===
+ACCIDENT D’EXPOSITION AU SANG OU À
+P2
+DES LIQUIDES BIOLOGIQUES OU SEXUELS
+protocole
+4/4
+Afrique
+RÉFÉRENCES
+NLAfrique du Sud NLMalawi
+Procédure transversale AES. Hôpital Jean Verdier,
+NLAngola NLMali
+juin 2018.
+NLBénin NLMozambique
+NLBotswana NLNamibie Rapport Morlat, octobre 2017.
+NLBurkina Faso NLNiger
+NLBurundi NLNigéria
+NLCameroun NLOuganda
+NLCap-Vert NLRépublique
+NLCongo centrafricaine
+NLCôte d’Ivoire NLRwanda
+NLDjibouti NLSénégal
+NLÉrythrée NLSierra Leone
+NLÉthiopie NLSomalie
+NLGabon NLSoudan
+NLGambie NLSwaziland
+NLGhana NLTanzanie
+NLGuinée NLTchad
+NLGuinée-Bissau NLTogo
+NLGuinée équatoriale NLZaïre
+NLKenya NLZambie
+NLLesotho NLZimbabwe
+NLLibéria
+Asie
+NLCambodge
+NLBirmanie
+NLThaïlande
+7
+=== Page 28 ===
+ACCIDENT ISCHÉMIQUE TRANSITOIRE
+P3
+protocole
+S. Deltour, S. Guinemer – Actualisation : 11/10/2018
+1/2 �
+DÉFINITION LLPRISE EN CHARGE MÉDICALE
+L’accident ischémique transitoire (AIT) est une perte Mise en condition
+brutale d’une fonction cérébrale due à une embolie
+ou à une thrombose vasculaire dont les symptômes
+NLAccès veineux avec obturateur
+durent typiquement moins d’1 heure sans lésion à Bilan
+l’imagerie.
+Pour la pratique clinique, le diagnostic d’AIT sera NLNFS, hémostase
+évoqué devant un patient ayant présenté des signes NLIono, créatinine
+neurologiques ou rétiniens transitoires compatibles NLCRP, glycémie
+avec un territoire vasculaire ayant complètement
+récupéré au moment de l’examen clinique.
+LLPROTOCOLE D’IMAGERIE
+LLPRISE EN CHARGE IAO NLRéférence : IRM de diffusion + ARM
+Bilan intracrânienne + TSA
+NLPAS, PAD, FC, FR, T °C, SpO
+2
+, Dextro
+NLP
+an
+a
+g
+r
+i
+d
+o
+é
+T
+fa
+D
+u
+M
+t :
+i n
+s
+t
+c
+r
+a
+a
+n
+c
+n
+râ
+e
+n
+r
+i
+c
+e
+é
+n
+r é
+e
+b
+t
+r
+T
+a
+S
+l
+A
+sans injection et
+NLECG
+Orientation
+LLAIT HAUT RISQUE
+NLBox
+(VU DANS LES 24 H)
+LLFAIRE LE SCORE ABCD2 : Définition
+PRÉDICTION DU RISQUE D’AVC NLABCD2 ≥ 4
+OU l’un des 2 items suivants :
+TLScore ABCD2 NLAIT répétés
+(A : Âge, B : Blood Pressure, C : Caractéristiques NLACFA mal ou non anticoagulée
+cliniques, D : Durée des symptômes, D : Diabète)
+Prise en charge
+Caractéristiques cliniques Points
+Âge ≥ 60 ans 1
+NLAvis neurovasculaire
+NLProtocole imagerie le plus tôt possible (cf. supra)
+PAS ≥ 140 et/ou PAD ≥ 90 mmHg 1 NLHospitalisation
+Caractéristiques cliniques :
+- déficit moteur unilatéral 2 Traitement
+- aphasie sans déficit moteur 1
+NLAspirine 250 mg/j PO après protocole imagerie
+Durée de symptômes : NLAnticoagulation si ACFA (P51) dès JO si protocole
+- ≥ 60 minutes 2 imagerie normal
+- 10-59 minutes 1 NLSi occlusion proximale : discuter thrombolyse IV
+Diabète 1 ± thrombectomie
+Estimation du risque d’AVC après un AIT en fonction
+du score ABCD2 : score ≥ 4 = patient à haut risque.
+8
+=== Page 29 ===
+ACCIDENT ISCHÉMIQUE TRANSITOIRE
+P3
+protocole
+2/2
+LLAIT BAS RISQUE
+RÉFÉRENCES
+Définition
+Amarenco et al. Five year risk of stroke after
+NLABCD2 < 4 transient ischaemic attack of minor stroke. New
+Engl J Med 2018 ; 378 : 2182-8.
+Prise en charge Rothwell PM, Giles MF, Flossmann E et al. A
+NLAvis neurovasculaire simple score (ABCD) to identify individuals at
+NLProtocole imagerie (cf. supra) high early risk of stroke after transient ischaemic
+NLSortie possible si protocole imagerie normal avec attack. Lancet 2005 ; 366 : 29-36.
+ordonnance : Guidelines for the management of patients with
+• IRM + échodoppler TSA transient ischemic attack. Neurol Neurosci
+• bilan lipidique, glycémie à jeun, HbA1c 2014 ; 33 : 103-14.
+• consultation neurovasculaire dans les 15 jours
+9
+=== Page 30 ===
+ACCIDENTS TRANSFUSIONNELS
+P4
+protocole
+F. Adnet – Actualisation : 20/8/2018
+1/2 �
+DÉFINITION LNPRISE EN CHARGE IAO
+Accidents hémolytiques Bilan
+NNIncompatibilités ABO : gravité immédiate, rares NNDextro, FR, PAS, PAD, FC, T °C, SpO 2 , BU
+NNIncompatibilités non ABO : moins graves NNECG
+NNIncompatibilités RAI : fréquentes Orientation
+Accidents infectieux NNSAUV
+NNGraves : 1/3 décès, fréquents avec transfusion de
+plaquettes LNPRÉCAUTIONS
+NNTypiquement : signes de 1 à 2 heures après le TRANSFUSIONNELLES
+début de la transfusion (jusqu’à 6 h)
+NNContrôle ultime au lit du malade
+Réaction allergique NNCompatibilité ABO
+NNFréquente avec transfusion de plaquettes
+NNV
+m
+it
+i
+e
+n
+s
+im
+se
+u m
+de
+e
+t
+t
+r a
+e
+n
+n
+s
+2
+fu
+h
+si
+e
+o
+u
+n
+r e
+le
+s
+n
+a
+te
+u
+:
+m
+1
+a
+c
+x
+u
+im
+lo
+u
+t
+m
+par heure au
+N
+N
+N
+N
+É
+D
+r
+é
+y
+t
+t
+r
+h
+e
+è
+s
+m
+se
+e
+r
+c
+e
+u
+s
+t
+p
+a
+ir
+n
+a
+é
+t
+,
+o
+p
+ir
+r
+e
+u r
+a
+i
+v
+t,
+e
+u
+c
+r t
+œ
+ic
+d
+a
+è
+ir
+m
+e
+e de Quincke
+NNF
+c
+e
+o
+m
+nc
+m
+en
+e
+t
+s
+r é
+e
+s
+n
+é
+â
+r
+g
+y
+e
+th
+d
+ro
+e
+c
+p
+y
+r
+ta
+o
+i
+c
+r
+r
+e
+é
+s
+e
+p
+r
+h
+e
+é
+t
+n
+p
+o
+o
+t
+l
+y
+y
+p
+tr
+é
+a
+s
+nsfusés :
+OAP cardiogénique NNGreffés de moelle osseuse ou déficit immunitaire
+acquis : concentrés globulaires ou de plaquettes
+NNFréquent
+irradiés
+NNPatients âgés
+NNTransfusion en SAUV
+NNInsuffisants cardiaques
+NNSurveillance pendant les 15 premières minutes et
+NNInsuffisants rénaux
+jusqu’à 2 heures après la fin de la transfusion
+NNSurvenue jusqu’à 24 h après la transfusion
+NNConserver les poches au moins 2 heures après la
+transfusion
+OAP lésionnel (TRALI ou Transfusion
+Related Aorte Lung Injury)
+LNPRISE EN CHARGE
+NNRarissime, grave
+NNToux + dyspnée NNArrêt de la transfusion
+NN1 à 3 heures après le début de la transfusion
+Bilan
+Métaboliques NNNFS, plaquettes
+NNRares (intoxication par citrates) NNTP
+NNParesthésies, tremblements NNIono, créat
+NNTroubles digestifs NNBilirubine : augmentée en cas d’hémolyse
+NNTroubles du rythme cardiaque NNHaptoglobine : baisse en cas d’hémolyse
+NNLDH : augmenté en cas d’hémolyse
+NNRx thorax : recherche d’OAP
+NND-dimères : augmentés si CIVD (P27)
+NNFibrinogène : < 1 g/L si CIVD (P27)
+NNHémocultures
+NNPrélever 1 tube sec et 1 EDTA pour Coombs
+direct •••
+10
+=== Page 31 ===
+Accidents trAnsfusionnels
+P4
+protocole
+2/2
+Traitement symptomatique NNRéaction allergique :
+• Arrêt transfusion
+NNFrissons – hyperthermie (38-40 °C) :
+• Urticaire (P148)
+• Arrêt transfusion
+• Œdème de Quincke (P9)
+• Bilan complet (cf. supra)
+• Antipyrétique : paracétamol 1 g.IVL
+NNOAP (souvent révélé par une toux)
+• Arrêt transfusion
+NNFrissons – hypothermie – céphalée – douleur
+• Diurétique (P113)
+lombaire puis choc
+• Oxygénothérapie au masque à haute
+• Arrêt transfusion
+concentration
+• Bilan complet (cf. supra)
+• Oxygénothérapie au masque à haute
+NNDans tous les cas :
+• Appel hématologue de garde
+concentration
+• Si choc : noradrénaline 1 mg/h IVSE à
+augmenter par palier de 0,5 mg/h LNORIENTATION
+NNAntibiothérapie : systématiquement tant qu’une
+origine infectieuse n’a pas été éliminée : NNRéanimation si signe de gravité
+• en l’absence de choc : Tazocilline® IV, 4 g x 3/j
+• avec un choc : Tienam®, 1 g x 3/j et Amiklin® :
+15 mg/kg/j IVL •••
+11
+=== Page 32 ===
+ACCOUCHEMENT INOPINÉ
+P5
+protocole
+S. Guinemer – Actualisation : 29/8/2018
+1/2 �
+DÉFINITION Préparation du matériel
+C’est un accouchement qui survient après 6 mois de pour le nouveau-né (NN)
+grossesse sans véritables signes annonciateurs. NLSonde aspiration de mucosités n° 6 ou 8 et
+raccord biconique avec l’aspirateur de mucosité
+NLBAVU adapté pédiatrie
+LLPRISE EN CHARGE IAO
+NLSource d’oxygène
+Constantes parturiente NLune couverture de survie
+NL1 bonnet bébé (jersey)
+NLPAS, PAD, FC, FR, T °C, Dextro
+NLHémocue si saignement Accouchement
+Orientation
+NLInstallation de la patiente au ras du brancard
+NLAnalgésie par protoxyde d’azote (MEOPA®)
+NLSAUV NLAsepsie pour l’opérateur : masque, gants stériles,
+casaque
+LLPRISE EN CHARGE MÉDICALE
+NLChamp stérile et drap sous le bassin
+NLSondage vésical
+Mise en condition immédiate NLPréparer table ou brancard pour accueillir le NN
+NLSi poche des eaux intacte : rupture par grattage
+NLVoie veineuse
+des membranes pendant une contraction avec
+NLMonitorage : PANI, FC
+une branche de la pince Kocher, démontée et
+introduite entre l’index et le majeur droit
+Bilan systématique
+NLPrésentation engagée = impossibilité d’introduire
+NLAucun sauf complication l’index et le majeur dans un axe sagittal entre la
+symphyse pubienne et la concavité sacrée
+Prescription initiale
+NLLes jambes de la patiente sont fléchies sur le
+NLRinger Lactate : 500 mL en perfusion sur 24 h ventre, en abduction lors des efforts expulsifs
+NLLa patiente empaume la face interne de ses
+Préparation du matériel cuisses lors des efforts
+pour l’accouchement NLUne aide se positionne aux épaules pour aider
+pendant les efforts expulsifs
+NLTablier à usage unique
+NLLunettes de protection, gants stériles
+NLFaire pousser la patiente pendant les contractions
+utérines (CU) (2 efforts expulsifs/CU) lorsque les
+NLCompresses stériles
+NLBétadine® ou chlorexhidine cheveux apparaissent à la vulve
+NL1 ou 2 champs stériles
+NLOpérateur un genou à terre, visage à hauteur du
+périnée
+NL1 serviette-éponge pour recueillir et sécher le
+nouveau-né
+NLÉpisiotomie médiolatérale lors d’un effort expulsif
+(à partir de la fourchette vulvaire et selon un axe
+NL2 pinces Kocher stériles, ciseaux, 2 clamps de
+oblique en bas et à droite, sur 4 cm) si :
+Barr (facultatif).
+NL2 ampoules d’Ocytocine (Syntocinon®) ••• • début de déchirure sur le périnée
+• siège chez une primipare
+• souffrance fœtale
+NLDégagement de la tête doit se faire le plus lentement
+possible, la patiente arrêtant de pousser •••
+12
+=== Page 33 ===
+Accouchement inopiné
+P5
+protocole
+2/2
+NLTête empaumée avec la main gauche qui la LLORIENTATION
+retient et exerce un contre-appui (vers le bas), sur
+Maternité de suivi ou de proximité
+le sommet de l’occiput de l’enfant tandis que la
+main droite exerce une poussée de bas en haut selon les circonstances
+sur le menton de l’enfant à travers le périnée NLTransfert médicalisé SMUR
+postérieur NLAllongée dans un matelas à dépression
+NLIl ne faut surtout pas tirer mais laisser faire NLSurveillance des paramètres vitaux et surveillance
+NLEngagement des épaules commence lors de des pertes sanguine
+l’expulsion de la tête NLFormalités médicolégales : certificat de naissance
+NLOcciput se tourne spontanément sur la droite ou
+la gauche selon le type de présentation (rotation
+de 45°), l’enfant regarde la cuisse de sa mère RÉFÉRENCES
+NLDégagement des épaules (antérieure en premier),
+Recommandations formalisées d’experts 2010 :
+par un mouvement par le bas
+urgences obstétricales extra-hospitalières (SFAR,
+NLSi circulaire serré du cordon, gênant l’expulsion :
+SFMU). Ann Fr Med Urg 2011 ; 1 : 141-55.
+couper le cordon entre 2 pinces
+Références en Médecine d’urgence SFMU.
+Délivrance dirigée La mère et l’enfant. Lavoisier. Paris. 2018.
+NLInjection de 5UI IVL d’ocytocine (Syntocinon®) à
+la sortie complète de l’enfant
+NLDélivrance dans les 30 minutes après
+l’accouchement
+NLDécollement quand une pression manuelle sus-
+pubienne n’entraîne pas la remontée simultanée
+du cordon
+NLNe pas tirer sur le cordon mais pression sur le
+fond utérin vers le bas
+NLAprès expulsion du placenta : s’assurer de son
+intégrité
+Soins nouveau-né
+NLClampage du cordon au moins 1 minute après
+l’expulsion de l’enfant
+NLSection du cordon de façon stérile et vérification
+anatomique (2 artères, 1 veine)
+NLLutte contre l’hypothermie : bonnet, sur le ventre
+de sa mère, couverture de survie, serviettes
+chaudes, séchage
+NLÉvaluation clinique précise : score d’Apgar (S2)
+13
+=== Page 34 ===
+ACIDOCÉTOSE OU CÉTONÉMIE
+P6 DU DIABÉTIQUE
+protocole
+A. Guenin – Actualisation : 17/12/2018
+1/1
+DÉFINITION PUIS :
+L’acidocétose est la conséquence d’une carence pro-
+NL1 000 mL de soluté en 4 heures
+• choix du soluté en fonction de la glycémie :
+fonde en insuline. Elle est définie par une glycémie
+– dextro > 14 mmol/L : NaCl 0,9 %
+supérieure à 11 mM, une cétonurie ou une cétoné-
+– dextro < 14 mmol/L : G5 avec 4 g de NaCl
+mie > 3 mM et une acidose ou HCO < 15 mM.
+3 par litre
+Insulinothérapie
+LLPRISE EN CHARGE IAO
+NLObjectif glycémique : 11 mM si cétonémie > 0,5 mM
+Bilan NLSi cétonémie > 0,5 mM : Novorapid® ou Apidra®
+ou Humalog® 0,1 UI/h/kg sans dépasser 10 UI/h
+NLPAS, PAD, FC, FR, ECG, T °C, SpO
+2
+, dextro, BU
+IVSE tant que la cétonémie est supérieure à 0,5 mM
+NLCétonémie capillaire
+NLECG
+NLObjectif de correction de la cétonémie :
+0,5 mmol/L par heure. Augmenter la vitesse de
+Orientation perfusion si la correction n’est pas atteinte au
+bout de quelques heures
+NLSAUV
+NLSi cétonémie < 0,5 mM : protocole insuline
+classique (F11)
+LLPRISE EN CHARGE MÉDICALE Recharge potassique initiale
+Bilan NLSi signe électrique d’hyperkaliémie ou si K+
+> 5,5 mM : pas de KCl dans les perfusions
+NLN
+tro
+F
+p
+S
+o
+, iono, glycémie, GDS veineux (pH), CRP, BHC,
+NLSinon : 2 g de KCl par litre de NaCl à partir du 3e litre
+NLCétonémie
+NLS
+ré
+i
+a
+k
+n
+a
+i
+l
+m
+ié
+a
+m
+te
+ie
+u r
+< 3,5 mM, arrêt insuline et avis
+NLPhosphorémie (hypophosphorémie)
+NLECBU Surveillance
+NLHémocultures si fièvre NLToutes les heures : dextro, conscience, fréquence
+respiratoire, pouls, tension artérielle, diurèse,
+Monitorage
+éventuellement température
+NLPANI, scope, SpO
+2
+, dextro/cétonémie/heure NLToutes les 4 heures : ionogramme sanguin,
+NLBU toutes les 2 heures glycémie, réserve alcaline, ECG, cétonémie
+NLIono et GDS veineux à 2 heures si acidose
+ou apport de KCl en IVSE (à 4 heures sinon)
+LLORIENTATION
+NLDébit urinaire NLSurveillance en UHCD ou USC si acidose
+NLBilan du lendemain : iono, glycémie, cétonémie,
+LLTRAITEMENT HbAIC
+Hydratation
+RÉFÉRENCES
+NLNaCl 0,9 % : 1 000 mL en 1 heure IVL
+Misras et al. Diabetic ketoacidosis in adult.
+ET : BMJ 2015 ; 351 : h5660.
+NL1 000 mL en 2 heures
+SFMU/SRLF. Diagnostic et prise en charge des
+ET :
+acidoses métaboliques. RFE. Janvier 2019.
+NL1 000 mL en 2 heures •••
+14
+=== Page 35 ===
+W
+ACIDOSE MÉTABOLIQUE
+P7
+F. Adnet – Actualisation : 17/12/2018
+protocole
+1/2�
+DÉFINITION TA ou TAc augmenté
+pH plasmatique ≤ 7,38 et [HCO–] < 20 mmol/L NLAcidocétose (glycémie > 12 mM) (P6)
+3
+et PCO < 40 mmHg. NLLactatémie > 5 mM = acidose lactique :
+2
+• convulsion (P30)
+• sepsis (P24)
+LLPRISE EN CHARGE IAO
+• lyse tumorale
+Bilan • intoxications :
+N N L L P D A e S xt , r P o A , D cé , t F o C n , é F m R i , e T °C, SpO 2 – – v c a ya lp n r u o r a e t e ( P (P 91 8 ) 0)
+NLCétonurie – CO (P79)
+NLECG – biguanides (metformine) (P88)
+NLLactatémie < 5 mM :
+Orientation • intoxications :
+NLBox – aspirine (P77)
+NLSAUV si détresse vitale – glycols (P92)
+– méthanol (P82)
+• insuffisance rénale (P75)
+LLPRISE EN CHARGE MÉDICALE
+Bilan initial
+LLTRAITEMENT
+NLNFS, plaquettes, CRP
+NLIono : NLÉtiologique (voir protocoles) +++
+• calcul du trou anionique (TA) NLCorrection d’un état de choc (P23)
+TA = Na – Cl – HCO (mmol.L–1) NLSymptomatique :
+3
+Valeur normale : 12 ± 4 mmol.L–1 • acidose chronique modérée (pH sanguin > 7,25,
+• calcul du trou anionique corrigé (TAc) bicarbonate > 15 mmol/L) :
+TAc = Na – (Cl + HCO) + 0,25 – eau de Vichy (1 litre apporte 3 à 4 g de HCO)
+3 3
+x (40 – Albuminémie) ou :
+Na, Cl, HCO en mmol.L–1, Albuminémie en g/L – THAM pauvre en sodium. La posologie (en
+3
+Valeur normale : 12 ± 4 mmol.L–1 mmol) est calculée par la formule : 0,3 ×
+Calcul automatique de ces formules dans déficit basique (base excess [BE]) (mmol/L)
+l’application × poids (kg). La moitié de la dose est
+NLUrée, créat : recherche d’une insuffisance rénale aiguë perfusée en 10 minutes, le reste en 1 heure.
+NLAlbuminémie
+La dose maximale est de 15 mmol/kg/j
+NLGlycémie, cétonémie
+• le bicarbonate de Na n’est indiqué que dans
+NLGDS, lactates
+les acidoses métaboliques dues à des pertes
+TA ou TAc normal : acidose digestives ou rénales de bicarbonates en cas de
+mauvaise tolérance clinique ou chez les patients
+hyperchlorémique
+graves présentant une acidémie profonde (pH
+NLSoluté de remplissage riche en chlore (sérum ≤ 7,20, PaCO < 45 mmHg) associée à une
+physiologique) insuffisance r 2 énale :
+N N L L P A e c r id te o s s e d s ig t e u s b t u iv la e i s r e (d s iarrhée, fistule) – objectif : pH = 7,28 et HCO 3 = 15 mM •••
+NLAccumulation d’un acide dont l’anion
+est le chlore •••
+15

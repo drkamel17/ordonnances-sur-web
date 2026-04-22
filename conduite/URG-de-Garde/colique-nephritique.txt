@@ -1,0 +1,163 @@
+CHOLÉCYSTITE, ANGIOCHOLITE
+P25
+protocole
+F. Adnet – Actualisation : 11/9/2018
+1/1
+DÉFINITION Prise en charge
+Inflammation de la vésicule biliaire (cholecystite) ou NLSi choc septique (P24) :
+des voies biliaires (angiocholite). L’infection secon- • remplissage (P24)
+daire est le plus souvent due à des germes digestifs • vasopresseur (noradrénaline : commencer à
+présents dans le duodénum. 1 mg/h IVSE) (P24)
+• antibiothérapie :
+– ceftriaxone (Rocephine®) : 2 g IVD/j en une
+LLPRISE EN CHARGE IAO injection et :
+– métronidazole (Flagyl®) : 500 mg x 3/j IVD et :
+Bilan
+– gentamicine : 8 mg/kg/j IVSE sur 30 minutes
+NLPAS, PAD, FC, FR, T °C, SpO 2 pendant 48 h
+NLDextro si diabète NLPas de choc :
+NLECG • réhydratation parentérale : 1 000 mL sérum
+physiologique
+Orientation
+• correction des éventuels troubles
+NLSAUV en cas d’hypotension ou choc hydroélectrolytiques
+NLBox dans les autres cas • à jeun strict
+• antalgiques (P41) et spasmolytiques : Spasfon®
+2 ampoules IVL
+LLPRISE EN CHARGE MÉDICALE • antibiothérapie
+– ceftriaxone (Rocéphine®) : 2 g en
+Bilan initial
+1 injection/j IV et :
+NLNFS, plaquettes – métronidazole (Flagyl®) : 500 mg x 3/j PO
+NLIono, urée, créat, glycémie, CRP ou IVL
+NLHémocultures • en cas d’allergie aux bêtalactamines :
+NLBHC, lipasémie – ofloxacine (Oflocet®) : 400 mg puis
+NLBilan préopératoire : 200 mg/12 h et :
+• groupe, Rhésus, RAI – métronidazole (Flagyl®) : 500 mg x 3/j et :
+• hémostase : TP, TCA – gentamicine : 8 mg/kg/24 h en 1 injection
+NLÉchographie : IVSE sur 30 minutes pendant 48 h
+• imagerie de 1re intention NLAvis chirurgical :
+• diagnostic positif sur paroi de plus de 3 mm • laparotomie ou cœlioscopie
+et/ou épanchement périvésiculaire • sphinctérotomie endoscopique en urgence
+• évaluation des voies biliaires discutée en cas d’angiocholite associée
+• recherche de lithiase
+NLTDM :
+• en cas de mauvaise échogénicité (obésité, gaz RÉFÉRENCES
+digestifs)
+Pilly E. Maladies Infectieuses et Tropicales.
+• si suspicion de perforation ou abcès ••• 26e édition. 2018.
+Prise en charge de la lithiase biliaire.
+Recommandations HAS 2009.
+44
+W
+CHUTE DU SUJET ÂGÉ
+P26
+B. Bernot – Actualisation : 2/10/2018
+protocole
+1/1
+DÉFINITION Bilan de la chute
+La chute est un événement grave chez une personne NLTraumatologique
+âgée. Elle peut révéler une pathologie aiguë ou chro- NLMobilité :
+nique et avoir de graves conséquences : risque de • timed up and go test : mesure du temps mis
+récidive, d’entrée en dépendance et de décès. pour se lever d’une chaise, marcher 3 mètres,
+faire demi-tour et revenir s’asseoir
+• positif si > 20 secondes, douteux entre 12 et
+LLPRISE EN CHARGE IAO 20 sec
+Bilan
+NLPAS, PAD, FC, FR, T °C, SpO
+2
+LLORIENTATION
+NLBU
+NLLe retour au domicile ne peut être envisagé qu’en
+NLDextro
+cas d’absence :
+NLECG
+• de complications traumatiques
+NLMode de vie et présence d’un entourage
+• de facteurs précipitants : infection, troubles
+métaboliques
+Orientation
+• syndrome post-chute
+NLBox • d’éléments prédictifs de réadmission aux
+urgences :
+– absence d’entourage
+LLPRISE EN CHARGE MÉDICALE
+– répétition des chutes
+Bilan initial – isolement social et médical
+– absence de téléalarme ou d’aide à domicile
+NLNFS, plaquettes (recherche anémie)
+– présence de troubles cognitifs
+NLCPK
+– dénutrition
+NLIono, urée, créat
+– polymédication
+NLINR si traitement par AVK
+– grand âge
+NLCalcémie
+– impossibilité pour le patient de se remettre
+NLRx :
+debout et de marcher
+• thorax si suspicion de pneumopathie
+NLHospitalisation à l’UHCD si retour à domicile
+• centrée sur les zones suspectes de fracture
+impossible
+• ASP (détection fécalome)
+NLAdmission en gériatrie aiguë
+NLPas de scanner cérébral en urgence si examen
+neurologique normal et absence de traitement
+anticoagulant
+RÉFÉRENCE
+NLBladderscan si doute sur rétention aiguë d’urine
+(P130) ••• HAS. Évaluation et prise en charge des
+personnes âgées faisant des chutes répétées.
+Recommandations, 2009.
+45
+CIVD
+P27
+protocole
+T. Coffre – Actualisation : 11/9/2018
+1/2 �
+DÉFINITION LLPRISE EN CHARGE MÉDICALE
+Stimulation excessive de la coagulation intra- Monitorage
+vasculaire avec consommation excessive de pla-
+quettes et de facteurs de la coagulation pouvant
+NLScope, PANI, SpO
+2
+entraîner des manifestations hémorragiques ou
+NLVoie veineuse : sérum physiologique, 1 000 mL
+débit libre
+microthrombotiques.
+Étiologies : Examens urgents
+– médicales : infections, pancréatite, complications
+transfusionnelles, drépanocytose, néoplasies, venins NLNFS, plaquettes : quantification thrombopénie
+de serpent, hémopathies, rhabdomyolyses, insuffi- NLFrottis sanguin : recherche schizocytes
+sances hépatiques sévères ; NLIono sang, urée, créatinine
+– chirurgicales : polytraumatismes, brûlures éten- NLD-dimères
+dues, chocs hémorragiques ; NLFibrinogène
+– obstétricales : éclampsie, hématome rétroplacen- NLFacteurs de la coagulation :
+taire, embolie amniotique, mort in utero, hémorra- • baisse surtout du facteur V
+gies de la grossesse. NLCRP
+NLBHC, lipasémie : recherche étiologie
+NLTP, TCA
+LLPRISE EN CHARGE IAO NLRx thorax
+NLGroupe, RAI
+Bilan NLDiagnostic :
+NLT °C, TA, FC, Dextro • D-dimères > 500 mg/mL
+et :
+Orientation • plaquettes < 50 000/mm3 ou TP < 50 %
+NLSAUV ou 2 critères parmi :
+• 50 000 < plaquettes < 100 000/mm3
+• 50 < TP < 65 %
+• fibrinogène < 1 g/L
+En fonction du contexte
+NLHémocultures
+NLGoutte épaisse
+NLCoombs direct
+NLHaptoglobine
+NLECBU
+Fréquence des bilans
+NLToutes les 4-6 heures
+Traitement
+CIVD biologique non symptomatique
+NLPas de traitement systématique •••
+46

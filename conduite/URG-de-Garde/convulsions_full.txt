@@ -1,0 +1,202 @@
+Convulsions
+P30
+protocole
+2/2
+OU : Crise chez un épileptique connu
+NLPhénobarbital (Gardénal®) : 15 mg/kg IVSE sur NLMauvaise observance sans critère de gravité :
+30 min sans dépasser la vitesse de 100 mg/min sortie et traitement habituel
+OU : NLBonne observance sans critère de gravité, sortie
+NLValproate de sodium (Dépakine®) : 40 mg/kg IVSE possible avec :
+en 15 min sans dépasser 3 g • consultation neurologue
+OU : • Urbanyl® : 5 mg x 3/j pendant 7 jours en plus
+NLLévétiracétam (Keppra®) : 40 mg/kg IVL en du traitement habituel
+10 min sans dépasser 4 g
+Crise chez un éthylique chronique
+SI PERSISTANCE DE LA CRISE (> 30 MIN) :
+NLintubation (F9) : agent d’induction : Penthotal®, Si sortie :
+5 mg/kg, NLUrbanyl® : 5 mg x 3/j pendant 7 jours
+ou Diprivan®, 2 mg/kg OU :
+NLSédation d’entretien : propofol (Diprivan®) NLTraitement habituel non modifié
+3 mg/kg/h ou/et midazolam (Hypnovel®)
+Crise sur métastases cérébrales connues
+0,3 mg/kg/h IVSE
+Sortie si pas d’œdème cérébral diffus :
+NLKeppra® 250 mg, 2 cp/j pendant 3 jours, puis
+LLORIENTATION Keppra® 500 mg, 2 cp/j
+ET :
+Crise comitiale simple
+NLUrbanyl® 5 mg x 3/j pendant 7 jours
+Premier épisode
+État de mal convulsif
+NLSortie possible
+Réanimation :
+NLIRM en externe avec consultation neurologie
+NLAppel Samu pour transfert
+Hospitalisation si présence d’au moins un des
+critères de gravité suivants :
+NLSurvenue d’une seconde crise aux urgences RÉFÉRENCE
+NLConfusion persistant plus de 30 minutes Prise en charge des états de mal épileptiques
+NLFièvre supérieure à 38 °C en préhospitalier, en structure d’urgence et en
+NLDéficit postcritique ou crise partielle réanimation dans les 48 premières heures.
+NLAlcoolisation SFMU-SRLF. Recommandations Formalisés
+NLIntoxication d’Experts. Juin 2018.
+NLTroubles métaboliques
+NLTrauma crânien ou autres lésions cérébrales
+NLMaladie générale : cancer, lymphome, HIV
+NLGrossesse •••
+52
+W
+CORPS ÉTRANGERS DIGESTIFS
+P31
+PG. Reuter – Actualisation : 30/9/2018
+protocole
+1/2�
+DÉFINITION LLINGESTION DE CORPS ÉTRANGERS
+Le plus souvent accidentel. Élimination naturelle NLAvis endoscopiste digestif : ± AVIS ORL si objet
+dans 80 % des cas. Moins de 1 % de nécessité de au-dessus du niveau du muscle cricopharyngien
+chirurgie. Chez l’adulte, les populations à risque sont
+les personnes âgées, les incarcérés et les patients Endoscopie en urgence (< 2 h ou < 6 h
+psychotiques. maximum) si :
+Intromission intrarectale : volontaire ou accidentelle.
+NLObstruction au niveau de l’hypopharynx
+Principalement chez les adultes jeunes.
+ou œsophage
+NLObjet tranchant ou coupant au-dessus du pylore
+LLPRISE EN CHARGE IAO NLPiles bloquées dans l’œsophage
+Constantes Endoscopie en urgence relative
+(< 24 h) :
+NLPAS, PAD, FC, T °C, SpO
+2
+, FR, Dextro
+NLAutre corps étranger œsophagien ou aimants
+Orientation sans signe d’obstruction : épaisseur : 2 à 2,5 cm
+NLSAUV si détresse respiratoire, emphysème ou longueur > 5 cm
+sous-cutané NLCorps étranger gastrique pointu, pile, aimant et de
+NLBox dans les autres cas grande taille (> 5 cm)
+Endoscopie programmée (< 72 h) :
+LLBILAN NLAutre corps étranger gastrique
+Imagerie Si retrait envisagé :
+NLRadio de thorax (± cervical) : face et profil Mise en condition
+pour les corps ingérés. Rechercher un
+pneumomédiastin
+NLAbord veineux – sérum physiologique :
+500 mL/24 h
+NLASP de face pour les intromissions rectales
+NLASP coupoles pour rechercher un
+NLÀ jeun
+pneumopéritoine au cas par cas Bilan
+NLT
+si
+D
+d
+M
+o u
+c
+t
+e
+e
+r v
+d
+i
+i
+c
+a
+o
+g
+t
+n
+h
+o
+o
+s
+r
+t
+a
+iq
+ci
+u
+q
+e
+u e
+a v
+o
+e
+u
+c
+a
+u
+b
+n
+d
+o
+o
+b
+m
+je
+in
+t
+o
+r
+p
+a
+e
+d
+l
+i
+v
+o
+i
+-
+enne
+NLNFS, TC, TCA, ionogramme
+transparent ou en cas de signe de perforation
+NLCréatininémie
+ATTENTION
+NLGroupe, RAI, ± ECG
+Pour les objets de type pièce, sur la radio de thorax : Thérapeutique
+Si rond de face et linéaire de profil → intra-œsophagien
+Si linéaire de face et rond de profil → intratrachéal
+NLAntalgie (P41)
+Dans les autres cas
+NLSurveillance clinique et radiographique avec une
+périodicité variable en fonction du type d’objet
+et de sa localisation •••
+53
+Corps étrangers digestifs
+P31
+protocole
+2/2
+Cas particulier des body packer
+RÉFÉRENCES
+NLNe pas essayer d’extraire les sachets car risque
+Ross E et al. Foreign bodies in sigmoid colon
+de perforation du sachet, de libération de la
+diverticulosis. Clin J Gastroenterol 2017 ; 10 :
+drogue et donc overdose
+491-7.
+NLExtraction en urgence si rupture d’un sac
+Birk M et al. Removal of foreign bodies in the
+upper gastrointestinal tract in adults: European
+LLCORPS ÉTRANGER INTRARECTAL Society of Gastrointestinal Endoscopy (ESGE).
+Clinical Guideline Endoscopy 2016 ; 17 : 13-20.
+Retrait de l’objet par les voies naturelles
+sous MEOPA aux urgences
+Si impossibilité :
+Mise en condition
+NLAbord veineux : sérum physiologique 500 mL/24 h
+NLÀ jeun
+Bilan
+NLNFS, TC, TCA
+NLIonogramme, créatininémie
+NLGroupe, RAI, ± ECG
+Avis chirurgien viscéral
+NLRetrait au bloc opératoire, sous anesthésie
+générale par les voies naturelles
+NLIndications chirurgicales :
+• signe de perforation, de dilacération ou
+d’infection
+• position haute du corps étranger ou échec
+d’extraction
+• objets cassables, friables, acérés ou
+potentiellement dangereux
+54

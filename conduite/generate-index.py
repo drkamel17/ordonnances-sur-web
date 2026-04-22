@@ -20,7 +20,8 @@ specialties = [
     'infectiologie', 'ophtalmologie', 'medecine-interne', 'pneumologie',
     'gastrologie', 'gynecologie', 'pediatrie', 'hematologie', 
     'orl', 'rhumatologie', 'ecg', 'neurologie', 'autres',
-    'medicaments-urgence', 'urgence', 'ordonnances', 'cat-consultation', 'reanimation'
+    'medicaments-urgence', 'urgence', 'ordonnances', 'cat-consultation', 
+    'reanimation', 'URG-de-Garde'
 ]
 
 # Obtenir le répertoire du script

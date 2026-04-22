@@ -15,6 +15,11 @@
     "specialty": "gastrologie"
   },
   {
+    "title": "Acces Palustre",
+    "path": "URG-de-Garde/acces-palustre.html",
+    "specialty": "URG-de-Garde"
+  },
+  {
     "title": "Accident Avk",
     "path": "cardiologie/accident-avk.html",
     "specialty": "cardiologie"
@@ -23,6 +28,21 @@
     "title": "Accident Exposition Sang",
     "path": "infectiologie/accident-exposition-sang.html",
     "specialty": "infectiologie"
+  },
+  {
+    "title": "Accident Exposition Sang",
+    "path": "URG-de-Garde/accident-exposition-sang.html",
+    "specialty": "URG-de-Garde"
+  },
+  {
+    "title": "Accident Ischemique Transitoire",
+    "path": "URG-de-Garde/accident-ischemique-transitoire.html",
+    "specialty": "URG-de-Garde"
+  },
+  {
+    "title": "Accouchement Inopine",
+    "path": "URG-de-Garde/accouchement-inopine.html",
+    "specialty": "URG-de-Garde"
   },
   {
     "title": "Accouchement Normal",
@@ -35,9 +55,19 @@
     "specialty": "cardiologie"
   },
   {
+    "title": "Acidocetose",
+    "path": "URG-de-Garde/acidocetose.html",
+    "specialty": "URG-de-Garde"
+  },
+  {
     "title": "Acidocetose Diabetique",
     "path": "endocrinologie/acidocetose-diabetique.html",
     "specialty": "endocrinologie"
+  },
+  {
+    "title": "Acidose Metabolique",
+    "path": "URG-de-Garde/acidose-metabolique.html",
+    "specialty": "URG-de-Garde"
   },
   {
     "title": "Acne",
@@ -53,6 +83,11 @@
     "title": "Acouphenes",
     "path": "orl/acouphenes.html",
     "specialty": "orl"
+  },
+  {
+    "title": "Acouphenes",
+    "path": "URG-de-Garde/acouphenes.html",
+    "specialty": "URG-de-Garde"
   },
   {
     "title": "Adenolymphite Mesenterique",
@@ -80,6 +115,11 @@
     "specialty": "medicaments-urgence"
   },
   {
+    "title": "Agitation",
+    "path": "URG-de-Garde/agitation.html",
+    "specialty": "URG-de-Garde"
+  },
+  {
     "title": "Allergie",
     "path": "ordonnances/allergie.html",
     "specialty": "ordonnances"
@@ -88,6 +128,11 @@
     "title": "Allergie",
     "path": "cat-consultation/allergie.html",
     "specialty": "cat-consultation"
+  },
+  {
+    "title": "Allergies Anaphylaxie",
+    "path": "URG-de-Garde/allergies-anaphylaxie.html",
+    "specialty": "URG-de-Garde"
   },
   {
     "title": "Alopecie",
@@ -103,6 +148,11 @@
     "title": "Anamniose",
     "path": "gynecologie/anamniose.html",
     "specialty": "gynecologie"
+  },
+  {
+    "title": "Anemie Adulte",
+    "path": "URG-de-Garde/anemie-adulte.html",
+    "specialty": "URG-de-Garde"
   },
   {
     "title": "Anemie Carence",
@@ -140,9 +190,19 @@
     "specialty": "orl"
   },
   {
+    "title": "Angines",
+    "path": "URG-de-Garde/angines.html",
+    "specialty": "URG-de-Garde"
+  },
+  {
     "title": "Angiocholite",
     "path": "gastrologie/angiocholite.html",
     "specialty": "gastrologie"
+  },
+  {
+    "title": "Angioedeme",
+    "path": "URG-de-Garde/angioedeme.html",
+    "specialty": "URG-de-Garde"
   },
   {
     "title": "Anite",
@@ -170,6 +230,11 @@
     "specialty": "cat-consultation"
   },
   {
+    "title": "Aplasie Febrile",
+    "path": "URG-de-Garde/aplasie-febrile.html",
+    "specialty": "URG-de-Garde"
+  },
+  {
     "title": "Aplv",
     "path": "pediatrie/aplv.html",
     "specialty": "pediatrie"
@@ -178,6 +243,16 @@
     "title": "Appendicite",
     "path": "gastrologie/appendicite.html",
     "specialty": "gastrologie"
+  },
+  {
+    "title": "Appendicite",
+    "path": "URG-de-Garde/appendicite.html",
+    "specialty": "URG-de-Garde"
+  },
+  {
+    "title": "Arret Cardiaque",
+    "path": "URG-de-Garde/arret-cardiaque.html",
+    "specialty": "URG-de-Garde"
   },
   {
     "title": "Arret Cardio Respiratoire",
@@ -193,6 +268,11 @@
     "title": "Arthrite Seplique",
     "path": "rhumatologie/arthrite-seplique.html",
     "specialty": "rhumatologie"
+  },
+  {
+    "title": "Arthrites Aigues",
+    "path": "URG-de-Garde/arthrites-aigues.html",
+    "specialty": "URG-de-Garde"
   },
   {
     "title": "Arthrose",
@@ -245,6 +325,11 @@
     "specialty": "cat-consultation"
   },
   {
+    "title": "Asthme",
+    "path": "URG-de-Garde/asthme.html",
+    "specialty": "URG-de-Garde"
+  },
+  {
     "title": "Atarax",
     "path": "medicaments-urgence/atarax.html",
     "specialty": "medicaments-urgence"
@@ -270,6 +355,11 @@
     "specialty": "urgence"
   },
   {
+    "title": "Autres Urgences",
+    "path": "URG-de-Garde/autres-urgences.html",
+    "specialty": "URG-de-Garde"
+  },
+  {
     "title": "Avc",
     "path": "neurologie/avc.html",
     "specialty": "neurologie"
@@ -278,6 +368,21 @@
     "title": "Avc",
     "path": "urgence/avc.html",
     "specialty": "urgence"
+  },
+  {
+    "title": "Avc Hemorragique",
+    "path": "URG-de-Garde/avc-hemorragique.html",
+    "specialty": "URG-de-Garde"
+  },
+  {
+    "title": "Avc Ischemique",
+    "path": "URG-de-Garde/avc-ischemique.html",
+    "specialty": "URG-de-Garde"
+  },
+  {
+    "title": "Avc Urgence",
+    "path": "URG-de-Garde/avc-urgence.html",
+    "specialty": "URG-de-Garde"
   },
   {
     "title": "Balanite",
@@ -360,6 +465,11 @@
     "specialty": "pneumologie"
   },
   {
+    "title": "Bradycardie",
+    "path": "URG-de-Garde/bradycardie.html",
+    "specialty": "URG-de-Garde"
+  },
+  {
     "title": "Bradycardie Sinusale",
     "path": "cardiologie/bradycardie-sinusale.html",
     "specialty": "cardiologie"
@@ -410,6 +520,11 @@
     "specialty": "cat-consultation"
   },
   {
+    "title": "Brulures",
+    "path": "URG-de-Garde/brulures.html",
+    "specialty": "URG-de-Garde"
+  },
+  {
     "title": "Canal Carpien",
     "path": "rhumatologie/canal-carpien.html",
     "specialty": "rhumatologie"
@@ -450,6 +565,11 @@
     "specialty": "medecine-interne"
   },
   {
+    "title": "Cephalee",
+    "path": "URG-de-Garde/cephalee.html",
+    "specialty": "URG-de-Garde"
+  },
+  {
     "title": "Cervicobrachialgies",
     "path": "rhumatologie/cervicobrachialgies.html",
     "specialty": "rhumatologie"
@@ -458,6 +578,11 @@
     "title": "Cetose Diabetique",
     "path": "urgence/cetose-diabetique.html",
     "specialty": "urgence"
+  },
+  {
+    "title": "Cetose Diabetique",
+    "path": "URG-de-Garde/cetose-diabetique.html",
+    "specialty": "URG-de-Garde"
   },
   {
     "title": "Chalazion",
@@ -485,14 +610,44 @@
     "specialty": "reanimation"
   },
   {
+    "title": "Choc Hemorragique",
+    "path": "URG-de-Garde/choc-hemorragique.html",
+    "specialty": "URG-de-Garde"
+  },
+  {
+    "title": "Choc Septique",
+    "path": "URG-de-Garde/choc-septique.html",
+    "specialty": "URG-de-Garde"
+  },
+  {
+    "title": "Cholecystite",
+    "path": "URG-de-Garde/cholecystite.html",
+    "specialty": "URG-de-Garde"
+  },
+  {
+    "title": "Chute Sujet Age",
+    "path": "URG-de-Garde/chute-sujet-age.html",
+    "specialty": "URG-de-Garde"
+  },
+  {
     "title": "Cicatrisation",
     "path": "dermatologie/cicatrisation.html",
     "specialty": "dermatologie"
   },
   {
+    "title": "Civd",
+    "path": "URG-de-Garde/civd.html",
+    "specialty": "URG-de-Garde"
+  },
+  {
     "title": "Colique Hépatique",
     "path": "gastrologie/colique-hépatique.html",
     "specialty": "gastrologie"
+  },
+  {
+    "title": "Colique Nephritique",
+    "path": "URG-de-Garde/colique-nephritique.html",
+    "specialty": "URG-de-Garde"
   },
   {
     "title": "Colique Nephtetique",
@@ -518,6 +673,11 @@
     "title": "Coma",
     "path": "neurologie/coma.html",
     "specialty": "neurologie"
+  },
+  {
+    "title": "Coma Hyperosmolaire",
+    "path": "URG-de-Garde/coma-hyperosmolaire.html",
+    "specialty": "URG-de-Garde"
   },
   {
     "title": "Complements Alimentaires",
@@ -580,6 +740,11 @@
     "specialty": "neurologie"
   },
   {
+    "title": "Convulsions",
+    "path": "URG-de-Garde/convulsions.html",
+    "specialty": "URG-de-Garde"
+  },
+  {
     "title": "Coqueluche",
     "path": "infectiologie/coqueluche.html",
     "specialty": "infectiologie"
@@ -590,6 +755,11 @@
     "specialty": "medicaments-urgence"
   },
   {
+    "title": "Corps Etrangers Digestifs",
+    "path": "URG-de-Garde/corps-etrangers-digestifs.html",
+    "specialty": "URG-de-Garde"
+  },
+  {
     "title": "Cors",
     "path": "dermatologie/cors.html",
     "specialty": "dermatologie"
@@ -598,6 +768,11 @@
     "title": "Cors",
     "path": "ordonnances/cors.html",
     "specialty": "ordonnances"
+  },
+  {
+    "title": "Coup Chaleur",
+    "path": "URG-de-Garde/coup-chaleur.html",
+    "specialty": "URG-de-Garde"
   },
   {
     "title": "Coups De Soleil",
@@ -623,6 +798,16 @@
     "title": "Crevasses Mamelon",
     "path": "gynecologie/crevasses-mamelon.html",
     "specialty": "gynecologie"
+  },
+  {
+    "title": "Crise Drepanocytaire",
+    "path": "URG-de-Garde/crise-drepanocytaire.html",
+    "specialty": "URG-de-Garde"
+  },
+  {
+    "title": "Crise Goutte",
+    "path": "URG-de-Garde/crise-goutte.html",
+    "specialty": "URG-de-Garde"
   },
   {
     "title": "Crise Hemorroidaire",
@@ -730,6 +915,11 @@
     "specialty": "gynecologie"
   },
   {
+    "title": "Diabete Type2",
+    "path": "URG-de-Garde/diabete-type2.html",
+    "specialty": "URG-de-Garde"
+  },
+  {
     "title": "Diarrhee",
     "path": "cat-consultation/diarrhee.html",
     "specialty": "cat-consultation"
@@ -738,6 +928,11 @@
     "title": "Diarrhee Aigue",
     "path": "ordonnances/diarrhee-aigue.html",
     "specialty": "ordonnances"
+  },
+  {
+    "title": "Diarrhee Infectieuse",
+    "path": "URG-de-Garde/diarrhee-infectieuse.html",
+    "specialty": "URG-de-Garde"
   },
   {
     "title": "Diarrhee Virale",
@@ -758,6 +953,16 @@
     "title": "Dissection Aortique",
     "path": "cardiologie/dissection-aortique.html",
     "specialty": "cardiologie"
+  },
+  {
+    "title": "Dissection Aortique",
+    "path": "URG-de-Garde/dissection-aortique.html",
+    "specialty": "URG-de-Garde"
+  },
+  {
+    "title": "Diverticulite",
+    "path": "URG-de-Garde/diverticulite.html",
+    "specialty": "URG-de-Garde"
   },
   {
     "title": "Dnv",
@@ -798,6 +1003,11 @@
     "title": "Douleur Thoracique",
     "path": "cardiologie/douleur-thoracique.html",
     "specialty": "cardiologie"
+  },
+  {
+    "title": "Douleure Analgesie",
+    "path": "URG-de-Garde/douleure-analgesie.html",
+    "specialty": "URG-de-Garde"
   },
   {
     "title": "Drepanocytose",
@@ -890,14 +1100,29 @@
     "specialty": "ordonnances"
   },
   {
+    "title": "Electrisation",
+    "path": "URG-de-Garde/electrisation.html",
+    "specialty": "URG-de-Garde"
+  },
+  {
     "title": "Embolie Pulmonaire",
     "path": "cardiologie/embolie-pulmonaire.html",
     "specialty": "cardiologie"
   },
   {
+    "title": "Embolie Pulmonaire",
+    "path": "URG-de-Garde/embolie-pulmonaire.html",
+    "specialty": "URG-de-Garde"
+  },
+  {
     "title": "Emission Gaz",
     "path": "gynecologie/emission-gaz.html",
     "specialty": "gynecologie"
+  },
+  {
+    "title": "Endocardites",
+    "path": "URG-de-Garde/endocardites.html",
+    "specialty": "URG-de-Garde"
   },
   {
     "title": "Endometriose",
@@ -925,9 +1150,24 @@
     "specialty": "ordonnances"
   },
   {
+    "title": "Entorse Cheville",
+    "path": "URG-de-Garde/entorse-cheville.html",
+    "specialty": "URG-de-Garde"
+  },
+  {
+    "title": "Envenimation Morsure",
+    "path": "URG-de-Garde/envenimation-morsure.html",
+    "specialty": "URG-de-Garde"
+  },
+  {
     "title": "Ephedrine",
     "path": "medicaments-urgence/ephedrine.html",
     "specialty": "medicaments-urgence"
+  },
+  {
+    "title": "Epigastralgie",
+    "path": "URG-de-Garde/epigastralgie.html",
+    "specialty": "URG-de-Garde"
   },
   {
     "title": "Epilepsie",
@@ -950,9 +1190,19 @@
     "specialty": "orl"
   },
   {
+    "title": "Epistaxis",
+    "path": "URG-de-Garde/epistaxis.html",
+    "specialty": "URG-de-Garde"
+  },
+  {
     "title": "Erysipele",
     "path": "medecine-interne/erysipele.html",
     "specialty": "medecine-interne"
+  },
+  {
+    "title": "Erysipele",
+    "path": "URG-de-Garde/erysipele.html",
+    "specialty": "URG-de-Garde"
   },
   {
     "title": "Erytheme Polymorphe",
@@ -973,6 +1223,21 @@
     "title": "Ethmoidite",
     "path": "orl/ethmoidite.html",
     "specialty": "orl"
+  },
+  {
+    "title": "Exacerbation Bpco",
+    "path": "URG-de-Garde/exacerbation-bpco.html",
+    "specialty": "URG-de-Garde"
+  },
+  {
+    "title": "Fasciite Necrosante",
+    "path": "URG-de-Garde/fasciite-necrosante.html",
+    "specialty": "URG-de-Garde"
+  },
+  {
+    "title": "Fibrillation Atriale",
+    "path": "URG-de-Garde/fibrillation-atriale.html",
+    "specialty": "URG-de-Garde"
   },
   {
     "title": "Fibrome",
@@ -1015,6 +1280,11 @@
     "specialty": "medicaments-urgence"
   },
   {
+    "title": "Flutter Auriculaire",
+    "path": "URG-de-Garde/flutter-auriculaire.html",
+    "specialty": "URG-de-Garde"
+  },
+  {
     "title": "Folliculite",
     "path": "dermatologie/folliculite.html",
     "specialty": "dermatologie"
@@ -1033,6 +1303,16 @@
     "title": "Fracture Boxeur",
     "path": "rhumatologie/fracture-boxeur.html",
     "specialty": "rhumatologie"
+  },
+  {
+    "title": "Fracture Clavicule",
+    "path": "URG-de-Garde/fracture-clavicule.html",
+    "specialty": "URG-de-Garde"
+  },
+  {
+    "title": "Fracture Humerrus",
+    "path": "URG-de-Garde/fracture-humerrus.html",
+    "specialty": "URG-de-Garde"
   },
   {
     "title": "Fracture Ouverte Jambe",
@@ -1068,6 +1348,11 @@
     "title": "Gale",
     "path": "cat-consultation/gale.html",
     "specialty": "cat-consultation"
+  },
+  {
+    "title": "Gale",
+    "path": "URG-de-Garde/gale.html",
+    "specialty": "URG-de-Garde"
   },
   {
     "title": "Garden Al",
@@ -1130,6 +1415,11 @@
     "specialty": "cat-consultation"
   },
   {
+    "title": "Grippe Saisonniere",
+    "path": "URG-de-Garde/grippe-saisonniere.html",
+    "specialty": "URG-de-Garde"
+  },
+  {
     "title": "Grossesse Jeune",
     "path": "gynecologie/grossesse-jeune.html",
     "specialty": "gynecologie"
@@ -1145,6 +1435,11 @@
     "specialty": "gynecologie"
   },
   {
+    "title": "Guillain Barre",
+    "path": "URG-de-Garde/guillain-barre.html",
+    "specialty": "URG-de-Garde"
+  },
+  {
     "title": "Gynecomastie",
     "path": "endocrinologie/gynecomastie.html",
     "specialty": "endocrinologie"
@@ -1153,6 +1448,11 @@
     "title": "Hematemese",
     "path": "hematologie/hematemese.html",
     "specialty": "hematologie"
+  },
+  {
+    "title": "Hematurie",
+    "path": "URG-de-Garde/hematurie.html",
+    "specialty": "URG-de-Garde"
   },
   {
     "title": "Hematurie Macroscopique",
@@ -1165,9 +1465,24 @@
     "specialty": "pneumologie"
   },
   {
+    "title": "Hemoptysie",
+    "path": "URG-de-Garde/hemoptysie.html",
+    "specialty": "URG-de-Garde"
+  },
+  {
     "title": "Hemorragie Delivrance",
     "path": "gynecologie/hemorragie-delivrance.html",
     "specialty": "gynecologie"
+  },
+  {
+    "title": "Hemorragies Digestives",
+    "path": "URG-de-Garde/hemorragies-digestives.html",
+    "specialty": "URG-de-Garde"
+  },
+  {
+    "title": "Hemorrhoîdes",
+    "path": "URG-de-Garde/hemorrhoîdes.html",
+    "specialty": "URG-de-Garde"
   },
   {
     "title": "Hemorroides",
@@ -1178,6 +1493,16 @@
     "title": "Heparine",
     "path": "medicaments-urgence/heparine.html",
     "specialty": "medicaments-urgence"
+  },
+  {
+    "title": "Hepatite Alcoolique",
+    "path": "URG-de-Garde/hepatite-alcoolique.html",
+    "specialty": "URG-de-Garde"
+  },
+  {
+    "title": "Hepatite Fulminante",
+    "path": "URG-de-Garde/hepatite-fulminante.html",
+    "specialty": "URG-de-Garde"
   },
   {
     "title": "Hernie Discale",
@@ -1245,6 +1570,11 @@
     "specialty": "pediatrie"
   },
   {
+    "title": "Hypercalcemie",
+    "path": "URG-de-Garde/hypercalcemie.html",
+    "specialty": "URG-de-Garde"
+  },
+  {
     "title": "Hypercholesterolemie",
     "path": "ordonnances/hypercholesterolemie.html",
     "specialty": "ordonnances"
@@ -1255,6 +1585,11 @@
     "specialty": "endocrinologie"
   },
   {
+    "title": "Hyperglycemie",
+    "path": "URG-de-Garde/hyperglycemie.html",
+    "specialty": "URG-de-Garde"
+  },
+  {
     "title": "Hyperkaliemie",
     "path": "urologie/hyperkaliemie.html",
     "specialty": "urologie"
@@ -1263,6 +1598,16 @@
     "title": "Hyperkaliemie",
     "path": "urgence/hyperkaliemie.html",
     "specialty": "urgence"
+  },
+  {
+    "title": "Hyperkaliemie",
+    "path": "URG-de-Garde/hyperkaliemie.html",
+    "specialty": "URG-de-Garde"
+  },
+  {
+    "title": "Hypernatremie",
+    "path": "URG-de-Garde/hypernatremie.html",
+    "specialty": "URG-de-Garde"
   },
   {
     "title": "Hypersialorrhee",
@@ -1300,9 +1645,19 @@
     "specialty": "endocrinologie"
   },
   {
+    "title": "Hypocalcemie",
+    "path": "URG-de-Garde/hypocalcemie.html",
+    "specialty": "URG-de-Garde"
+  },
+  {
     "title": "Hypoglycemie",
     "path": "endocrinologie/hypoglycemie.html",
     "specialty": "endocrinologie"
+  },
+  {
+    "title": "Hypoglycemie",
+    "path": "URG-de-Garde/hypoglycemie.html",
+    "specialty": "URG-de-Garde"
   },
   {
     "title": "Hypoglycémie",
@@ -1315,9 +1670,24 @@
     "specialty": "urologie"
   },
   {
+    "title": "Hypokaliemie",
+    "path": "URG-de-Garde/Hypokaliemie.html",
+    "specialty": "URG-de-Garde"
+  },
+  {
+    "title": "Hyponatremie",
+    "path": "URG-de-Garde/hyponatremie.html",
+    "specialty": "URG-de-Garde"
+  },
+  {
     "title": "Hypotension Arterielle",
     "path": "cardiologie/hypotension-arterielle.html",
     "specialty": "cardiologie"
+  },
+  {
+    "title": "Hypothermie",
+    "path": "URG-de-Garde/Hypothermie.html",
+    "specialty": "URG-de-Garde"
   },
   {
     "title": "Hypothyroidie",
@@ -1365,6 +1735,11 @@
     "specialty": "ecg"
   },
   {
+    "title": "Infarctus Du Myocarde",
+    "path": "URG-de-Garde/infarctus-du-myocarde.html",
+    "specialty": "URG-de-Garde"
+  },
+  {
     "title": "Infection Urinaire",
     "path": "urologie/infection-urinaire.html",
     "specialty": "urologie"
@@ -1380,9 +1755,19 @@
     "specialty": "gynecologie"
   },
   {
+    "title": "Infections Urinaires",
+    "path": "URG-de-Garde/infections-urinaires.html",
+    "specialty": "URG-de-Garde"
+  },
+  {
     "title": "Ingestion Caustique",
     "path": "gastrologie/ingestion-caustique.html",
     "specialty": "gastrologie"
+  },
+  {
+    "title": "Ingestion Caustiques",
+    "path": "URG-de-Garde/ingestion-caustiques.html",
+    "specialty": "URG-de-Garde"
   },
   {
     "title": "Ingestion Eau Javel",
@@ -1415,6 +1800,16 @@
     "specialty": "cat-consultation"
   },
   {
+    "title": "Insuffisance Renale Aigue",
+    "path": "URG-de-Garde/insuffisance-renale-aigue.html",
+    "specialty": "URG-de-Garde"
+  },
+  {
+    "title": "Insuffisance Surrenalienne",
+    "path": "URG-de-Garde/insuffisance-surrenalienne.html",
+    "specialty": "URG-de-Garde"
+  },
+  {
     "title": "Interpretation Generale",
     "path": "ecg/interpretation-generale.html",
     "specialty": "ecg"
@@ -1435,9 +1830,99 @@
     "specialty": "gastrologie"
   },
   {
+    "title": "Intoxication Au Co",
+    "path": "URG-de-Garde/Intoxication-au-CO.html",
+    "specialty": "URG-de-Garde"
+  },
+  {
+    "title": "Intoxication Au Lithium",
+    "path": "URG-de-Garde/Intoxication-au-lithium.html",
+    "specialty": "URG-de-Garde"
+  },
+  {
+    "title": "Intoxication Au Methanol",
+    "path": "URG-de-Garde/Intoxication-au-methanol.html",
+    "specialty": "URG-de-Garde"
+  },
+  {
+    "title": "Intoxication Au Trichloroethylene",
+    "path": "URG-de-Garde/Intoxication-au-trichloroethylene.html",
+    "specialty": "URG-de-Garde"
+  },
+  {
+    "title": "Intoxication Aux Antidepresseurs Tricycliques",
+    "path": "URG-de-Garde/Intoxication-aux-antidepresseurs-tricycliques.html",
+    "specialty": "URG-de-Garde"
+  },
+  {
+    "title": "Intoxication Aux Betabloquants",
+    "path": "URG-de-Garde/Intoxication-aux-betabloquants.html",
+    "specialty": "URG-de-Garde"
+  },
+  {
+    "title": "Intoxication Aux Biguanides",
+    "path": "URG-de-Garde/Intoxication-aux-biguanides.html",
+    "specialty": "URG-de-Garde"
+  },
+  {
+    "title": "Intoxication Aux Champignons",
+    "path": "URG-de-Garde/Intoxication-aux-champignons.html",
+    "specialty": "URG-de-Garde"
+  },
+  {
+    "title": "Intoxication Aux Cyanures",
+    "path": "URG-de-Garde/Intoxication-aux-cyanures.html",
+    "specialty": "URG-de-Garde"
+  },
+  {
+    "title": "Intoxication Aux Digitaliques",
+    "path": "URG-de-Garde/Intoxication-aux-digitaliques.html",
+    "specialty": "URG-de-Garde"
+  },
+  {
+    "title": "Intoxication Aux Glycols",
+    "path": "URG-de-Garde/Intoxication-aux-glycols.html",
+    "specialty": "URG-de-Garde"
+  },
+  {
+    "title": "Intoxication Aux Inhibiteurs",
+    "path": "URG-de-Garde/Intoxication-aux-inhibiteurs.html",
+    "specialty": "URG-de-Garde"
+  },
+  {
+    "title": "Intoxication Aux Neuroleptiques",
+    "path": "URG-de-Garde/Intoxication-aux-neuroleptiques.html",
+    "specialty": "URG-de-Garde"
+  },
+  {
+    "title": "Intoxication Aux Opiaces",
+    "path": "URG-de-Garde/Intoxication-aux-opiaces.html",
+    "specialty": "URG-de-Garde"
+  },
+  {
+    "title": "Intoxication Aux Sulfamides",
+    "path": "URG-de-Garde/Intoxication-aux-sulfamides.html",
+    "specialty": "URG-de-Garde"
+  },
+  {
+    "title": "Intoxication Benzodiazepines",
+    "path": "URG-de-Garde/intoxication-benzodiazepines.html",
+    "specialty": "URG-de-Garde"
+  },
+  {
     "title": "Intoxication Co",
     "path": "reanimation/intoxication-co.html",
     "specialty": "reanimation"
+  },
+  {
+    "title": "Intoxication Cocaine",
+    "path": "URG-de-Garde/intoxication-cocaine.html",
+    "specialty": "URG-de-Garde"
+  },
+  {
+    "title": "Intoxication Paracetamol",
+    "path": "URG-de-Garde/intoxication-paracetamol.html",
+    "specialty": "URG-de-Garde"
   },
   {
     "title": "Ira",
@@ -1455,9 +1940,19 @@
     "specialty": "ecg"
   },
   {
+    "title": "Ischemie Aigue",
+    "path": "URG-de-Garde/ischemie-aigue.html",
+    "specialty": "URG-de-Garde"
+  },
+  {
     "title": "Isuprel",
     "path": "medicaments-urgence/isuprel.html",
     "specialty": "medicaments-urgence"
+  },
+  {
+    "title": "Ivresse Aigue",
+    "path": "URG-de-Garde/ivresse-aigue.html",
+    "specialty": "URG-de-Garde"
   },
   {
     "title": "Kawasaki",
@@ -1530,6 +2025,11 @@
     "specialty": "ordonnances"
   },
   {
+    "title": "Lombosciatique",
+    "path": "URG-de-Garde/lombosciatique.html",
+    "specialty": "URG-de-Garde"
+  },
+  {
     "title": "Loxen",
     "path": "medicaments-urgence/loxen.html",
     "specialty": "medicaments-urgence"
@@ -1555,6 +2055,16 @@
     "specialty": "pediatrie"
   },
   {
+    "title": "Maladie De Lyme",
+    "path": "URG-de-Garde/maladie-de-lyme.html",
+    "specialty": "URG-de-Garde"
+  },
+  {
+    "title": "Malaises Syncopes",
+    "path": "URG-de-Garde/malaises-syncopes.html",
+    "specialty": "URG-de-Garde"
+  },
+  {
     "title": "Menace Accouchement",
     "path": "gynecologie/menace-accouchement.html",
     "specialty": "gynecologie"
@@ -1570,9 +2080,19 @@
     "specialty": "neurologie"
   },
   {
+    "title": "Meningites",
+    "path": "URG-de-Garde/meningites.html",
+    "specialty": "URG-de-Garde"
+  },
+  {
     "title": "Mentee Laituse",
     "path": "gynecologie/mentee-laituse.html",
     "specialty": "gynecologie"
+  },
+  {
+    "title": "Microangiopathie Thrombotique",
+    "path": "URG-de-Garde/microangiopathie-thrombotique.html",
+    "specialty": "URG-de-Garde"
   },
   {
     "title": "Migraine",
@@ -1630,6 +2150,11 @@
     "specialty": "medicaments-urgence"
   },
   {
+    "title": "Noyade",
+    "path": "URG-de-Garde/noyade.html",
+    "specialty": "URG-de-Garde"
+  },
+  {
     "title": "Oap",
     "path": "cardiologie/oap.html",
     "specialty": "cardiologie"
@@ -1645,6 +2170,11 @@
     "specialty": "cat-consultation"
   },
   {
+    "title": "Occlusion Digestive",
+    "path": "URG-de-Garde/occlusion-digestive.html",
+    "specialty": "URG-de-Garde"
+  },
+  {
     "title": "Occlusion Intestinale",
     "path": "gastrologie/occlusion-intestinale.html",
     "specialty": "gastrologie"
@@ -1653,6 +2183,16 @@
     "title": "Oedeme Membres Inferieurs",
     "path": "cardiologie/oedeme-membres-inferieurs.html",
     "specialty": "cardiologie"
+  },
+  {
+    "title": "Oedeme Poumon",
+    "path": "URG-de-Garde/oedeme-poumon.html",
+    "specialty": "URG-de-Garde"
+  },
+  {
+    "title": "Oeil Rouge",
+    "path": "URG-de-Garde/oeil-rouge.html",
+    "specialty": "URG-de-Garde"
   },
   {
     "title": "Onde P",
@@ -1720,6 +2260,11 @@
     "specialty": "orl"
   },
   {
+    "title": "Otites",
+    "path": "URG-de-Garde/otites.html",
+    "specialty": "URG-de-Garde"
+  },
+  {
     "title": "Otomycose",
     "path": "orl/otomycose.html",
     "specialty": "orl"
@@ -1733,6 +2278,11 @@
     "title": "Panaris",
     "path": "dermatologie/panaris.html",
     "specialty": "dermatologie"
+  },
+  {
+    "title": "Pancreatite",
+    "path": "URG-de-Garde/pancreatite.html",
+    "specialty": "URG-de-Garde"
   },
   {
     "title": "Pancréatite",
@@ -1750,6 +2300,11 @@
     "specialty": "neurologie"
   },
   {
+    "title": "Paralysie Faciale",
+    "path": "URG-de-Garde/paralysie-faciale.html",
+    "specialty": "URG-de-Garde"
+  },
+  {
     "title": "Paresthesie",
     "path": "neurologie/paresthesie.html",
     "specialty": "neurologie"
@@ -1763,6 +2318,11 @@
     "title": "Perfalgan",
     "path": "medicaments-urgence/perfalgan.html",
     "specialty": "medicaments-urgence"
+  },
+  {
+    "title": "Pericardite",
+    "path": "URG-de-Garde/pericardite.html",
+    "specialty": "URG-de-Garde"
   },
   {
     "title": "Perichondrite",
@@ -1785,6 +2345,11 @@
     "specialty": "medicaments-urgence"
   },
   {
+    "title": "Phlebite",
+    "path": "URG-de-Garde/phlebite.html",
+    "specialty": "URG-de-Garde"
+  },
+  {
     "title": "Phlegmon",
     "path": "rhumatologie/phlegmon.html",
     "specialty": "rhumatologie"
@@ -1798,6 +2363,11 @@
     "title": "Pied Diabetique",
     "path": "medecine-interne/pied-diabetique.html",
     "specialty": "medecine-interne"
+  },
+  {
+    "title": "Pied Diabetique",
+    "path": "URG-de-Garde/pied-diabetique.html",
+    "specialty": "URG-de-Garde"
   },
   {
     "title": "Piqure Araignee",
@@ -1845,6 +2415,21 @@
     "specialty": "rhumatologie"
   },
   {
+    "title": "Plaies",
+    "path": "URG-de-Garde/plaies.html",
+    "specialty": "URG-de-Garde"
+  },
+  {
+    "title": "Plaies De La Main",
+    "path": "URG-de-Garde/plaies-de-la-main.html",
+    "specialty": "URG-de-Garde"
+  },
+  {
+    "title": "Plaques Morsures Insectes",
+    "path": "URG-de-Garde/plaques-morsures-insectes.html",
+    "specialty": "URG-de-Garde"
+  },
+  {
     "title": "Pna",
     "path": "urologie/pna.html",
     "specialty": "urologie"
@@ -1855,9 +2440,19 @@
     "specialty": "pediatrie"
   },
   {
+    "title": "Pneumopathies Communautaires",
+    "path": "URG-de-Garde/pneumopathies-communautaires.html",
+    "specialty": "URG-de-Garde"
+  },
+  {
     "title": "Pneumothorax",
     "path": "pneumologie/pneumothorax.html",
     "specialty": "pneumologie"
+  },
+  {
+    "title": "Pneumothorax Spontane",
+    "path": "URG-de-Garde/pneumothorax-spontane.html",
+    "specialty": "URG-de-Garde"
   },
   {
     "title": "Polyarthrite Rhumatoide",
@@ -1870,6 +2465,11 @@
     "specialty": "reanimation"
   },
   {
+    "title": "Poussee Hypertensive",
+    "path": "URG-de-Garde/poussee-hypertensive.html",
+    "specialty": "URG-de-Garde"
+  },
+  {
     "title": "Poussée Dentaire",
     "path": "pediatrie/poussée-dentaire.html",
     "specialty": "pediatrie"
@@ -1878,6 +2478,11 @@
     "title": "Pr",
     "path": "ecg/pr.html",
     "specialty": "ecg"
+  },
+  {
+    "title": "Pre Eclampsie",
+    "path": "URG-de-Garde/pre-eclampsie.html",
+    "specialty": "URG-de-Garde"
   },
   {
     "title": "Preeclampsie",
@@ -1915,9 +2520,19 @@
     "specialty": "ophtalmologie"
   },
   {
+    "title": "Purpura Fulminans",
+    "path": "URG-de-Garde/purpura-fulminans.html",
+    "specialty": "URG-de-Garde"
+  },
+  {
     "title": "Purpura Rhumatoide",
     "path": "medecine-interne/purpura-rhumatoide.html",
     "specialty": "medecine-interne"
+  },
+  {
+    "title": "Purpura Thrombocytopenique",
+    "path": "URG-de-Garde/purpura-thrombocytopenique.html",
+    "specialty": "URG-de-Garde"
   },
   {
     "title": "Péritonite",
@@ -1945,6 +2560,11 @@
     "specialty": "pediatrie"
   },
   {
+    "title": "Retention Aigue Urine",
+    "path": "URG-de-Garde/retention-aigue-urine.html",
+    "specialty": "URG-de-Garde"
+  },
+  {
     "title": "Rgo",
     "path": "gastrologie/rgo.html",
     "specialty": "gastrologie"
@@ -1953,6 +2573,11 @@
     "title": "Rgo",
     "path": "cat-consultation/rgo.html",
     "specialty": "cat-consultation"
+  },
+  {
+    "title": "Rhabdomyolyse",
+    "path": "URG-de-Garde/rhabdomyolyse.html",
+    "specialty": "URG-de-Garde"
   },
   {
     "title": "Rheumatisme Articulaire Aigu",
@@ -2025,6 +2650,11 @@
     "specialty": "cardiologie"
   },
   {
+    "title": "Sca St",
+    "path": "URG-de-Garde/SCA-ST.html",
+    "specialty": "URG-de-Garde"
+  },
+  {
     "title": "Scarlatine",
     "path": "dermatologie/scarlatine.html",
     "specialty": "dermatologie"
@@ -2038,6 +2668,11 @@
     "title": "Sciatique",
     "path": "rhumatologie/sciatique.html",
     "specialty": "rhumatologie"
+  },
+  {
+    "title": "Sclerose En Plaque",
+    "path": "URG-de-Garde/sclerose-en-plaque.html",
+    "specialty": "URG-de-Garde"
   },
   {
     "title": "Scoliose",
@@ -2080,6 +2715,11 @@
     "specialty": "cat-consultation"
   },
   {
+    "title": "Sinusites",
+    "path": "URG-de-Garde/sinusites.html",
+    "specialty": "URG-de-Garde"
+  },
+  {
     "title": "Solumedrol",
     "path": "medicaments-urgence/solumedrol.html",
     "specialty": "medicaments-urgence"
@@ -2115,6 +2755,11 @@
     "specialty": "pediatrie"
   },
   {
+    "title": "Surdosage Avk",
+    "path": "URG-de-Garde/surdosage-avk.html",
+    "specialty": "URG-de-Garde"
+  },
+  {
     "title": "Surdosage Paracetamol",
     "path": "reanimation/surdosage-paracetamol.html",
     "specialty": "reanimation"
@@ -2125,9 +2770,24 @@
     "specialty": "cardiologie"
   },
   {
+    "title": "Syncope",
+    "path": "URG-de-Garde/syncope.html",
+    "specialty": "URG-de-Garde"
+  },
+  {
     "title": "Syncope Dnv",
     "path": "gynecologie/syncope-dnv.html",
     "specialty": "gynecologie"
+  },
+  {
+    "title": "Syndrome Abdominal",
+    "path": "URG-de-Garde/syndrome-abdominal.html",
+    "specialty": "URG-de-Garde"
+  },
+  {
+    "title": "Syndrome Coronarien",
+    "path": "URG-de-Garde/syndrome-coronarien.html",
+    "specialty": "URG-de-Garde"
   },
   {
     "title": "Syndrome Grippal",
@@ -2145,6 +2805,11 @@
     "specialty": "hematologie"
   },
   {
+    "title": "Syndrome Hepatorenal",
+    "path": "URG-de-Garde/syndrome-hepatorenal.html",
+    "specialty": "URG-de-Garde"
+  },
+  {
     "title": "Syndrome Tourniquet",
     "path": "pediatrie/syndrome-tourniquet.html",
     "specialty": "pediatrie"
@@ -2155,6 +2820,11 @@
     "specialty": "infectiologie"
   },
   {
+    "title": "Tachycardie Jonctionnelle",
+    "path": "URG-de-Garde/tachycardie-jonctionnelle.html",
+    "specialty": "URG-de-Garde"
+  },
+  {
     "title": "Tachycardie Sinusale",
     "path": "cardiologie/tachycardie-sinusale.html",
     "specialty": "cardiologie"
@@ -2163,6 +2833,11 @@
     "title": "Tachycardie Supraventriculaire",
     "path": "cardiologie/tachycardie-supraventriculaire.html",
     "specialty": "cardiologie"
+  },
+  {
+    "title": "Tachycardie Ventriculaire",
+    "path": "URG-de-Garde/tachycardie-ventriculaire.html",
+    "specialty": "URG-de-Garde"
   },
   {
     "title": "Tamgesic",
@@ -2195,9 +2870,24 @@
     "specialty": "hematologie"
   },
   {
+    "title": "Thrombophlebite Cerebrale",
+    "path": "URG-de-Garde/thrombophlebite-cerebrale.html",
+    "specialty": "URG-de-Garde"
+  },
+  {
     "title": "Thyroidite Hashimoto",
     "path": "endocrinologie/thyroidite-hashimoto.html",
     "specialty": "endocrinologie"
+  },
+  {
+    "title": "Torsade De Pointe",
+    "path": "URG-de-Garde/torsade-de-pointe.html",
+    "specialty": "URG-de-Garde"
+  },
+  {
+    "title": "Torsion Testiculaire",
+    "path": "URG-de-Garde/torsion-testiculaire.html",
+    "specialty": "URG-de-Garde"
   },
   {
     "title": "Torticolis",
@@ -2210,6 +2900,11 @@
     "specialty": "cat-consultation"
   },
   {
+    "title": "Toxiques",
+    "path": "URG-de-Garde/toxiques.html",
+    "specialty": "URG-de-Garde"
+  },
+  {
     "title": "Toxoplasmose",
     "path": "infectiologie/toxoplasmose.html",
     "specialty": "infectiologie"
@@ -2218,6 +2913,31 @@
     "title": "Trachome",
     "path": "ophtalmologie/trachome.html",
     "specialty": "ophtalmologie"
+  },
+  {
+    "title": "Transfusion",
+    "path": "URG-de-Garde/transfusion.html",
+    "specialty": "URG-de-Garde"
+  },
+  {
+    "title": "Traumatisme Cranien",
+    "path": "URG-de-Garde/traumatisme-cranien.html",
+    "specialty": "URG-de-Garde"
+  },
+  {
+    "title": "Traumatisme Epaule",
+    "path": "URG-de-Garde/traumatisme-epaule.html",
+    "specialty": "URG-de-Garde"
+  },
+  {
+    "title": "Traumatisme Genou",
+    "path": "URG-de-Garde/traumatisme-genou.html",
+    "specialty": "URG-de-Garde"
+  },
+  {
+    "title": "Traumatisme Grave",
+    "path": "URG-de-Garde/traumatisme-grave.html",
+    "specialty": "URG-de-Garde"
   },
   {
     "title": "Traumatisme Pelvien",
@@ -2275,6 +2995,11 @@
     "specialty": "dermatologie"
   },
   {
+    "title": "Urticaire Aigu",
+    "path": "URG-de-Garde/urticaire-aigu.html",
+    "specialty": "URG-de-Garde"
+  },
+  {
     "title": "Valium",
     "path": "medicaments-urgence/valium.html",
     "specialty": "medicaments-urgence"
@@ -2283,6 +3008,11 @@
     "title": "Varicelle",
     "path": "infectiologie/varicelle.html",
     "specialty": "infectiologie"
+  },
+  {
+    "title": "Varicelle",
+    "path": "URG-de-Garde/varicelle.html",
+    "specialty": "URG-de-Garde"
   },
   {
     "title": "Varices",
@@ -2320,6 +3050,11 @@
     "specialty": "orl"
   },
   {
+    "title": "Vertiges Peripheriques",
+    "path": "URG-de-Garde/vertiges-peripheriques.html",
+    "specialty": "URG-de-Garde"
+  },
+  {
     "title": "Viroses",
     "path": "infectiologie/viroses.html",
     "specialty": "infectiologie"
@@ -2353,6 +3088,11 @@
     "title": "Zona",
     "path": "infectiologie/zona.html",
     "specialty": "infectiologie"
+  },
+  {
+    "title": "Zona",
+    "path": "URG-de-Garde/zona.html",
+    "specialty": "URG-de-Garde"
   },
   {
     "title": "Zona Ophtalmique",

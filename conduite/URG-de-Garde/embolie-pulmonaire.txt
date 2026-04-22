@@ -1,0 +1,140 @@
+COLIQUE NÉPHRÉTIQUE
+P28
+protocole
+F. Adnet – Actualisation : 13/9/2018
+1/2 �
+DÉFINITION LLCOLIQUE NÉPHRÉTIQUE
+Syndrome douloureux lomboabdominal aigu résul- DE PRÉSENTATION COMPLIQUÉE
+tant de la mise en tension brutale de la voie excrétrice
+Définition
+du haut appareil urinaire en amont d’une obstruction.
+Au moins 1 signe :
+NLFièvre ou CRP élevée
+LLPRISE EN CHARGE IAO NLInsuffisance rénale (créat > 100 µmol.L–1)
+Bilan
+NLComorbidité :
+• insuffisance rénale chronique
+NLPAS, PAD, FC, FR, T °C, heure et quantité de la • uropathie préexistante
+dernière miction + BU • rein transplanté
+NLEVA • patient VIH
+NLProtocole douleur (P127) • rein unique
+• diabète
+Orientation NLHyperalgie résistant au traitement IV
+NLBox NLCollapsus
+Bilan
+LLCOLIQUE NÉPHRÉTIQUE NLBiologique :
+DE PRÉSENTATION SIMPLE • iono, urée, créat, NFS, CRP
+• ECBU, hémocultures si arguments
+Bilan • TP, TCA
+NLBiologique : iono, urée, créat, NFS, CRP : • ECG
+• βHCG pour les femmes NLImagerie :
+• ECBU si BU positive • scanner sans injection
+NLImagerie : • échographie
+• si douleurs persistantes : échographie
+Prise en charge
+• éventuellement scanner non injecté
+NLSi fièvre : antibiothérapie
+Prise en charge • ceftriaxone (Rocéphine®) 2 g/j en 1 injection IVL
+Protocole douleur : et :
+NLParacétamol : 1 g IVL (15 min) et Kétoprofène • gentamicine 5 mg/kg IVL sur 30 minutes/j
+(Profénid®) : 100 mg IVL en 15 min (CI : fièvre) et NLProtocole douleur :
+Tramadol (Topalgic®) : 100 mg IVL • paracétamol : 1 g IVL (15 min) et kétoprofène
+Et cas de non-réponse (Profénid®) : 100 mg IVL en 15 min (CI : fièvre,
+NLMorphine IV : 3 mg/5 min, puis : Morphine SC : sepsis) et tramadol (Topalgic®) : 100 mg IVL
+10 mg/6 heures OU :
+• morphine : 3 mg/5 min IVD
+puis :
+• morphine SC : 10 mg/6 heures
+NLRemplissage vasculaire si choc (P24)
+NLAvis urologue
+48
+Colique néphrétique
+P28
+protocole
+2/2
+LLORIENTATION
+RÉFÉRENCES
+Retour à domicile si : 8e Conférence de consensus de la SFUM : prise
+NLPatient soulagé, apyrétique en charge des CN de l’adulte dans les services
+NLDiurèse conservée d’accueil des urgences (Marseille, 1999).
+NLDélai de 4 heures après la dernière injection de Actualisation : Commission de veille scientifique,
+morphine SFMU, 2009.
+Lavand S. La colique néphrétique aux urgences
+Ordonnance de sortie : en 2017. https://francais.medscape.com/
+NLProfénid® : 100 mg x 3/j pendant 5 à 7 jours voirarticle/3603307-1. Dernière consultation
+NLMopral® : 20 mg/j pendant 7 jours si âge 13/9/2018.
+> 55 ans ou ATCD de douleurs gastriques
+si CI aux AINS :
+NLTopalgic® : 100 mg LP, 1 cp matin et soir pendant
+10 jours
+NLÉventuellement : alphabloquant : Omexel® 1 cp/j
+pendant 15 jours :
+• filtrage des urines avec un filtre à café
+• paracétamol
+NLConsultation d’urologie dans la semaine avec
+résultat CRP, Iono, créat
+NLRevenir aux urgences si fièvre
+NLOrdonnance pour éventuelle analyse du calcul
+Hospitalisation UHCD si :
+NLPersistance de la douleur supportable
+NLUropathie préexistante
+NLPatient connu du service d’urologie
+Transfert urgent en urologie si :
+Au moins un signe :
+NLDilatation des voies urinaires
+NLRein unique
+NLInsuffisance rénale aiguë
+NLSepsis
+NLLithiase > 6 mm
+NLHyperalgie résistante aux traitements antalgiques
+Réanimation si :
+NLChoc septique (P24)
+49
+COMA HYPEROSMOLAIRE
+P29
+protocole
+F. Adnet – Actualisation : 19/9/2018
+1/1
+DÉFINITION Traitement
+Le coma hyperosmolaire est une complication grave NLRéhydratation :
+du diabète, définie par une osmolarité plasmatique • crystalloïdes : sérum physiologique, 1 000 mL
+> 340 mOsm.L–1, une glycémie > 6 g/L, théorique- en 30 min
+ment sans acidose ni cétose. Il est secondaire à une puis :
+déshydratation globale sévère et souvent associé à • sérum physiologique, 2 000 mL en 2 heures,
+une pathologie aiguë sous-jacente. puis solution B26 ou sérum physiologique avec
+2 g/L de kcL, 4 000 mL en 24 heures
+• vit. B1 : 100 mg IVL
+LLPRISE EN CHARGE IAO NLInsulinothérapie : objectif glycémie 11 mM
+• début : Insuline rapide (Actrapid®), 0,1 UI/kg/h
+Bilan
+• si inefficace au bout de 2 heures, passer à
+NLDextro, PAS, PAD, FC, T °C, SpO 2 , FR 0,2 UI/kg/h
+NLBU • puis adapter en fonction de la glycémie
+NLECG • dès que la glycémie est < 11 mM, changer le
+sérum physiologique pour du G5
+Orientation
+NLRecharge potassique (P70)
+NLSAUV NLAnticoagulation préventive Lovenox® 0,4 mL SC/j
+NLTraitement de la cause déclenchante
+LLPRISE EN CHARGE MÉDICALE Surveillance
+Bilan NLGlycémie, cétonémie toutes les heures
+NLÀ H6, H12, H18 : GDS, iono, ECG
+NLNFS, iono, créatinémie, urémie NLDiurèse horaire
+NLCRP, GDS NLFC, PAS, PAD, BU toutes les 2 heures
+NLPhosphorémie
+NLHémocultures en cas de fièvre
+NLECBU si BU positive RÉFÉRENCE
+Calcul de l’osmolarité : formule
+[2 x (Na + K) + glycémie (mmol.L–1) + urémie Faylman M et al. Management of hyperglycemic
+crisis: diabetic ketoacidosis and hyperglycemic
+(mmol.L–1)]
+hyperosmolar state. Med Clin North Am 2017 ;
+• normale : 290 ± 5 mosm.L–1
+101 : 587-606.
+• si > 320 mosm.L–1 : hyperosmolarité
+Calcul automatique de la formule dans l’application
+NLRx thorax
+Monitorage
+NLPANI, Scope
+NLSonde urinaire ou pénilex •••
+50

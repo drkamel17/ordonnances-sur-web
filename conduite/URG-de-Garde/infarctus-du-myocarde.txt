@@ -1,0 +1,138 @@
+COUP DE CHALEUR
+P33
+protocole
+S. Travers – Actualisation : 20/9/2018
+1/2 �
+DÉFINITION LLPRISE EN CHARGE MÉDICALE
+Le coup de chaleur est défini par l’association d’une Bilan
+hyperthermie supérieure à 40 °C et la présence de
+symptômes neurologiques (troubles de conscience,
+NLNFS, plaquettes (hémoconcentration)
+troubles du comportement, confusion, convulsions,
+NLIono (déshydratation)
+coma…).
+NLBHC (cytolyse)
+On distingue classiquement le « coup de chaleur
+NLCréat (insuffisance rénale)
+classique » dans un contexte de conditions clima-
+NLGDS-lactates
+tiques chaudes et le « coup de chaleur d’exercice »
+NLBilan infectieux (hémocultures, ECBU, PL,
+recherche paludisme, radio thorax) au moindre
+dans un contexte d’épreuve sportive associé souvent
+doute (trouble neurologique)
+à une température de l’air élevée et à un fort taux
+d’humidité. Mise en condition
+Les formes graves peuvent rapidement évoluer vers
+des troubles vasculaires, une défaillance multiviscé- NLScope, PANI, SpO 2 , surveillance diurèse,
+rale et le décès. oxygénothérapie systématique au masque
+haute concentration (6 L/min), VVP avec sérum
+physiologique 1 500 mL/24 h en base
+LLPRISE EN CHARGE IAO
+Traitement
+Bilan
+NLRefroidissement : faire baisser la T° centrale en
+NLT°C, FC, TA, FR, SpO
+2
+, niveau de conscience, dessous de 39,4 °C le plus rapidement possible :
+Dextro, ECG • déshabillage, salle climatisée (à défaut, placer une
+NLDéshabillage du patient, début de refroidissement bassine remplie de glace devant un ventilateur)
+(pièce climatisée, cold pack par-dessus un drap • bains froids : méthode la plus efficace, mais
+sur les plis inguinaux et aisselles…) seulement si l’état du patient le permet (patient
+jeune…)
+Orientation • refroidissement par évaporation (plusieurs
+NLSAUV méthodes) :
+– idéalement « tunnel réfrigérant » associant
+courant d’air sous un tunnel composé de draps
+mouillés et d’arceaux de lits orthopédiques
+provoqué par un ventilateur au pied du lit,
+– association vaporisation des téguments avec
+de l’eau tiède et ventilateur brassant de l’air,
+– application de linges régulièrement
+humidifiés avec de l’eau froide sur
+l’ensemble des téguments et brassage de
+l’air par ventilateur,
+• AINS, aspirine, paracétamol et Dantrolène® :
+non efficaces et déconseillés
+NLOxygénothérapie systématique : masque à haute
+concentration (O 2 6 L/min) •••
+56
+Coup de Chaleur
+P33
+protocole
+2/2
+NLRéhydratation (si possible avec solutés refroidis).
+RÉFÉRENCES
+Sérum physiologique : débuter le plus souvent
+par 1 à 1,5 litre en 1 heure puis selon l’état HCSP. Recommandations sanitaires du plan
+de déshydratation du patient (P67). Adapter canicule 2014.
+impérativement l’hydratation à l’examen clinique Urgences-online. Prise en charge du coup de
+et à la biologie chaleur à la BSPP. Janvier 2017.
+NLPrise en charge des détresses vitales :
+• ventilation mécanique (F9) : éviter la
+succinylcholine pour l’induction, préférer le
+rocuronium (Esmeron®) 1,2 mg/kg IVD
+• prise en charge des convulsions (P30)
+NLPrévention et traitement des complications :
+• insuffisance rénale, rhabdomyolyse (P131)
+• troubles ioniques (dont hyperkaliémie (P66))
+• souffrance myocardique, infections, accidents
+thromboemboliques (F8), CIVD (P27)
+57
+CRISE DE GOUTTE
+P34
+protocole
+S. Guinemer – Actualisation : 5/11/2018
+1/1
+DÉFINITION ET :
+Arthrite aiguë en rapport avec des dépôts de cristaux
+NLKétoprofène (Biprofénid® LP), 100 mg (1 cp) x 3/j
+pendant 15 jours OU : Diclofenac (Voltarène®),
+d’acide urique dans l’articulation.
+75 mg x 2/j pendant 15 jours en vérifiant
+la créatinémie
+LLPRISE EN CHARGE IAO OU :
+NLColchicine (Colchimax®) idéalement avant 36 h :
+Constantes • J0 : 1 mg PO puis 0,5 mg PO 1 h après
+• 0,5 mg x 2 les jours suivants pendant 10 jours
+NLPAS, PAD, FC, FR, T °C
+OU :
+NLDextro
+NLPrednisone (Cortancyl®) 0,5 mg/kg PO par jour
+Orientation pendant 5 jours
+ET :
+NLBox
+NLHydratation à base d’eau de Vichy : 1,5 L/j
+Si insuffisance rénale :
+LLPRISE EN CHARGE MÉDICALE
+NLPrednisone (Cortancyl®) : 0,5 mg/kg PO par jour
+Bilan en une prise le matin pendant 5 jours
+NLNFS, iono, CRP
+Mesures associées
+NLUricémie (peut être normale)
+NLCréatinémie NLLe traitement doit être maintenu 2 jours après
+NLHémoculture avant et après ponction articulaire la disparition des symptômes douloureux
+si besoin NLRégime hypo-uricémiant à J10 (allopurinol
+NLPonction articulaire (éventuellement) : (Zyloric®) 100 à 300 mg/j) à débuter après
+• Indication selon la localisation guérison de l’épisode aigu
+• liquide inflammatoire (> 2 000 éléments) NLArrêt de l’alcool
+• cristaux d’urate de sodium
+NLRadiographie articulation, non systématique en LLORIENTATION
+phase aiguë :
+• normale NLAmbulatoire
+• géodes intraosseuses NLConsultation rhumatologie
+• ostéophytose marginale
+RÉFÉRENCES
+Traitement de la crise aiguë
+Moi JH. Lifestyle intervention for acute gout.
+NLRepos articulaire :
+Cochrane database Syst Rev 2013 ; 4 ; 11 :
+• arceau CD010519.
+• vessie de glace (10-15 min x 3/j sur zone
+Soskind R et al. Updates on the treatment of
+douloureuse)
+gout, including a review of updated treatment
+• antalgique : paracétamol, 1 g x 4/j PO ••• guidelines and use of small molecule therapies
+for difficult-to-treat gout and gout flares. Expert
+Opin Pharmacother 2017 ; 18 : 1115-25.
+58

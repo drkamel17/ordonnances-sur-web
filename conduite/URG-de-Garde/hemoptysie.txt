@@ -1,0 +1,159 @@
+COMA HYPEROSMOLAIRE
+P29
+protocole
+F. Adnet – Actualisation : 19/9/2018
+1/1
+DÉFINITION Traitement
+Le coma hyperosmolaire est une complication grave NLRéhydratation :
+du diabète, définie par une osmolarité plasmatique • crystalloïdes : sérum physiologique, 1 000 mL
+> 340 mOsm.L–1, une glycémie > 6 g/L, théorique- en 30 min
+ment sans acidose ni cétose. Il est secondaire à une puis :
+déshydratation globale sévère et souvent associé à • sérum physiologique, 2 000 mL en 2 heures,
+une pathologie aiguë sous-jacente. puis solution B26 ou sérum physiologique avec
+2 g/L de kcL, 4 000 mL en 24 heures
+• vit. B1 : 100 mg IVL
+LLPRISE EN CHARGE IAO NLInsulinothérapie : objectif glycémie 11 mM
+• début : Insuline rapide (Actrapid®), 0,1 UI/kg/h
+Bilan
+• si inefficace au bout de 2 heures, passer à
+NLDextro, PAS, PAD, FC, T °C, SpO 2 , FR 0,2 UI/kg/h
+NLBU • puis adapter en fonction de la glycémie
+NLECG • dès que la glycémie est < 11 mM, changer le
+sérum physiologique pour du G5
+Orientation
+NLRecharge potassique (P70)
+NLSAUV NLAnticoagulation préventive Lovenox® 0,4 mL SC/j
+NLTraitement de la cause déclenchante
+LLPRISE EN CHARGE MÉDICALE Surveillance
+Bilan NLGlycémie, cétonémie toutes les heures
+NLÀ H6, H12, H18 : GDS, iono, ECG
+NLNFS, iono, créatinémie, urémie NLDiurèse horaire
+NLCRP, GDS NLFC, PAS, PAD, BU toutes les 2 heures
+NLPhosphorémie
+NLHémocultures en cas de fièvre
+NLECBU si BU positive RÉFÉRENCE
+Calcul de l’osmolarité : formule
+[2 x (Na + K) + glycémie (mmol.L–1) + urémie Faylman M et al. Management of hyperglycemic
+crisis: diabetic ketoacidosis and hyperglycemic
+(mmol.L–1)]
+hyperosmolar state. Med Clin North Am 2017 ;
+• normale : 290 ± 5 mosm.L–1
+101 : 587-606.
+• si > 320 mosm.L–1 : hyperosmolarité
+Calcul automatique de la formule dans l’application
+NLRx thorax
+Monitorage
+NLPANI, Scope
+NLSonde urinaire ou pénilex •••
+50
+W
+CONVULSIONS
+P30
+F. Adnet – Actualisation 19/9/2018
+protocole
+1/2�
+DÉFINITION LLÉTAT DE MAL ÉPILEPTIQUE
+Crise d’épilepsie : manifestation clinique de l’hyperac- Mise en condition immédiate
+tivité paroxystique d’un groupe plus ou moins étendu de
+neurones cérébraux et de son éventuelle propagation.
+NLMonitorage : PANI, SpO
+2
+, Scope
+État de mal épileptique : crise généralisée
+NLVoie veineuse :
+• sérum salé (NaCl 0,9 %)
+> 5 minutes ou crises répétées (≥ 2) sans reprise de
+• 1 500 mL/24 heures
+conscience intercritique.
+NLOxygénothérapie au masque haute concentration
+6-9 L/min
+LLPRISE EN CHARGE IAO Bilan
+Bilan NLNFS, iono, calcémie, BHC, hémostase, CRP
+N N L L P D A e S xt , r P o AD, FC, FR, ECG, T °C, SpO 2 N N L L M Al a co g o n l é é s m ém ie i s e i contexte évocateur
+NLECG
+NLRecherche toxiques
+NLDosage antiépileptique si traitement connu
+Orientation NLScanner injecté systématique avec séquences
+veineuses avant la PL et après stabilisation du
+NLSAUV
+patient
+NLPL si température ≥ 38 °C (F10)
+LLCRISE COMITIALE SIMPLE NLEEG en urgence après arrêt des convulsions
+Prise en charge
+Mise en condition immédiate
+NLLutte contre les ACSOS :
+NLMonitorage : PANI, FC, SpO
+2 • hyperthermie (paracétamol 1 g IVL)
+NLVoie veineuse :
+• hypoglycémie (P69)
+• sérum salé (NaCl 0,9 %)
+• hypoxie (masque à haute concentration
+• 1 500 mL/24 heures
+d’oxygène)
+NLOxygénothérapie au masque haute concentration
+• hyperglycémie (P37)
+6-9 L/min
+• trouble du rythme (P51)
+Bilan • hypocalcémie (P68)
+• hyponatrémie (P71)
+NLSi épileptique connu et crise habituelle : pas de NLClonazepam (Rivotril®) : 1 mg IVD
+bilan. Sinon : (ou 0,015 mg.kg–1). À renouveler une fois
+NLNFS, iono, calcémie, BHC, TP, TCA, CRP si récidive (convulsions > 5 min)
+NLAlcoolémie si contexte évocateur OU :
+NLPL si température ≥ 38 °C (F10) NLValium® : 0,15 mg/kg IM
+NLScanner systématique sauf pour éthylique SI PERSISTANCE DE LA CRISE (CONVULSIONS
+chronique ou crise chez un épileptique connu > 5 MIN) :
+Prise en charge
+NLFosphénytoïne (Prodilantin®) : 20 mg/kg
+équivalent phénytoïne en IVSE sur 15 min sans
+NLRivotril® : 1 mg IVD (0,5 mg si cachectique, sujet dépasser la vitesse de 150 mg/min •••
+âgé) si crise en cours ou en prévention d’une 2e
+crise s’il existe un facteur épileptogène identifié
+51
+Convulsions
+P30
+protocole
+2/2
+OU : Crise chez un épileptique connu
+NLPhénobarbital (Gardénal®) : 15 mg/kg IVSE sur NLMauvaise observance sans critère de gravité :
+30 min sans dépasser la vitesse de 100 mg/min sortie et traitement habituel
+OU : NLBonne observance sans critère de gravité, sortie
+NLValproate de sodium (Dépakine®) : 40 mg/kg IVSE possible avec :
+en 15 min sans dépasser 3 g • consultation neurologue
+OU : • Urbanyl® : 5 mg x 3/j pendant 7 jours en plus
+NLLévétiracétam (Keppra®) : 40 mg/kg IVL en du traitement habituel
+10 min sans dépasser 4 g
+Crise chez un éthylique chronique
+SI PERSISTANCE DE LA CRISE (> 30 MIN) :
+NLintubation (F9) : agent d’induction : Penthotal®, Si sortie :
+5 mg/kg, NLUrbanyl® : 5 mg x 3/j pendant 7 jours
+ou Diprivan®, 2 mg/kg OU :
+NLSédation d’entretien : propofol (Diprivan®) NLTraitement habituel non modifié
+3 mg/kg/h ou/et midazolam (Hypnovel®)
+Crise sur métastases cérébrales connues
+0,3 mg/kg/h IVSE
+Sortie si pas d’œdème cérébral diffus :
+NLKeppra® 250 mg, 2 cp/j pendant 3 jours, puis
+LLORIENTATION Keppra® 500 mg, 2 cp/j
+ET :
+Crise comitiale simple
+NLUrbanyl® 5 mg x 3/j pendant 7 jours
+Premier épisode
+État de mal convulsif
+NLSortie possible
+Réanimation :
+NLIRM en externe avec consultation neurologie
+NLAppel Samu pour transfert
+Hospitalisation si présence d’au moins un des
+critères de gravité suivants :
+NLSurvenue d’une seconde crise aux urgences RÉFÉRENCE
+NLConfusion persistant plus de 30 minutes Prise en charge des états de mal épileptiques
+NLFièvre supérieure à 38 °C en préhospitalier, en structure d’urgence et en
+NLDéficit postcritique ou crise partielle réanimation dans les 48 premières heures.
+NLAlcoolisation SFMU-SRLF. Recommandations Formalisés
+NLIntoxication d’Experts. Juin 2018.
+NLTroubles métaboliques
+NLTrauma crânien ou autres lésions cérébrales
+NLMaladie générale : cancer, lymphome, HIV
+NLGrossesse •••
+52
