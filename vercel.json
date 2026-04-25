@@ -102,6 +102,10 @@
       "use": "@vercel/static"
     },
     {
+      "src": "medicaments/**/*.html",
+      "use": "@vercel/static"
+    },
+    {
       "src": "conduite/**/*",
       "use": "@vercel/static"
     },
@@ -143,9 +147,17 @@
       "src": "/dece/(.*)",
       "dest": "/dece/$1"
     },
+{
+      "src": "/commentaire/(.*)",
+      "dest": "/commentaire/$1"
+    },
     {
-      "src": "/ordonnance/(.*)",
-      "dest": "/ordonnance/$1"
+      "src": "/medicaments/(.*)",
+      "dest": "/medicaments/$1"
+    },
+    {
+      "src": "/conduite/(.*)",
+      "dest": "/conduite/$1"
     },
     {
       "src": "/score/(.*)",
