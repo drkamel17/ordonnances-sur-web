@@ -18,11 +18,7 @@
       "use": "@vercel/static"
     },
     {
-      "src": "*.jpg",
-      "use": "@vercel/static"
-    },
-    {
-      "src": "*.svg",
+      "src": "*.json",
       "use": "@vercel/static"
     },
     {
@@ -58,6 +54,10 @@
       "use": "@vercel/static"
     },
     {
+      "src": "ordonnance type/**/*",
+      "use": "@vercel/static"
+    },
+    {
       "src": "score/**/*.js",
       "use": "@vercel/static"
     },
@@ -90,19 +90,27 @@
       "use": "@vercel/static"
     },
     {
-      "src": "templates/*.pdf",
+      "src": "medicaments/**/*.js",
       "use": "@vercel/static"
     },
     {
-      "src": "ordonnance type/**/*",
-      "use": "@vercel/static"
-    },
-    {
-      "src": "commentaire/**/*",
+      "src": "medicaments/**/*.css",
       "use": "@vercel/static"
     },
     {
       "src": "medicaments/**/*.html",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "radiologie/**/*",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "templates/*.pdf",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "commentaire/**/*",
       "use": "@vercel/static"
     },
     {
@@ -132,6 +140,10 @@
       "dest": "/api/save-supabase.js"
     },
     {
+      "src": "/medicaments/(.*)",
+      "dest": "/medicaments/$1"
+    },
+    {
       "src": "/api/commentaires",
       "dest": "/api/commentaires.js"
     },
@@ -147,17 +159,9 @@
       "src": "/dece/(.*)",
       "dest": "/dece/$1"
     },
-{
-      "src": "/commentaire/(.*)",
-      "dest": "/commentaire/$1"
-    },
     {
-      "src": "/medicaments/(.*)",
-      "dest": "/medicaments/$1"
-    },
-    {
-      "src": "/conduite/(.*)",
-      "dest": "/conduite/$1"
+      "src": "/ordonnance/(.*)",
+      "dest": "/ordonnance/$1"
     },
     {
       "src": "/score/(.*)",
@@ -166,6 +170,10 @@
     {
       "src": "/medicamentdz/(.*)",
       "dest": "/medicamentdz/$1"
+    },
+    {
+      "src": "/radiologie/(.*)",
+      "dest": "/radiologie/$1"
     },
     {
       "src": "/ordonnance%20type/(.*)",
@@ -178,22 +186,6 @@
     {
       "src": "/ordonnance%20type/api/save-supabase.js",
       "dest": "/ordonnance%20type/api/save-supabase.js"
-    },
-    {
-      "src": "/ordonnance%20type/api/save.js",
-      "dest": "/ordonnance%20type/api/save.js"
-    },
-    {
-      "src": "/ordonnance%20type/api/save-github.js",
-      "dest": "/ordonnance%20type/api/save-github.js"
-    },
-    {
-      "src": "/ordonnance%20type/ordonnances-types.json",
-      "dest": "/ordonnance/ordonnances-types.json"
-    },
-    {
-      "src": "/ordonnance%20type/medicaments.json",
-      "dest": "/ordonnance/medicaments.json"
     },
     {
       "src": "/(.*)\\.json",
@@ -220,22 +212,12 @@
       "dest": "/api/recuperer_donnees.js"
     },
     {
-      "src": "(.*)",
+      "src": "/",
+      "dest": "/index.html"
+    },
+    {
+      "src": "/(.*)",
       "dest": "/$1.html"
-    }
-  ],
-  "rewrites": [
-    {
-      "source": "/ordonnance%20type/api/config.js",
-      "destination": "/ordonnance%20type/api/config.js"
-    },
-    {
-      "source": "/ordonnance%20type/api/save-supabase",
-      "destination": "/ordonnance%20type/api/save-supabase.js"
-    },
-    {
-      "source": "/ordonnances-types.json",
-      "destination": "/ordonnances-types.json"
     }
   ],
   "headers": [
