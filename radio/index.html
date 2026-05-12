@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atlas de Radiographies - Dr. KHERBA N</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0f172a;
+            --secondary: #1e293b;
+            --accent: #3b82f6;
+            --accent-light: #60a5fa;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text: #1e293b;
+            --text-light: #64748b;
+            --border: #e2e8f0;
+            --shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+        .header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 0.8rem 2rem;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .header h1 { font-size: 1.2rem; font-weight: 700; margin-bottom: 0.2rem; }
+        .header .subtitle { font-size: 0.8rem; opacity: 0.9; font-weight: 300; }
+        .header .doctor {
+            display: inline-block;
+            margin-top: 1rem;
+            padding: 0.5rem 1.5rem;
+            background: rgba(255,255,255,0.15);
+            border-radius: 50px;
+            font-weight: 500;
+        }
+        .container { max-width: 1200px; margin: 0 auto; padding: 2rem; }
+        .stats-bar {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            padding: 1.5rem;
+            background: var(--card-bg);
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+        .stat-item { text-align: center; }
+        .stat-value { font-size: 2rem; font-weight: 700; color: var(--accent); }
+        .stat-label { font-size: 0.85rem; color: var(--text-light); }
+        .nav-section {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+        }
+        .nav-section h2 { margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem; }
+        .case-header { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; }
+        .case-number { width: 50px; height: 50px; background: #3b82f6; color: white; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1.2rem; flex-shrink: 0; }
+        .text-danger { background: #fce7f3; padding: 1rem; border-radius: 8px; border-left: 4px solid #e11d48; margin-bottom: 1rem; color: #881337; }
+        .text-warning { background: #fef3c7; padding: 1rem; border-radius: 8px; border-left: 4px solid #f59e0b; margin-bottom: 1rem; color: #92400e; }
+        .text-success { background: #d1fae5; padding: 1rem; border-radius: 8px; border-left: 4px solid #10b981; margin-bottom: 1rem; }
+        .text-info { background: #dbeafe; padding: 1rem; border-radius: 8px; border-left: 4px solid #3b82f6; margin-bottom: 1rem; color: #1e40af; }
+        .floating-nav { position: fixed; bottom: 2rem; right: 1rem; display: flex; flex-direction: column; gap: 0.5rem; }
+        .floating-btn { width: 50px; height: 50px; border-radius: 50%; border: none; background: var(--accent); color: white; cursor: pointer; font-size: 1.2rem; box-shadow: var(--shadow-lg); transition: all 0.2s; }
+        .floating-btn:hover { background: var(--primary); transform: scale(1.1); }
+        .search-box { margin-bottom: 1rem; }
+        .search-box input { width: 100%; padding: 1rem; border: 2px solid var(--border); border-radius: 8px; font-size: 1rem; }
+        .search-box input:focus { outline: none; border-color: var(--accent); }
+        @media (max-width: 768px) { .case-content { grid-template-columns: 1fr; } .header h1 { font-size: 1.8rem; } }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <h1>Atlas de Radiographies</h1>
+        <p class="subtitle">Guide pratique de fracture courantes des urgences(PU)</p>
+        <span class="doctor">Dr. KHERBA N</span>
+    </header>
+    
+    <div class="container">
+       
+
+        <div class="nav-section">
+            <h2>Recherche</h2>
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="Rechercher une pathologie, un traitement..." oninput="searchCases(this.value)">
+            </div>
+        </div>
+
+        <div id="cases-container"></div>
+    </div>
+
+    <div class="modal" id="modal" onclick="closeModal(event)">
+        <span class="modal-close" onclick="event.stopPropagation(); closeModal()">&times;</span>
+        <img id="modal-img" src="" alt="Zoom">
+    </div>
+
+    <div class="floating-nav">
+        <button class="floating-btn" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+        <button class="floating-btn" onclick="window.scrollTo({top:document.body.scrollHeight,behavior:'smooth'})">↓</button>
+    </div>
+
+    <script>
+        const pagesData = [{"page":1,"text":"","images":[]},{"page":2,"text":"Fractures ➡️ Attelles / Plâtres \n \n◾️Clavicule➡️ Attelle en 8 \n◾️AB/Coude/Bras/Poignet➡️ Attelle en BABP \n◾️Poignet et Os du carpe➡️ Attelle Manchette \n◾️Cheville/Tendon d'Achille/Entorse➡️ Attelle \njambière poster  \n◾️Fémur/Genoux/Jambe/Cheville➡️ \nCruropedieuse  \n◾️Mains➡️ Attelle en gant  \n◾️Pieds➡️ Attelle en botte \n◾️Doigts 4/5➡️ Attelle en gouttière","images":[]},{"page":3,"text":"","images":["page003_img01.jpg"]},{"page":4,"text":"☠️Fracture de tiers inférieur de Radius \n🔸️En motte de beurre🔸️ \n \n▪️Fait un profil pour voir s'elle est déplacée ou \npas \n▪️Si c'est non déplacée=> BABP pdt 21j \n▪️Traitement médical + contrôle après 15j \n➡️Avis spécialisé","images":["page004_img01.jpg"]},{"page":5,"text":"☠️Un enfant de 13ans sans ATCD \npathologiques reçoit un coup de marteau par \nson papa sur le coude.  \n \n▪️Faut faire un Rx controlatéral pour confirmer la \nfacture \n \n▪️Déclaration  \n➡️Orientation CCI","images":["page005_img01.jpg"]},{"page":6,"text":"☠️Un sujet jeune qui présente un traumatisme \nfermé de sa main  \n \n⚠️ Fracture de M4  \n▪️Le patient bénéficie une attelle intrinsèque + \navis traumato  \n▪️Le traumato dit que le patient ne nécessite pas \nune attelage, juste un traitement médical  \n  \n▪️Mais en réalité y a un risque de déplacement / \nCal vicieux+++ donc : \n Manchette ou Attelle plâtrée jusqu'à une \nostéosynthèse","images":["page006_img01.jpg"]},{"page":7,"text":"☠️Fracture de phalange median du 3ème doigt  \n◾️Attelle à l'abaisse langue \nOu orthèse de doigt ou Syndactilisation \n \n➡️Orientation orthopédie","images":["page007_img01.jpg"]},{"page":8,"text":"☠️Douleur intense suite d'un frappe sur une \ntable \n⚠️Fracture de 5éme phalange proximale \n✅️CAT : syndactilisation","images":["page008_img01.jpg"]},{"page":9,"text":"☠️Enfant de 4ans, chute de sa hauteur  \nDouleur au niveau de l'avant bras  \n \n⚠️Fracture des 2Os de AB en Motte de beurre  \n◾️Attelle BABP  \n➡️Avis CCI","images":["page009_img01.jpg"]},{"page":10,"text":"Fibrome non ossifiant \n \nOstéolyse géographique diaphysaire fémorale \ninférieure excentrée de forme grossièrement \novalaire mesurant approximativement 5 cm à \ngrand axe parallèle à celui de l'os porteur, ayant \ndes contours polycycliques entourée d'une \nsclérose périphérique à matrice hétérogène par \nla présence de cloisons réalisant l'aspect en \nbulles de savon \n \n▪️Corticale non rompue \n▪️Pas de réaction périoste \n▪️Parties molles respectées","images":["page010_img01.jpg"]},{"page":11,"text":"⚠️Processus osseux lentement évolutif d'allure \nbénin type FNO (fibrome non ossifiant) \n \n◾️Surveillance Radiologique","images":[]},{"page":12,"text":"Maladie d'Osgood Schalatter \n \nAffection du genou ; c'est une apophysose  « \nostéochondrose tibiale antérieure » puisqu'il \ns'agit d'une souffrance de l'insertion basse du \ntendon rotulien au niveau de la tubérosité \ntibiale antérieure.. \n Adolescents de 11_12ans et plus…  \n \nOstéochondrose au point d'insertion de tendon \nrotulien résultat de sollicitation violente et \nrépétée chez les adolescents, son traitement \nest le repos, arrêt de l'activité sportive pdt \n3mois et privilégie la natation.","images":["page012_img01.jpg"]},{"page":13,"text":"✅️CAT : \n▪️Repos/Surveillance +++ \n▪️Antalgiques  \n▪️Anti-inflammatoires  \n▪️Attelle cruropedieuse pour la phase aiguë qui \nsuit le traumatisme pour limiter les \nmouvements de flexion ( ça nécessite pas un \nplâtre) \n➡️Orientation vers un orthopédiste \n(surveillance jusqu'à l'âge de 18 ans..)","images":[]},{"page":14,"text":"☠️Un enfant de 6ans chute de sa propre \nhauteur  \nRx du coude gauche \nPalette type 4  \n✅️CAT :  \n▪️Mise en condition de l'enfant \n▪️Bilan pré-op  \n▪️Examen minutieux neurologique et vasculaire \ndu membre supérieur  \n▪️Immobilisation provisoire par attelle BABP  \n➡️Évacuation vers EPH pour traitement \nchirurgicale en urgence","images":["page014_img01.jpg"]},{"page":15,"text":"☠️Patient de 38ans diabétique sous insuline \nconsulte pour chute lors d'un match de foot \navec point d'impact main gauche  \nA l'examen tuméfaction au niveau du poignet  \n \n⚠️Fracture de l'os Scaphoïde \nmal visualisée à la radio","images":["page015_img01.jpg","page015_img02.jpg"]},{"page":16,"text":"◾️Rechercher une impotence fonctionnelle   \n▪️Si le malade est capable de faire un \"STOP\" \n▪️Rechercher un comblement de Tabatière \nanatomique  \n=> Attelle en Cravate \n \n⚠️Tout traumatisme du poignet est une \nfracture du scaphoïde jusqu'à preuve du \ncontraire \n \n✅️ La clinique peut révéler une fracture du \nscaphoïde mais, infra-radiologique: \n▪️Immobilise de poignet par une attelle \nantérieure et on le réévalue dans 15j par un Rx \nincidence de Schneck  \n▪️Si y a une fracture elle se faire montrer par les \nphénomènes de résorption périfracturaire  \nFracture du scaphoïde négligée = arthrose, \ninstabilité, pseudarthrose du poignet ..","images":[]},{"page":17,"text":"☠️Une patiente consulte pour une chute sa fait \nune semaine  \nDouleur au niveau de la face palmaire du pied \navec impotence   \n \n⚠️Fracture de 4ème métatarse \n=> Attelle en botte \n▪️Interdiction 21j \n▪️Traitement AINS et antalgique \n➡️Contrôle orthopédie","images":["page017_img01.jpg"]},{"page":18,"text":"☠️Un patient de 60ans, hypertendu sous \ntraitement, consulte pour des douleurs au \nniveau de coude gauche depuis 2j \nCoude gauche rouge chaud et gonflé, limitation \ndes mouvements de flexion à cause de la \ndouleur et l'œdème  \n \n⚠️Rx: une zone dense en regard de l'insertion \ndu tendon  tricepital sur l'olécrane  \n \n=> Tendinite calcifiante (Enthesopathies)","images":["page018_img01.jpg"]},{"page":19,"text":"✅️CAT: \n▪️Repos immobilisation \n▪️AINS/Antalgiques/Poche de glace/Bondage \nalcoolisé  \n ▪️Échographie  \n➡️Rééducation","images":[]},{"page":20,"text":"","images":["page020_img01.jpg","page020_img02.jpg","page020_img03.jpg"]},{"page":21,"text":"☠️Patient de 68ans consulte pour une  douleur \nau niveau de genou gauche \nPas de notion de traumatisme \n \n⚠️Gonarthrose \n  \n▪️Pincement articulaire \n▪️Ostéophyte, c'est-à-dire un surplus d'os \nautour de l'articulation \n▪️Condensation de l'os sous le cartilage \n▪️ Géodes  \n▪️Déformation bilatérale en genu-varum \n▪️Gonarthrose bilatérale secondaire à la \ndéformation \n▪️Proposer au début des infiltrations (CTC...) \n▪️Penser à une valgisation correctrice","images":[]},{"page":22,"text":"☠️Femme de 50ans sans ATCD  \nConsulte pour une chute de sa propre hauteur  \n \n⚠️Entorse maligne \nArrachement osseux du condyle fémoral \nexterne (arrachement ligamentaire entraînant \nune avulsion osseuse) \n \n=>Plâtre cruropedieux","images":["page022_img01.jpg"]},{"page":23,"text":"☠️Enfant de 3ans, traumatisé \n \n⚠️Fracture spiroidale du Tibia \n▪️Demander un Rx de profil \n▪️Attelle  \n➡️Orientation CCI","images":["page023_img01.jpg"]},{"page":24,"text":"⚠️Rectitude du rachis cervical  \nUne perte de la courbure naturelle de la partie \nhaute de la colonne vertébrale, et c'est l'un des \nsignes de début de l'arthrose cervicale... \n✅️CAT: \n▪️Collier cervicale semi rigide \n▪️AINS/IPP \n▪️Relaxant  \n▪️Antalgique  \n▪️Contrôle après 12j \n▪️Refaire la Rx","images":["page024_img01.jpg"]},{"page":25,"text":"☠️Rx :Bec ostéophytique  \n▪️Pincement de l'interligne  \n Gonarthrose","images":["page025_img01.jpg"]},{"page":26,"text":"☠️Un enfant de 6ans \nChute sur le nez \nŒdème + épistaxis \n  \nRx : Fracture des OPN","images":["page026_img01.jpg"]},{"page":27,"text":"☠️Traumatisme du pied, douleur, œdème \nminime et impossibilité de mettre le pied sur le \nsol  \nRx: Fracture du cunéiforme médial","images":["page027_img01.jpg"]},{"page":28,"text":"☠️Homme de 56ans, maçon sans ATCD, \nconsulte pour douleur au niveau de l'omoplate \ndroit qui irradie vers la main droite évoluant \ndepuis quelques mois radio  \n \nRx: Arthrose cervicale  \n▪️Rectitude cervicale \n▪️Tassement des 3 dernier vertèbres  \n▪️Perte de l'alignement des vertèbres \ncervicales..","images":["page028_img01.jpg"]},{"page":29,"text":"☠️Rx chez un enfant  \n \nRx: Luxation de la hanche gauche  \navec dysplasie cotyloïdienne  \n \n➡️Orientation vers un CCI","images":["page029_img01.jpg"]},{"page":30,"text":"☠️Patiente 80ans hypertendu  \nChute de sa propre hauteur \n \nRx : Fracture de col fémural FCF \n Traitement chirurgical « PTH » Prothèse \ntotale de hanche \n▪️Bilan d'ostéoporose \n➡️Avis cardiologie (Échocœur)","images":["page030_img01.jpg","page030_img02.jpg"]},{"page":31,"text":"Fracture de Poteau colles","images":["page031_img01.jpg"]},{"page":32,"text":"☠️Fracture spiroïdale de 5éme métacarpe  \n \n▪️Dans ce type de Fracture faut un avis \northopédie  \n▪️Ça peut nécessite une embrochage \n(Ostéosynthèse) \n▪️Donc: Immobilisation  \n➡️ Orientation","images":["page032_img01.jpg","page032_img02.jpg"]},{"page":33,"text":"Fibrome non ossifiant  \n \n▪️Juste surveillance Radiologique  \n▪️Si extension => exérèse","images":["page033_img01.jpg"]},{"page":34,"text":"☠️Homme de 55ans qui présente des \nLombosciatalgies invalidantes avec notion d'un \nancien traumatisme lombaire \n \nRx: Discarthropathie dégénérative étagée \nplus prononcée au niveau de L2L3 \nAttitude Scoliotique","images":["page034_img01.jpg","page034_img02.jpg"]},{"page":35,"text":"✅️Traitement antalgique classique mais seule \nune infiltration pourra faire céder la douleur \n▪️Demander une TDM à la recherche d'une \nirritation du nerf sciatique (donc entre L4-S3) \ncar la discopathie L2L3 ne peut pas donner de \nsciatalgie.. \n \n◾️Pour différencier de \"Tassement vertébral\" \n▪️Il faut que la hauteur vertébrale soit diminuée \net qu'elle soit associée à une fracture vertébrale \n: ce qui n'est pas le cas ici \n▪️Ici, c'est le disque intervertébral qui est \ncomplétement aplati : discarthropathie \ndégénérative..","images":[]},{"page":36,"text":"☠️Patient de 19 ans  \nConsultation Après 15 jours malgré il fait un \nplâtre  \nPas de consolidation !!","images":["page036_img01.jpg","page036_img02.jpg","page036_img03.jpg"]},{"page":37,"text":"⚠️C'est pourquoi faut toujours orienter ce type \nde Fracture vers un orthopédiste \n(Ostéosynthèse) puisque la plupart sont des \nFractures déplacées qui peuvent nécessité un \ntraitement chirurgicale (embrochage)","images":[]},{"page":38,"text":"☠️Sujet âgé après une chute \n \nRx: Col chirurgical \n \n◾️En fonction de l'âge: \n▪️Sujet âgé: Bandage en coude au corps pdt 21j \net Traitement médicale  \n▪️Sujet jeune: Visage \n \n➡️ Orientation orthopédie","images":["page038_img01.jpg"]},{"page":39,"text":"☠️Un enfant: \nFracture diaphysaire en boit vert des 2 os de \nl'avant bras à confirmer par une incidence de \nface","images":["page039_img01.jpg","page039_img02.jpg"]},{"page":40,"text":"▪️Si c'est non déplacée: Attelle BABP puis \ncontrôle après 15_21j \n▪️Si c'est déplacée: Immobilisation BABP  \n➡️ Orientation CCI (embrochage)","images":[]},{"page":41,"text":"☠️Après accident de la voie publique  \nLuxation du coude \n◾️Réduction puis Immobilisation par une attelle \nplâtré BABP pdt 21j \n▪️Antalgique  \n➡️Avis orthopédie","images":["page041_img01.jpg"]},{"page":42,"text":"☠️Fracture en aile du papillon 🦋 \n Ostéosynthèse par plaque vissée \n⛔️Risque de lésion du nerf radial  \n▪️Attelle avec écharpe  \n➡️Évacuation","images":["page042_img01.jpg","page042_img02.jpg"]},{"page":43,"text":"☠️Fracture au niveau de 4ème phalange \nproximal.  \n \n Attelle Zimmer","images":["page043_img01.jpg"]},{"page":44,"text":"Luxation antérieure scapulo humérale \nsub_claviculaire  \nOu  \n◾️Luxation antéro-interne sous coracoïdienne \nde l'épaule (forme la plus fréquente des \nluxation de l'épaule) \n \n✅️CAT: \n▪️Réduction avant 6h  \nTechnique de Kocher (traction➡️rotation \nexterne➡️adduction ➡️rotation interne)","images":["page044_img01.jpg"]},{"page":45,"text":"⚠️ Après la réduction faut un radio de contrôle \npuisque c'est médico-légale  \n \n▪️Il faut vérifier la sensibilité du moignon de \nl'épaule pour voir s'il y a une compression du \nnerf axillaire ou circonflexe \n \n▪️Immobilisation par un mayo clinique coude au \ncorps type Dujarier pdt 1mois \n \n▪️Traitement antalgique  \n▪️+/_ Échographie des parties molles à faire \naprès 21js pour voir l'atteinte musculaire et \ntendineuse  \n▪️Radio de contrôle","images":[]},{"page":46,"text":"☠️Rx : Fracture du col chirurgical \n \n▪️Examen vasculo nerveux  \n▪️Attelle directionnelle ou attelle Dujarier  \n▪️Antalgiques  \n \n➡️Orientation orthopédie","images":["page046_img01.jpg"]},{"page":47,"text":"☠️Rx: \nDouleur du pied chronique sans notion de \ntraumatisme \n  \nRx: Enthesopathie calcifiante du tendon \nd'Achille   \n▪️Traitement symptomatique + RHD (chaussures \nlarges..)  \n▪️Si c'est inflammatoire dont l'origine une \nmaladie inflammatoire rhumatismale (PR/SPA..) \n▪️Traitement de la maladie est nécessaire","images":["page047_img01.jpg"]},{"page":48,"text":"◾️En général :  \n▪️Kinésithérapie physiothérapie  \n▪️Mésothérapie  \n▪️Infiltration corticoïdes  \n▪️Rééducation  \n▪️Étirements","images":[]},{"page":49,"text":"☠️Rx: \nFille 10ans, sans ATCD \nChute sur le coude \n \nRx: Fracture du l'extrémité supérieur de \nradius (col radial) avec angulation > 30° (type 3 \nselon classification de Judet) \n \n✅️CAT: \n▪️Immobilisation provisoire par attelle BABP  \n▪️Traitement antalgique (perfusion Perfalgan \n500mg)","images":["page049_img01.jpg","page049_img02.jpg"]},{"page":50,"text":"➡️Orientation vers Traumatologie (possibilité \nde traitement chirurgicale par embrochage \npercutané)","images":[]},{"page":51,"text":"☠️Patient âgé de 70ans d'ATCD de PR \nConsulte pour un œdème au niveau du poignet, \navec des douleurs modérées, \nPas de troubles sensitivomoteurs  \nMécanisme du traumatisme est inconnu \n \nRx : Polyarthrite rhumatoïde  \n▪️Carpite fusion des os du poignet","images":["page051_img01.jpg"]},{"page":52,"text":"✅️CAT : \n▪️Traitement symptomatique  \n▪️Bilan : CRP/VS \n▪️Rx poignet controlatéral, pied  \n▪️TLT \n➡️Avis Rhumatologie","images":[]},{"page":53,"text":"☠️Fille 8ans, chute sur la main  \nPoint d'impact: petit doigt \n \nRx: Luxation métacarpo phalangienne  \n \n✅️CAT: \n▪️Réduction  \n▪️Antalgique \n➡️Avis CCI","images":["page053_img01.jpg"]},{"page":54,"text":"☠️Impotence fonctionnelle douloureuse et \nimmédiate du pied gauche suite à un \ntraumatisme indirect  \n \nRx : Fracture de Jones: fracture de la base du \n5ème métatarsien \nentre l'articulation et la diaphyse du 5ème \nmétatarsien","images":["page054_img01.jpg"]},{"page":55,"text":"✅️CAT: \n◾️Immobilisation du pied par une attelle \nplâtrée/résine ou une botte sans appui entre \n45_60j  \n \n◾️Si absence de consolidation lors des \nradiographies de contrôle à 6 semaines: \n \n➡️ Traitement chirurgical \n(fixation par une vis insérée depuis la base du \n5ème métatarsien à l'intérieur de la cavité \nosseuse)","images":[]},{"page":56,"text":"☠️Taumatisme directe du coude droit \nLégère douleur, impotence fonctionnelle \nmodérée. \nRx: pas de fracture ni fissure mais une \ndécouverte fortuite de multiples formations \nnodulaire bien arrondie disséminées au niveau \nde l'articulation. \ny a une notion d'un traumatisme ancien au \nmême endroit  \nA la palpation: formations non douloureuses, \ntrès mobiles de consistance dure comme un os. \n \nRx: Chondromatose synoviale","images":["page056_img01.jpg"]},{"page":57,"text":"Probablement post traumatique, bénigne mais \nrécidivante.  \n \n◾️IRM est l'examen clé pour confirmer le \ndiagnostic  \n➡️ Avis orthopédie","images":[]},{"page":58,"text":"Douleur au niveau du jonction acromio \nclaviculaire \n \nRx: Luxation acromio claviculaire type 2 \n \n CAT: \n Antalgique  \n Elasto pdt 1sem","images":["page058_img01.jpg"]},{"page":59,"text":"","images":["page059_img01.jpg","page059_img02.jpg"]},{"page":60,"text":"Rx: Fracture en motte de beurre \n \n✅️CAT: \n▪️Attelle d'immobilisation pdt 14_21j \n▪️Si avant_bras=> BABP \n▪️Antalgique  \n▪️Contrôle 21j","images":["page060_img01.jpg","page060_img02.jpg"]},{"page":61,"text":"☠️Enfant de 5ans \n \nRx : Fracture en bois vert de la diaphyse de \nl'ulna \n \n✅️CAT: \n◾️Examiner l'innervation et la vascularisation de \nl'avant bras  \n◾️Chercher et traiter les lésions cutanées si \nelles existent + ATB (Keforal 50mg/kg/jr)","images":["page061_img01.jpg"]},{"page":62,"text":"◾️Rx de l'avant bras (Profil) qui inclut les \narticulations sus et sous jacentes pour \nconfirmer l'absence d'un déplacement  \n◾️Si déplacement (+): \n✓ Attelle BABP de transport  \n✓ Orienter vers CCI pour une éventuelle \nréduction + suivi à leur niveau  \n \n◾️Si absence de déplacement : \n✓ Attelle BABP \n✓ contrôle après une semaine (avec une radio \nde l'avant bras F+P faite la veille du RDV)  \n▪️Si déplacement : ➡️ orienter vers CCI \n \n▪️Sinon contrôle après 3 semaines (pour évaluer \net décider l'ablation ou la prolongation de la \ndurée jusqu'à 5-6 semaines) \n✓Paracétamol","images":[]},{"page":63,"text":"◾️Fracture de Monteggia: si luxation de la tête \nradiale associée","images":[]},{"page":64,"text":"☠️Enfant consulte pour une fracture de l'avant \nbras  \n \nRx: Fractures diaphysaires déplacées des 2 os \nde l'avant-bras à sommet ventral \n \n✅️CAT: \n◾️Examen neurologique minutieux à la \nrecherche d'une lésion du nerf médian ou du \nnerf radial (mouvements 🤚✊️✌️)","images":["page064_img01.jpg"]},{"page":65,"text":"◾️Examen vasculaire (pouls radial+++) \n◾️Si plaie associé (fracture ouvert = Extrême \nurgences) \n▪️Perfusion Prodaf 500  \n◾️Immobilisation provisoire par Attelle BABP ➡️ \nOrientation Traumatologie ou CCI \n \n▪️Souvent nécessite un traitement chirurgicale \npar embrochage percutané","images":[]},{"page":66,"text":"","images":[]}];
+
+        function renderAll() {
+            const container = document.getElementById('cases-container');
+            container.innerHTML = pagesData.map((p, index) => renderCase(p, index)).join('');
+        }
+
+        function renderCase(page, index, query = '') {
+            if (page.page === 2) {
+                const textLines = page.text ? page.text.split('\n').filter(l => l.trim()) : [];
+                return `
+                <div class="case-card" id="case-${index}">
+                    <div class="case-header">
+                        <div class="case-number">1</div>
+                        <div class="case-title">
+                            <h3>Guide des Attelles et Plâtres</h3>
+                        </div>
+                    </div>
+                    <div class="case-content">
+                        <div class="case-text">
+                            ${textLines.map(line => formatText(line, query)).join('')}
+                        </div>
+                    </div>
+                </div>`;
+            }
+            if (page.page === 3) {
+                return `
+                <div class="case-card" id="case-${index}">
+                    <div class="case-header">
+                        <div class="case-number">2</div>
+                        <div class="case-title">
+                            <h3>Radiographies</h3>
+                        </div>
+                    </div>
+                    <div class="case-content image-only">
+                        ${page.images.map(img => `<img src="images/${img}" alt="Radiographie page ${page.page}" onclick="openModal(this.src)">`).join('')}
+                    </div>
+                </div>`;
+            }
+            
+            const caseNum = index - 2;
+            const textLines = page.text ? page.text.split('\n').filter(l => l.trim()) : [];
+            
+            if (textLines.length === 0 && page.images.length === 0) return '';
+            
+            let html = '';
+            
+            if (textLines.length > 0) {
+                html = `
+                <div class="case-card" id="case-${index}">
+                    <div class="case-header">
+                        <div class="case-number">${caseNum}</div>
+                        <div class="case-title">
+                            <h3>Cas ${caseNum}</h3>
+                        </div>
+                    </div>
+                    <div class="case-content">
+                        <div class="case-text">
+                            ${textLines.map(line => formatText(line, query)).join('')}
+                        </div>
+                        ${page.images.length > 0 ? `
+                        <div class="case-images">
+                            ${page.images.map(img => `<img src="images/${img}" alt="Radiographie page ${page.page}" onclick="openModal(this.src)">`).join('')}
+                            <p class="caption">${page.images.length} image(s)</p>
+                        </div>` : ''}
+                    </div>
+                </div>`;
+            } else if (page.images.length > 0) {
+                html = `
+                <div class="case-card" id="case-${index}">
+                    <div class="case-header">
+                        <div class="case-number">${caseNum}</div>
+                        <div class="case-title">
+                            <h3>Cas ${caseNum}</h3>
+                        </div>
+                    </div>
+                    <div class="case-content image-only">
+                        ${page.images.map(img => `<img src="images/${img}" alt="Radiographie page ${page.page}" onclick="openModal(this.src)">`).join('')}
+                    </div>
+                </div>`;
+            }
+            
+            return html;
+        }
+
+        function formatText(line, query = '') {
+            const text = query ? highlightText(line, query) : line;
+            if (line.includes('☠️') || line.includes('Patient') || line.includes('Femme') || line.includes('Homme') || line.includes('Enfant') || line.includes('Fille')) {
+                return `<div class="text-danger">${text}</div>`;
+            }
+            if (line.includes('⚠️') || line.includes('CAT') || line.includes('Traitement') || line.includes('Rx')) {
+                return `<div class="text-warning">${text}</div>`;
+            }
+            if (line.includes('✅')) {
+                return `<div class="text-success">${text}</div>`;
+            }
+            if (line.includes('▪️') || line.includes('◾️')) {
+                return `<ul class="ul-list"><li>${text}</li></ul>`;
+            }
+            if (line.includes('➡️')) {
+                return `<div class="text-info"><span class="arrow">${text}</span></div>`;
+            }
+            return `<p>${text}</p>`;
+        }
+
+        function scrollToCase(index) {
+            const cases = document.querySelectorAll('.case-card');
+            if (cases[index]) {
+                cases[index].scrollIntoView({ behavior: 'smooth', block: 'start' });
+                updateNav(index);
+            }
+        }
+
+        function updateNav(index) {
+            document.querySelectorAll('.nav-btn').forEach((btn, i) => btn.classList.toggle('active', i === index));
+        }
+
+        function searchCases(query) {
+            if (!query) { renderAll(); return; }
+            query = query.toLowerCase();
+            const container = document.getElementById('cases-container');
+            let found = false;
+            container.innerHTML = pagesData.map((p, index) => {
+                if (p.text && p.text.toLowerCase().includes(query)) {
+                    found = true;
+                    return renderCase(p, index, query);
+                }
+                return '';
+            }).join('');
+            if (!found) container.innerHTML = '<p style="text-align:center;padding:2rem;">Aucun résultat trouvé</p>';
+        }
+
+        function highlightText(text, query) {
+            const regex = new RegExp(`(${query})`, 'gi');
+            return text.replace(regex, '<mark style="background:#fef08a;padding:0 2px;border-radius:2px;">$1</mark>');
+        }
+
+        function openModal(src) {
+            document.getElementById('modal-img').src = src;
+            document.getElementById('modal').classList.add('active');
+        }
+
+        function closeModal(event) {
+            if (!event || event.target === document.getElementById('modal')) {
+                document.getElementById('modal').classList.remove('active');
+            }
+        }
+
+        document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+        renderAll();
+    </script>
+</body>
+</html>

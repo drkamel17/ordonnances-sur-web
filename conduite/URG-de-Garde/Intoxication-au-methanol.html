@@ -4,7 +4,10 @@
     <meta charset="UTF-8">
     <title>Intoxication au Methanol - URG de Garde</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css-all.min.css">
-    <style>body{font-family:sans-serif;background:linear-gradient(#fdfbfb,#ebedee);margin:0;padding:20px}.container{background:#fff;border-radius:16px;box-shadow:0 10px 40px rgba(0,0,0,0.1);padding:30px;max-width:800px;margin:0 auto}h1{text-align:center;color:#e74c3c;padding-bottom:15px;border-bottom:3px solid #e74c3c}h2{color:#2980b9;margin-top:25px;border-left:4px solid #2980b9;padding-left:10px}.back-link{padding:10px 20px;background:#3498db;color:#fff;text-decoration:none;border-radius:8px;margin-bottom:25px;display:inline-block}</style>
+    <style>body{font-family:sans-serif;background:linear-gradient(#fdfbfb,#ebedee);margin:0;padding:20px}.container{background:#fff;border-radius:16px;box-shadow:0 10px 40px rgba(0,0,0,0.1);padding:30px;max-width:800px;margin:0 auto}h1{text-align:center;color:#e74c3c;padding-bottom:15px;border-bottom:3px solid #e74c3c}h2{color:#2980b9;margin-top:25px;border-left:4px solid #2980b9;padding-left:10px}.back-link{padding:10px 20px;background:#3498db;color:#fff;text-decoration:none;border-radius:8px;margin-bottom:25px;display:inline-block}
+    
+        .highlight-search { background-color: #fff3cd; padding: 0 2px; border-radius: 2px; }
+    </style>
 </head>
 <body>
 <div class="container">
@@ -83,5 +86,38 @@
 <li>Diurèse</li>
 </ul>
 </div>
+
+<script>
+(function() {
+    const params = new URLSearchParams(window.location.search);
+    const highlight = params.get('highlight');
+    if (highlight) {
+        const body = document.body;
+        const walker = document.createTreeWalker(body, NodeFilter.SHOW_TEXT, null);
+        let node;
+        const regex = new RegExp('(' + highlight.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+        const nodesToReplace = [];
+        while (node = walker.nextNode()) {
+            if (node.parentElement.tagName === 'MARK') continue;
+            if (node.parentElement.tagName === 'A') continue;
+            if (node.parentElement.tagName === 'SCRIPT') continue;
+            const text = node.textContent;
+            if (regex.test(text)) {
+                nodesToReplace.push({node: node, text: text});
+            }
+        }
+        nodesToReplace.forEach(item => {
+            const text = item.text;
+            const parent = item.node.parentNode;
+            const wrapper = document.createElement('span');
+            wrapper.innerHTML = text.replace(regex, '<mark class="highlight-search">$1</mark>');
+            while (wrapper.firstChild) {
+                parent.insertBefore(wrapper.firstChild, item.node);
+            }
+            parent.removeChild(item.node);
+        });
+    }
+})();
+</script>
 </body>
 </html>

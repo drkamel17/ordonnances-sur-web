@@ -14,6 +14,7 @@
         li { margin-bottom: 10px; }
         .important { background-color: #d4edda; border-left: 4px solid #28a745; padding: 15px; margin: 15px 0; }
         .warning { background-color: #f8d7da; border-left: 4px solid #dc3545; padding: 15px; margin: 15px 0; }
+        .highlight-search { background-color: #fff3cd; padding: 0 2px; border-radius: 2px; }
     </style>
 </head>
 <body>
@@ -41,18 +42,39 @@
         
         <div class="warning">
             <strong>Jamais SAT seul, toujours + VDT</strong>
-        </div>
-        
-        <ul>
-            <li>Ou HRIG (humain) : 20 x poids / ERIG : 40 x poids</li>
-            <li>Dose max : 3000Ui</li>
-            <li>Immunoglobulines</li>
-            <li>ATB : Peni G 4-8MUI/j</li>
-            <li>Si allergie : Tetracycline 200mg/j Ou Flagyl</li>
-            <li>Traitement de porte d'entree</li>
-            <li>Vaccination</li>
-            <li>PEC en Reanimation</li>
-        </ul>
+</div>
     </div>
+<script>
+(function() {
+    const params = new URLSearchParams(window.location.search);
+    const highlight = params.get('highlight');
+    if (highlight) {
+        const body = document.body;
+        const walker = document.createTreeWalker(body, NodeFilter.SHOW_TEXT, null);
+        let node;
+        const regex = new RegExp('(' + highlight.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+        const nodesToReplace = [];
+        while (node = walker.nextNode()) {
+            if (node.parentElement.tagName === 'MARK') continue;
+            if (node.parentElement.tagName === 'A') continue;
+            if (node.parentElement.tagName === 'SCRIPT') continue;
+            const text = node.textContent;
+            if (regex.test(text)) {
+                nodesToReplace.push({node: node, text: text});
+            }
+        }
+        nodesToReplace.forEach(item => {
+            const text = item.text;
+            const parent = item.node.parentNode;
+            const wrapper = document.createElement('span');
+            wrapper.innerHTML = text.replace(regex, '<mark class="highlight-search">$1</mark>');
+            while (wrapper.firstChild) {
+                parent.insertBefore(wrapper.firstChild, item.node);
+            }
+            parent.removeChild(item.node);
+        });
+    }
+})();
+</script>
 </body>
 </html>

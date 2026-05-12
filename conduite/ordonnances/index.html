@@ -11,6 +11,27 @@
         .header { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); margin-bottom: 30px; text-align: center; }
         .header h1 { color: #27ae60; font-size: 2.5rem; margin-bottom: 10px; }
         .header p { color: #666; font-size: 1.1rem; }
+        
+        .search-section { margin-bottom: 25px; padding: 20px; background: white; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .search-input-wrapper { display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap; }
+        .search-input { flex: 1; min-width: 200px; padding: 12px 15px; border: 2px solid #ddd; border-radius: 8px; font-size: 1em; }
+        .search-input:focus { border-color: #27ae60; outline: none; }
+        .search-btn { padding: 12px 20px; background: #27ae60; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; }
+        .search-btn:hover { background: #219a52; }
+        
+        .search-options { display: flex; gap: 20px; margin-bottom: 15px; flex-wrap: wrap; }
+        .search-options label { display: flex; align-items: center; gap: 6px; cursor: pointer; font-weight: 500; color: #555; }
+        .search-options input[type="radio"] { width: 18px; height: 18px; cursor: pointer; }
+        
+        .search-results { margin-top: 15px; }
+        .result-item { padding: 12px; background: #f8f9fa; border-radius: 8px; margin-bottom: 10px; border-left: 4px solid #27ae60; }
+        .result-item a { color: #27ae60; font-weight: 600; text-decoration: none; font-size: 1.1em; display: block; margin-bottom: 5px; }
+        .result-item a:hover { text-decoration: underline; }
+        .result-item .result-excerpt { color: #666; font-size: 0.9em; line-height: 1.5; }
+        .result-item .result-excerpt mark { background: #fff3cd; padding: 0 2px; border-radius: 2px; }
+        .no-results { padding: 15px; text-align: center; color: #666; background: #fff3cd; border-radius: 8px; }
+        .hidden { display: none !important; }
+        
         .category { background: white; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); padding: 25px; margin-bottom: 25px; }
         .category h2 { color: #27ae60; font-size: 1.5rem; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 2px solid #27ae60; }
         .prescription-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 15px; }
@@ -21,99 +42,257 @@
         .back-link { display: inline-block; margin-bottom: 20px; color: white; text-decoration: none; font-weight: 600; }
         .back-link:hover { text-decoration: underline; }
         .footer { text-align: center; margin-top: 30px; color: white; font-size: 0.9rem; }
+        
+        @media (max-width: 600px) {
+            .search-input-wrapper { flex-direction: column; }
+            .search-options { flex-direction: column; gap: 10px; }
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <a href="../index.html" class="back-link">&larr; Retour à la page d'accueil</a>
+        <a href="../index.html" class="back-link">&larr; Retour a la page d'accueil</a>
         <div class="header">
             <h1>Ordonnances Types</h1>
-            <p>Collection d'ordonnances médicales courantes</p>
+            <p>Collection d'ordonnances medicales courantes</p>
         </div>
         
-        <div class="category">
-            <h2>Allergies & Infections</h2>
-            <div class="prescription-grid">
-                <div class="prescription-card"><a href="allergie.html">Allergie</a></div>
-                <div class="prescription-card"><a href="angine-bacterienne.html">Angine bactérienne</a></div>
-                <div class="prescription-card"><a href="angine-virale.html">Angine virale</a></div>
-                <div class="prescription-card"><a href="brulure.html">Brûlure</a></div>
-                <div class="prescription-card"><a href="candidose-cutanee.html">Candidose cutanée</a></div>
-                <div class="prescription-card"><a href="candidose-buccale.html">Candidose buccale</a></div>
-                <div class="prescription-card"><a href="conjonctivite-bacterienne.html">Conjonctivite bactérienne</a></div>
-                <div class="prescription-card"><a href="conjonctivite-virale.html">Conjonctivite virale</a></div>
-                <div class="prescription-card"><a href="conjonctivite-allergique.html">Conjonctivite allergique</a></div>
-                <div class="prescription-card"><a href="dermite-siege.html">Dermite de siège</a></div>
-                <div class="prescription-card"><a href="diarrhee-aigue.html">Diarrhée aigue</a></div>
-                <div class="prescription-card"><a href="diarrhee-virale.html">Diarrhée virale</a></div>
-                <div class="prescription-card"><a href="eczema-atopique.html">Eczéma atopique</a></div>
-                <div class="prescription-card"><a href="folliculite.html">Folliculite</a></div>
-                <div class="prescription-card"><a href="furoncle.html">Furoncle</a></div>
-                <div class="prescription-card"><a href="gale.html">Gale</a></div>
-                <div class="prescription-card"><a href="grippe.html">Grippe</a></div>
-                <div class="prescription-card"><a href="herpes.html">Herpès</a></div>
-                <div class="prescription-card"><a href="impetigo.html">Impétigo</a></div>
+        <div class="search-section">
+            <div class="search-input-wrapper">
+                <input type="text" id="searchInput" class="search-input" placeholder="Rechercher dans les fichiers...">
+                <button class="search-btn" id="searchBtn">Rechercher</button>
             </div>
-        </div>
-        
-        <div class="category">
-            <h2>Dermatologie</h2>
-            <div class="prescription-grid">
-                <div class="prescription-card"><a href="anite.html">Anite</a></div>
-                <div class="prescription-card"><a href="balanite.html">Balanite</a></div>
-                <div class="prescription-card"><a href="blepharite.html">Blépharite</a></div>
-                <div class="prescription-card"><a href="chalazion.html">Chalazion</a></div>
-                <div class="prescription-card"><a href="cors.html">Cors</a></div>
-                <div class="prescription-card"><a href="entorse.html">Entorse</a></div>
+            
+            <div class="search-options">
+                <label>
+                    <input type="radio" name="searchType" value="titles" checked>
+                    Titres seulement
+                </label>
+                <label>
+                    <input type="radio" name="searchType" value="content">
+                    Contenu complet
+                </label>
             </div>
+            
+            <div id="searchResults" class="search-results"></div>
         </div>
         
-        <div class="category">
-            <h2>Digestif</h2>
-            <div class="prescription-grid">
-                <div class="prescription-card"><a href="colopathie.html">Colopathie</a></div>
-                <div class="prescription-card"><a href="colopathie-fonctionnelle.html">Colopathie fonctionnelle</a></div>
-                <div class="prescription-card"><a href="constipation.html">Constipation</a></div>
-                <div class="prescription-card"><a href="douleur-abdominale.html">Douleur abdominale</a></div>
-                <div class="prescription-card"><a href="crise-hemorroidaire.html">Crise hémorroïdaire</a></div>
+        <div id="buttonsGrid">
+            <div class="category">
+                <h2>Allergies & Infections</h2>
+                <div class="prescription-grid">
+                    <div class="prescription-card"><a href="allergie.html">Allergie</a></div>
+                    <div class="prescription-card"><a href="angine-bacterienne.html">Angine bacterienne</a></div>
+                    <div class="prescription-card"><a href="angine-virale.html">Angine virale</a></div>
+                    <div class="prescription-card"><a href="brulure.html">Brulure</a></div>
+                    <div class="prescription-card"><a href="candidose-cutanee.html">Candidose cutanee</a></div>
+                    <div class="prescription-card"><a href="candidose-buccale.html">Candidose buccale</a></div>
+                    <div class="prescription-card"><a href="conjonctivite-bacterienne.html">Conjonctivite bacterienne</a></div>
+                    <div class="prescription-card"><a href="conjonctivite-virale.html">Conjonctivite virale</a></div>
+                    <div class="prescription-card"><a href="conjonctivite-allergique.html">Conjonctivite allergique</a></div>
+                    <div class="prescription-card"><a href="dermite-siege.html">Dermite de siege</a></div>
+                    <div class="prescription-card"><a href="diarrhee-aigue.html">Diarrhee aigue</a></div>
+                    <div class="prescription-card"><a href="diarrhee-virale.html">Diarrhee virale</a></div>
+                    <div class="prescription-card"><a href="eczema-atopique.html">Eczema atopique</a></div>
+                    <div class="prescription-card"><a href="folliculite.html">Folliculite</a></div>
+                    <div class="prescription-card"><a href="furoncle.html">Furoncle</a></div>
+                    <div class="prescription-card"><a href="gale.html">Gale</a></div>
+                    <div class="prescription-card"><a href="grippe.html">Grippe</a></div>
+                    <div class="prescription-card"><a href="herpes.html">Herpes</a></div>
+                    <div class="prescription-card"><a href="impetigo.html">Impetigo</a></div>
+                </div>
             </div>
-        </div>
-        
-        <div class="category">
-            <h2>Respiratoire</h2>
-            <div class="prescription-grid">
-                <div class="prescription-card"><a href="bronchite-aigue.html">Bronchite aigue</a></div>
-                <div class="prescription-card"><a href="bouffee-chaleur.html">Bouffée de chaleur</a></div>
+            
+            <div class="category">
+                <h2>Dermatologie</h2>
+                <div class="prescription-grid">
+                    <div class="prescription-card"><a href="anite.html">Anite</a></div>
+                    <div class="prescription-card"><a href="balanite.html">Balanite</a></div>
+                    <div class="prescription-card"><a href="blepharite.html">Blepharite</a></div>
+                    <div class="prescription-card"><a href="chalazion.html">Chalazion</a></div>
+                    <div class="prescription-card"><a href="cors.html">Cors</a></div>
+                    <div class="prescription-card"><a href="entorse.html">Entorse</a></div>
+                </div>
             </div>
-        </div>
-        
-        <div class="category">
-            <h2>Neurologie</h2>
-            <div class="prescription-grid">
-                <div class="prescription-card"><a href="asthenie.html">Asthénie</a></div>
-                <div class="prescription-card"><a href="dnv.html">DNV</a></div>
-                <div class="prescription-card"><a href="lombosciatique.html">Lombosciatique</a></div>
+            
+            <div class="category">
+                <h2>Digestif</h2>
+                <div class="prescription-grid">
+                    <div class="prescription-card"><a href="colopathie.html">Colopathie</a></div>
+                    <div class="prescription-card"><a href="colopathie-fonctionnelle.html">Colopathie fonctionnelle</a></div>
+                    <div class="prescription-card"><a href="constipation.html">Constipation</a></div>
+                    <div class="prescription-card"><a href="douleur-abdominale.html">Douleur abdominale</a></div>
+                    <div class="prescription-card"><a href="crise-hemorroidaire.html">Crise hemorroidaire</a></div>
+                </div>
             </div>
-        </div>
-        
-        <div class="category">
-            <h2>Urologie & Gynécologie</h2>
-            <div class="prescription-grid">
-                <div class="prescription-card"><a href="cystite.html">Cystite</a></div>
-                <div class="prescription-card"><a href="dysmenorrhee.html">Dysménorrhée</a></div>
+            
+            <div class="category">
+                <h2>Respiratoire</h2>
+                <div class="prescription-grid">
+                    <div class="prescription-card"><a href="bronchite-aigue.html">Bronchite aigue</a></div>
+                    <div class="prescription-card"><a href="bouffee-chaleur.html">Bouffee de chaleur</a></div>
+                </div>
             </div>
-        </div>
-        
-        <div class="category">
-            <h2>Cardiovasculaire</h2>
-            <div class="prescription-grid">
-                <div class="prescription-card"><a href="hypercholesterolemie.html">Hypercholesterolémie</a></div>
+            
+            <div class="category">
+                <h2>Neurologie</h2>
+                <div class="prescription-grid">
+                    <div class="prescription-card"><a href="asthenie.html">Astenie</a></div>
+                    <div class="prescription-card"><a href="dnv.html">DNV</a></div>
+                    <div class="prescription-card"><a href="lombosciatique.html">Lombosciatique</a></div>
+                </div>
+            </div>
+            
+            <div class="category">
+                <h2>Urologie & Gynecologie</h2>
+                <div class="prescription-grid">
+                    <div class="prescription-card"><a href="cystite.html">Cystite</a></div>
+                    <div class="prescription-card"><a href="dysmenorrhee.html">Dysmenorrhee</a></div>
+                </div>
+            </div>
+            
+            <div class="category">
+                <h2>Cardiovasculaire</h2>
+                <div class="prescription-grid">
+                    <div class="prescription-card"><a href="hypercholesterolemie.html">Hypercholesterolemie</a></div>
+                </div>
             </div>
         </div>
         
         <div class="footer">
-            <p>Ordonnances types élaborées par R. OUARAS et B. OULD MOHAND</p>
+            <p>Ordonnances types elaborees par R. OUARAS et B. OULD MOHAND</p>
         </div>
     </div>
+    
+    <script>
+        const filesList = [
+            'allergie.html', 'angine-bacterienne.html', 'angine-virale.html', 'brulure.html',
+            'candidose-cutanee.html', 'candidose-buccale.html', 'conjonctivite-bacterienne.html',
+            'conjonctivite-virale.html', 'conjonctivite-allergique.html', 'dermite-siege.html',
+            'diarrhee-aigue.html', 'diarrhee-virale.html', 'eczema-atopique.html', 'folliculite.html',
+            'furoncle.html', 'gale.html', 'grippe.html', 'herpes.html', 'impetigo.html', 'anite.html',
+            'balanite.html', 'blepharite.html', 'chalazion.html', 'cors.html', 'entorse.html',
+            'colopathie.html', 'colopathie-fonctionnelle.html', 'constipation.html',
+            'douleur-abdominale.html', 'crise-hemorroidaire.html', 'bronchite-aigue.html',
+            'bouffee-chaleur.html', 'asthenie.html', 'dnv.html', 'lombosciatique.html',
+            'cystite.html', 'dysmenorrhee.html', 'hypercholesterolemie.html'
+        ];
+        
+        const searchInput = document.getElementById('searchInput');
+        const searchBtn = document.getElementById('searchBtn');
+        const searchResults = document.getElementById('searchResults');
+        const buttonsGrid = document.getElementById('buttonsGrid');
+        const radioButtons = document.getElementsByName('searchType');
+        
+        async function performSearch() {
+            const query = searchInput.value.trim().toLowerCase();
+            if (!query) {
+                searchResults.innerHTML = '';
+                buttonsGrid.classList.remove('hidden');
+                return;
+            }
+            
+            const searchType = document.querySelector('input[name="searchType"]:checked').value;
+            
+            if (searchType === 'titles') {
+                searchInTitles(query);
+            } else {
+                await searchInContent(query);
+            }
+        }
+        
+        function searchInTitles(query) {
+            const cards = buttonsGrid.querySelectorAll('.prescription-card');
+            let found = false;
+            
+            cards.forEach(card => {
+                const text = card.textContent.toLowerCase();
+                const href = card.querySelector('a').getAttribute('href');
+                if (text.includes(query) || href.toLowerCase().includes(query)) {
+                    card.classList.remove('hidden');
+                    found = true;
+                } else {
+                    card.classList.add('hidden');
+                }
+            });
+            
+            if (!found) {
+                searchResults.innerHTML = '<div class="no-results">Aucun resultat trouve pour "' + query + '"</div>';
+            } else {
+                searchResults.innerHTML = '';
+            }
+        }
+        
+        async function searchInContent(query) {
+            searchResults.innerHTML = '<div class="no-results">Recherche en cours...</div>';
+            buttonsGrid.classList.add('hidden');
+            
+            const results = [];
+            
+            for (const file of filesList) {
+                try {
+                    const response = await fetch(file);
+                    if (!response.ok) continue;
+                    
+                    const text = await response.text();
+                    
+                    const titleMatch = text.match(/<title>([^<]+)<\/title>/);
+                    const title = titleMatch ? titleMatch[1] : file.replace('.html', '');
+                    
+                    const contentLower = text.toLowerCase();
+                    if (contentLower.includes(query)) {
+                        const index = contentLower.indexOf(query);
+                        const start = Math.max(0, index - 50);
+                        const end = Math.min(text.length, index + query.length + 50);
+                        let excerpt = text.substring(start, end);
+                        
+                        excerpt = excerpt.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+                        
+                        const regex = new RegExp('(' + query + ')', 'gi');
+                        excerpt = excerpt.replace(regex, '<mark>$1</mark>');
+                        
+                        results.push({
+                            file: file,
+                            title: title,
+                            excerpt: '...' + excerpt + '...',
+                            query: query
+                        });
+                    }
+                } catch (e) {
+                    console.error('Erreur lecture', file, e);
+                }
+            }
+            
+            if (results.length === 0) {
+                searchResults.innerHTML = '<div class="no-results">Mot "' + query + '" non trouve dans le contenu.</div>';
+            } else {
+                let html = '';
+                results.forEach(r => {
+                    const link = r.file + '?highlight=' + encodeURIComponent(r.query);
+                    html += `
+                        <div class="result-item">
+                            <a href="${link}" target="_blank">${r.title}</a>
+                            <div class="result-excerpt">${r.excerpt}</div>
+                        </div>
+                    `;
+                });
+                searchResults.innerHTML = '<div style="margin-bottom:10px;color:#666;">' + results.length + ' resultat(s) trouve(s)</div>' + html;
+            }
+        }
+        
+        searchBtn.addEventListener('click', performSearch);
+        
+        searchInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') performSearch();
+        });
+        
+        radioButtons.forEach(radio => {
+            radio.addEventListener('change', () => {
+                if (searchInput.value.trim()) {
+                    performSearch();
+                }
+            });
+        });
+    </script>
 </body>
 </html>

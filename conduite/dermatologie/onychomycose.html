@@ -14,6 +14,7 @@
         li { margin-bottom: 10px; }
         .warning { background-color: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; margin: 15px 0; }
         .important { background-color: #d4edda; border-left: 4px solid #28a745; padding: 15px; margin: 15px 0; }
+        .highlight-search { background-color: #fff3cd; padding: 0 2px; border-radius: 2px; }
     </style>
 </head>
 <body>
@@ -55,5 +56,37 @@
             <li>20_40kg=> 1/2cp</li>
         </ul>
     </div>
+<script>
+(function() {
+    const params = new URLSearchParams(window.location.search);
+    const highlight = params.get('highlight');
+    if (highlight) {
+        const body = document.body;
+        const walker = document.createTreeWalker(body, NodeFilter.SHOW_TEXT, null);
+        let node;
+        const regex = new RegExp('(' + highlight.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+        const nodesToReplace = [];
+        while (node = walker.nextNode()) {
+            if (node.parentElement.tagName === 'MARK') continue;
+            if (node.parentElement.tagName === 'A') continue;
+            if (node.parentElement.tagName === 'SCRIPT') continue;
+            const text = node.textContent;
+            if (regex.test(text)) {
+                nodesToReplace.push({node: node, text: text});
+            }
+        }
+        nodesToReplace.forEach(item => {
+            const text = item.text;
+            const parent = item.node.parentNode;
+            const wrapper = document.createElement('span');
+            wrapper.innerHTML = text.replace(regex, '<mark class="highlight-search">$1</mark>');
+            while (wrapper.firstChild) {
+                parent.insertBefore(wrapper.firstChild, item.node);
+            }
+            parent.removeChild(item.node);
+        });
+    }
+})();
+</script>
 </body>
 </html>

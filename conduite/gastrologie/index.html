@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gastrologie - Conduite a Tenir</title>
-    <meta name="description" content="Conduites a tenir en Gastrologie">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root { --primary-color: #e74c3c; --bg-gradient: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%); --card-bg: #ffffff; --text-main: #2c3e50; --text-muted: #7f8c8d; }
@@ -18,45 +17,130 @@
         .cta-button { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 15px; background: linear-gradient(135deg, #fff 0%, #f8f9fa 100%); border: 2px solid #e0e0e0; border-radius: 10px; text-decoration: none; color: var(--text-main); font-weight: 600; transition: all 0.3s ease; text-align: center; font-size: 0.95em; }
         .cta-button:hover { border-color: var(--primary-color); transform: translateY(-2px); box-shadow: 0 5px 15px rgba(231, 76, 60, 0.2); }
         .cta-button i { font-size: 1.3em; color: var(--primary-color); }
+        
+        .search-section { margin-bottom: 25px; padding: 20px; background: #f8f9fa; border-radius: 12px; border: 2px solid #e0e0e0; }
+        .search-input-wrapper { display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap; }
+        .search-input { flex: 1; min-width: 200px; padding: 12px 15px; border: 2px solid #ddd; border-radius: 8px; font-size: 1em; }
+        .search-input:focus { border-color: var(--primary-color); outline: none; }
+        .search-btn { padding: 12px 20px; background: var(--primary-color); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; }
+        .search-btn:hover { background: #c0392b; }
+        .search-options { display: flex; gap: 20px; margin-bottom: 15px; flex-wrap: wrap; }
+        .search-options label { display: flex; align-items: center; gap: 6px; cursor: pointer; font-weight: 500; }
+        .search-options input[type="radio"] { width: 18px; height: 18px; cursor: pointer; }
+        .search-results { margin-top: 15px; }
+        .result-item { padding: 12px; background: white; border-radius: 8px; margin-bottom: 10px; border-left: 4px solid var(--primary-color); }
+        .result-item a { color: var(--primary-color); font-weight: 600; text-decoration: none; font-size: 1.1em; display: block; margin-bottom: 5px; }
+        .result-item a:hover { text-decoration: underline; }
+        .result-item .result-excerpt { color: var(--text-muted); font-size: 0.9em; line-height: 1.5; }
+        .result-item .result-excerpt mark { background: #fff3cd; padding: 0 2px; border-radius: 2px; }
+        .no-results { padding: 15px; text-align: center; color: var(--text-muted); background: #fff3cd; border-radius: 8px; }
+        .hidden { display: none !important; }
+        
+        @media (max-width: 600px) { .search-input-wrapper { flex-direction: column; } .search-options { flex-direction: column; gap: 10px; } }
     </style>
 </head>
 <body>
     <div class="container">
         <a href="../index.html" class="back-link"><i class="fas fa-arrow-left"></i> Retour aux specialites</a>
-        
         <h1><i class="fas fa-stomach"></i> Gastrologie</h1>
         <p class="subtitle">28 conduites a tenir</p>
         
-        <div class="buttons-grid">
-            <a href="abcès-périanal.html" class="cta-button"><i class="fas fa-band-aid"></i> Abcès périanal</a>
+        <div class="search-section">
+            <div class="search-input-wrapper">
+                <input type="text" id="searchInput" class="search-input" placeholder="Rechercher...">
+                <button class="search-btn" id="searchBtn"><i class="fas fa-search"></i> Rechercher</button>
+            </div>
+            <div class="search-options">
+                <label><input type="radio" name="searchType" value="titles" checked> <i class="fas fa-heading"></i> Titres seulement</label>
+                <label><input type="radio" name="searchType" value="content"> <i class="fas fa-file-alt"></i> Contenu complet</label>
+            </div>
+            <div id="searchResults" class="search-results"></div>
+        </div>
+        
+        <div class="buttons-grid" id="buttonsGrid">
+            <a href="abces-perianal.html" class="cta-button"><i class="fas fa-band-aid"></i> Abces perianal</a>
             <a href="angiocholite.html" class="cta-button"><i class="fas fa-liver"></i> Angiocholite</a>
             <a href="appendicite.html" class="cta-button"><i class="fas fa-utensils"></i> Appendicite</a>
             <a href="ascaridose.html" class="cta-button"><i class="fas fa-worm"></i> Ascaridose</a>
-            <a href="colique-hépatique.html" class="cta-button"><i class="fas fa-bolt"></i> Colique hépatique</a>
+            <a href="colique-hepatique.html" class="cta-button"><i class="fas fa-bolt"></i> Colique hepatique</a>
             <a href="colopathies-fonctionnelles.html" class="cta-button"><i class="fas fa-intestine"></i> Colopathies</a>
             <a href="constipation.html" class="cta-button"><i class="fas fa-stop"></i> Constipation</a>
-            <a href="crise-hémorroïdaire.html" class="cta-button"><i class="fas fa-tint"></i> Crise hémorroïdaire</a>
-            <a href="diarrhées-aigues.html" class="cta-button"><i class="fas fa-droplet"></i> Diarrhées aigues</a>
+            <a href="crise-hemorrhoidaire.html" class="cta-button"><i class="fas fa-tint"></i> Crise hemorroidaire</a>
+            <a href="diarrhees-aigues.html" class="cta-button"><i class="fas fa-droplet"></i> Diarrhees aigues</a>
             <a href="douleur-abdominale.html" class="cta-button"><i class="fas fa-burst"></i> Douleur abdominale</a>
             <a href="dyspepsie.html" class="cta-button"><i class="fas fa-utensils"></i> Dyspepsie</a>
             <a href="fissure-anale.html" class="cta-button"><i class="fas fa-crack"></i> Fissure anale</a>
             <a href="gastrite.html" class="cta-button"><i class="fas fa-stomach"></i> Gastrite</a>
-            <a href="gastroentérite.html" class="cta-button"><i class="fas fa-virus"></i> Gastroentérite</a>
-            <a href="hépatites.html" class="cta-button"><i class="fas fa-liver"></i> Hépatites</a>
+            <a href="gastroenterite.html" class="cta-button"><i class="fas fa-virus"></i> Gastro-enterite</a>
+            <a href="hepatites.html" class="cta-button"><i class="fas fa-liver"></i> Hepatites</a>
             <a href="ingestion-caustique.html" class="cta-button"><i class="fas fa-flame"></i> Ingestion caustique</a>
             <a href="ingestion-eau-javel.html" class="cta-button"><i class="fas fa-water"></i> Ingestion eau Javel</a>
-            <a href="ingestion-piece.html" class="cta-button"><i class="fas fa-coins"></i> Ingestion pièce</a>
+            <a href="ingestion-piece.html" class="cta-button"><i class="fas fa-coins"></i> Ingestion piece</a>
             <a href="ingestion-pile.html" class="cta-button"><i class="fas fa-battery"></i> Ingestion pile</a>
             <a href="intoxication-alimentaire.html" class="cta-button"><i class="fas fa-burger"></i> Intoxication alimentaire</a>
             <a href="occlusion-intestinale.html" class="cta-button"><i class="fas fa-stop"></i> Occlusion intestinale</a>
             <a href="oxyurose.html" class="cta-button"><i class="fas fa-bug"></i> Oxyurose</a>
-            <a href="pancréatite.html" class="cta-button"><i class="fas fa-stomach"></i> Pancréatite</a>
-            <a href="péritonite.html" class="cta-button"><i class="fas fa-external"></i> Péritonite</a>
+            <a href="pancreatite.html" class="cta-button"><i class="fas fa-stomach"></i> Pancreatite</a>
+            <a href="peritonite.html" class="cta-button"><i class="fas fa-external"></i> Peritonite</a>
             <a href="rgo.html" class="cta-button"><i class="fas fa-fire"></i> RGO</a>
             <a href="rupture-varices.html" class="cta-button"><i class="fas fa-droplet"></i> Rupture varices</a>
             <a href="ugd.html" class="cta-button"><i class="fas fa-ulcer"></i> UGD</a>
             <a href="vomissements.html" class="cta-button"><i class="fas fa-vomit"></i> Vomissements</a>
         </div>
     </div>
+    
+    <script>
+        const filesList = ['abces-perianal.html', 'angiocholite.html', 'appendicite.html', 'ascaridose.html', 'colique-hepatique.html', 'colopathies-fonctionnelles.html', 'constipation.html', 'crise-hemorrhoidaire.html', 'diarrhees-aigues.html', 'douleur-abdominale.html', 'dyspepsie.html', 'fissure-anale.html', 'gastrite.html', 'gastroenterite.html', 'hepatites.html', 'ingestion-caustique.html', 'ingestion-eau-javel.html', 'ingestion-piece.html', 'ingestion-pile.html', 'intoxication-alimentaire.html', 'occlusion-intestinale.html', 'oxyurose.html', 'pancreatite.html', 'peritonite.html', 'rgo.html', 'rupture-varices.html', 'ugd.html', 'vomissements.html'];
+        const searchInput = document.getElementById('searchInput'), searchBtn = document.getElementById('searchBtn'), searchResults = document.getElementById('searchResults'), buttonsGrid = document.getElementById('buttonsGrid');
+        
+        async function performSearch() {
+            const query = searchInput.value.trim().toLowerCase();
+            if (!query) { searchResults.innerHTML = ''; buttonsGrid.classList.remove('hidden'); return; }
+            const searchType = document.querySelector('input[name="searchType"]:checked').value;
+            if (searchType === 'titles') { searchInTitles(query); } else { await searchInContent(query); }
+        }
+        
+        function searchInTitles(query) {
+            const buttons = buttonsGrid.querySelectorAll('.cta-button');
+            let found = false;
+            buttons.forEach(btn => {
+                if (btn.textContent.toLowerCase().includes(query) || btn.getAttribute('href').toLowerCase().includes(query)) { btn.classList.remove('hidden'); found = true; }
+                else { btn.classList.add('hidden'); }
+            });
+            searchResults.innerHTML = found ? '' : '<div class="no-results">Aucun resultat pour "' + query + '"</div>';
+        }
+        
+        async function searchInContent(query) {
+            searchResults.innerHTML = '<div class="no-results">Recherche en cours...</div>';
+            buttonsGrid.classList.add('hidden');
+            const results = [];
+            for (const file of filesList) {
+                try {
+                    const response = await fetch(file);
+                    if (!response.ok) continue;
+                    const text = await response.text();
+                    const titleMatch = text.match(/<title>([^<]+)<\/title>/);
+                    const title = titleMatch ? titleMatch[1] : file.replace('.html', '');
+                    if (text.toLowerCase().includes(query)) {
+                        const index = text.toLowerCase().indexOf(query);
+                        let excerpt = text.substring(Math.max(0, index - 50), Math.min(text.length, index + query.length + 50));
+                        excerpt = excerpt.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+                        excerpt = excerpt.replace(new RegExp('(' + query + ')', 'gi'), '<mark>$1</mark>');
+                        results.push({ file, title, excerpt });
+                    }
+                } catch (e) {}
+            }
+            if (results.length === 0) { searchResults.innerHTML = '<div class="no-results">Mot "' + query + '" non trouve.</div>'; }
+            else {
+                let html = '';
+                results.forEach(r => { html += '<div class="result-item"><a href="' + r.file + '?highlight=' + encodeURIComponent(query) + '">' + r.title + '</a><div class="result-excerpt">...' + r.excerpt + '...</div></div>'; });
+                searchResults.innerHTML = '<div style="margin-bottom:10px;color:#7f8c8d;">' + results.length + ' resultat(s)</div>' + html;
+            }
+        }
+        
+        searchBtn.addEventListener('click', performSearch);
+        searchInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') performSearch(); });
+        document.querySelectorAll('input[name="searchType"]').forEach(r => r.addEventListener('change', () => { if (searchInput.value.trim()) performSearch(); }));
+    </script>
 </body>
 </html>

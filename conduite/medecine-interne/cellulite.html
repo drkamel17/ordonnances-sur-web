@@ -22,6 +22,7 @@ ul.info-list li { padding: 12px 15px; margin-bottom: 10px; background: white; bo
 .med-item:hover { background: #16a085; color: white; }
 .back-btn { display: inline-block; margin-top: 20px; padding: 12px 25px; background: #16a085; color: white; text-decoration: none; border-radius: 8px; }
 @media (max-width: 600px) { .content { padding: 20px 15px; } }
+.highlight-search { background-color: #fff3cd; padding: 0 2px; border-radius: 2px; }
 </style>
 </head>
 <body>
@@ -34,5 +35,37 @@ ul.info-list li { padding: 12px 15px; margin-bottom: 10px; background: white; bo
 <div class="section"><h3 class="section-title">Traitement: Hospitalisation</h3><p class="info-item"><strong>Immobilisation</strong> si cellulite de membre</p><ul class="info-list"><li>Cefazoline 1g x3/j (10j) <em>ou</em> Augmentin 1g x3/j (7-10j)</li><li>Flagyl 500mg x3/j perf</li><li>Lovenox 0.4 Ui</li></ul></div>
 <a href="index.html" class="back-btn">Retour</a>
 </div></div>
+<script>
+(function() {
+    const params = new URLSearchParams(window.location.search);
+    const highlight = params.get('highlight');
+    if (highlight) {
+        const body = document.body;
+        const walker = document.createTreeWalker(body, NodeFilter.SHOW_TEXT, null);
+        let node;
+        const regex = new RegExp('(' + highlight.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+        const nodesToReplace = [];
+        while (node = walker.nextNode()) {
+            if (node.parentElement.tagName === 'MARK') continue;
+            if (node.parentElement.tagName === 'A') continue;
+            if (node.parentElement.tagName === 'SCRIPT') continue;
+            const text = node.textContent;
+            if (regex.test(text)) {
+                nodesToReplace.push({node: node, text: text});
+            }
+        }
+        nodesToReplace.forEach(item => {
+            const text = item.text;
+            const parent = item.node.parentNode;
+            const wrapper = document.createElement('span');
+            wrapper.innerHTML = text.replace(regex, '<mark class="highlight-search">$1</mark>');
+            while (wrapper.firstChild) {
+                parent.insertBefore(wrapper.firstChild, item.node);
+            }
+            parent.removeChild(item.node);
+        });
+    }
+})();
+</script>
 </body>
 </html>
