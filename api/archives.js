@@ -57,7 +57,7 @@ export default async function handler(req, res) {
         return res.json({ success: true, data: {} });
       }
 
-      const buffer = await file.download();
+      const buffer = await file.downloadBuffer();
       const importedData = JSON.parse(buffer.toString('utf-8'));
 
       return res.json({ success: true, data: importedData });
