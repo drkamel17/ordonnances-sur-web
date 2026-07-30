@@ -537,13 +537,14 @@ async function exporterVersSupabase() {
     if (!email) return;
     const password = prompt('Entrez votre mot de passe Mega.nz :');
     if (!password) return;
+    const nomFichier = prompt('Nom du fichier (laisser vide pour "ordonnances-archivees.json") :') || 'ordonnances-archivees.json';
 
     try {
         showMessage('Exportation vers Mega.nz en cours...', '#856404');
         const response = await fetch('/api/archives', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ action: 'export', email, password, data: ordonnancesArchivees })
+            body: JSON.stringify({ action: 'export', email, password, data: ordonnancesArchivees, filename: nomFichier })
         });
 
         const result = await response.json();
@@ -565,23 +566,62 @@ async function importerDepuisSupabase() {
     if (!password) return;
 
     try {
-        showMessage('Importation depuis Mega.nz en cours...', '#856404');
+        showMessage('Connexion à Mega.nz...', '#856404');
+
+        // D'abord lister les fichiers disponibles
+        const listResponse = await fetch('/api/archives', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ action: 'list', email, password })
+        });
+        const listResult = await listResponse.json();
+
+        if (!listResult.success) {
+            showMessage('Erreur Mega.nz: ' + listResult.message, 'red');
+            return;
+        }
+
+        const fichiers = listResult.files || [];
+        if (fichiers.length === 0) {
+            showMessage('Aucun fichier JSON trouvé sur votre Mega.nz.', 'red');
+            return;
+        }
+
+        // Let user choose a file
+        let choixNom = null;
+        if (fichiers.length === 1) {
+            choixNom = fichiers[0].name;
+        } else {
+            const liste = fichiers.map((f, i) => `${i + 1}. ${f.name}`).join('\n');
+            const choix = prompt(
+                `Fichiers disponibles sur Mega.nz :\n\n${liste}\n\nChoisissez le numéro à importer :`,
+                '1'
+            );
+            const idx = parseInt(choix) - 1;
+            if (isNaN(idx) || idx < 0 || idx >= fichiers.length) {
+                showMessage('Import annulé.', '#856404');
+                return;
+            }
+            choixNom = fichiers[idx].name;
+        }
+
+        showMessage(`Téléchargement de "${choixNom}" depuis Mega.nz...`, '#856404');
         const response = await fetch('/api/archives', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ action: 'import', email, password })
+            body: JSON.stringify({ action: 'import', email, password, filename: choixNom })
         });
         const result = await response.json();
 
         if (!result.success) {
-            showMessage('Erreur cloud: ' + result.message, 'red');
+            showMessage('Erreur Mega.nz: ' + result.message, 'red');
             return;
         }
 
         const importedData = result.data || {};
 
         if (Object.keys(importedData).length === 0) {
-            showMessage('Aucune donnée trouvée sur le cloud.', 'red');
+            showMessage(`Le fichier "${choixNom}" est vide.`, 'red');
             return;
         }
 
