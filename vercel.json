@@ -136,6 +136,10 @@
     {
       "src": "api/send-email.js",
       "use": "@vercel/node"
+    },
+    {
+      "src": "api/archives.js",
+      "use": "@vercel/node"
     }
   ],
   "routes": [
@@ -214,6 +218,10 @@
     {
       "src": "/api/modifier_dece",
       "dest": "/api/modifier_dece.js"
+    },
+    {
+      "src": "/api/archives",
+      "dest": "/api/archives.js"
     },
     {
       "src": "/api/recuperer_donnees",

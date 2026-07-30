@@ -237,33 +237,11 @@ const storage = {
         });
     }
 
-    // === Exporter vers Google Drive ===
-    document.getElementById("exporter-ordonnances-cloud").addEventListener("click", exporterVersGDrive);
+    // === Exporter vers Supabase (cloud) ===
+    document.getElementById("exporter-ordonnances-cloud").addEventListener("click", exporterVersSupabase);
 
-    // === Importer de Google Drive ===
-    document.getElementById("importer-ordonnances-cloud").addEventListener("click", importerDepuisGDrive);
-
-    // === Configurer Google Drive ===
-    document.getElementById("gdrive-config-link").addEventListener("click", function() {
-        const currentId = localStorage.getItem('google_drive_client_id');
-        const newId = prompt(
-            'Configuration Google Drive\n\n' +
-            'Entrez votre Google Client ID OAuth 2.0 :\n' +
-            (currentId ? '(Laissez vide pour effacer la configuration actuelle)' : ''),
-            currentId || ''
-        );
-        if (newId === null) return;
-        if (newId.trim()) {
-            localStorage.setItem('google_drive_client_id', newId.trim());
-            showMessage('Client ID Google Drive enregistré.', 'green');
-        } else {
-            localStorage.removeItem('google_drive_client_id');
-            showMessage('Configuration Google Drive effacée.', '#856404');
-        }
-        // Reset token client so it reinitializes with new ID
-        gdriveToken = null;
-        gdriveClient = null;
-    });
+    // === Importer de Supabase (cloud) ===
+    document.getElementById("importer-ordonnances-cloud").addEventListener("click", importerDepuisSupabase);
 
     if (btnImporterMeds && importMedsInput) {
         btnImporterMeds.addEventListener("click", function() {
@@ -546,173 +524,64 @@ function supprimerOrdonnanceDirecte(nom) {
     showMessage(`Ordonnance "${nom}" supprimée avec succès !`, "green");
 }
 
-// === Google Drive Integration ===
-const GDRIVE_FILE_NAME = 'ordonnances-archivees.json';
-const GDRIVE_SCOPES = 'https://www.googleapis.com/auth/drive.file';
+// === Supabase (cloud) Integration ===
 
-let gdriveToken = null;
-let gdriveClient = null;
-
-function initGDriveTokenClient() {
-    if (gdriveClient) return gdriveClient;
-
-    const clientId = localStorage.getItem('google_drive_client_id');
-    if (!clientId) {
-        showMessage('Configuration Google Drive requise. Cliquez sur "Configurer Google Drive" sous les boutons.', '#856404');
-        return null;
-    }
-
-    if (typeof google === 'undefined' || !google.accounts || !google.accounts.oauth2) {
-        showMessage('La bibliothèque Google Identity n\'est pas chargée. Vérifiez votre connexion Internet.', 'red');
-        return null;
-    }
-
-    gdriveClient = google.accounts.oauth2.initTokenClient({
-        client_id: clientId,
-        scope: GDRIVE_SCOPES,
-        callback: (response) => {
-            if (response.access_token) {
-                gdriveToken = response.access_token;
-            } else if (response.error) {
-                showMessage('Erreur d\'authentification Google: ' + response.error, 'red');
-            }
-        },
-    });
-
-    return gdriveClient;
-}
-
-function gdriveAuthenticate() {
-    return new Promise((resolve, reject) => {
-        const client = initGDriveTokenClient();
-        if (!client) {
-            reject(new Error('Token client non initialisé'));
-            return;
-        }
-        if (gdriveToken) {
-            resolve(gdriveToken);
-            return;
-        }
-
-        client.requestAccessToken();
-
-        let attempts = 0;
-        const checkToken = setInterval(() => {
-            attempts++;
-            if (gdriveToken) {
-                clearInterval(checkToken);
-                resolve(gdriveToken);
-            } else if (attempts > 120) {
-                clearInterval(checkToken);
-                reject(new Error("Timeout d'authentification Google Drive. Vérifiez que les popups ne sont pas bloqués."));
-            }
-        }, 500);
-    });
-}
-
-async function exporterVersGDrive() {
+async function exporterVersSupabase() {
     const ordonnancesArchivees = JSON.parse(localStorage.getItem('ordonnancesPatients') || '{}');
     if (Object.keys(ordonnancesArchivees).length === 0) {
         showMessage('Aucune ordonnance archivée à exporter.', 'red');
         return;
     }
 
+    const email = prompt('Entrez votre email Mega.nz :');
+    if (!email) return;
+    const password = prompt('Entrez votre mot de passe Mega.nz :');
+    if (!password) return;
+
     try {
-        showMessage('Authentification Google Drive en cours...', '#856404');
-        const token = await gdriveAuthenticate();
+        showMessage('Exportation vers Mega.nz en cours...', '#856404');
+        const response = await fetch('/api/archives', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ action: 'export', email, password, data: ordonnancesArchivees })
+        });
 
-        const dataStr = JSON.stringify(ordonnancesArchivees, null, 2);
-        const blob = new Blob([dataStr], { type: 'application/json' });
+        const result = await response.json();
 
-        showMessage('Recherche du fichier existant sur Google Drive...', '#856404');
-        const searchResponse = await fetch(
-            `https://www.googleapis.com/drive/v3/files?q=name='${GDRIVE_FILE_NAME}' and trashed=false&fields=files(id,name)`,
-            { headers: { Authorization: `Bearer ${token}` } }
-        );
-        if (!searchResponse.ok) throw new Error(await searchResponse.text());
-        const searchResult = await searchResponse.json();
-        const existingFiles = searchResult.files || [];
-
-        const formData = new FormData();
-        formData.append('metadata', new Blob([JSON.stringify({ name: GDRIVE_FILE_NAME, mimeType: 'application/json' })], { type: 'application/json' }));
-        formData.append('file', blob, GDRIVE_FILE_NAME);
-
-        if (existingFiles.length > 0) {
-            const fileId = existingFiles[0].id;
-            const updateResponse = await fetch(
-                `https://www.googleapis.com/upload/drive/v3/files/${fileId}?uploadType=multipart`,
-                {
-                    method: 'PATCH',
-                    headers: { Authorization: `Bearer ${token}` },
-                    body: formData,
-                }
-            );
-            if (!updateResponse.ok) throw new Error(await updateResponse.text());
+        if (result.success) {
+            showMessage(`${Object.keys(ordonnancesArchivees).length} ordonnance(s) archivée(s) exportée(s) vers Mega.nz.`, 'green');
         } else {
-            const createResponse = await fetch(
-                'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart',
-                {
-                    method: 'POST',
-                    headers: { Authorization: `Bearer ${token}` },
-                    body: formData,
-                }
-            );
-            if (!createResponse.ok) throw new Error(await createResponse.text());
+            showMessage('Erreur Mega.nz: ' + result.message, 'red');
         }
-
-        showMessage(`${Object.keys(ordonnancesArchivees).length} ordonnance(s) archivée(s) exportée(s) vers Google Drive.`, 'green');
     } catch (error) {
-        showMessage('Erreur Google Drive: ' + error.message, 'red');
-        console.error(error);
+        showMessage('Erreur Mega.nz: ' + error.message, 'red');
     }
 }
 
-async function importerDepuisGDrive() {
+async function importerDepuisSupabase() {
+    const email = prompt('Entrez votre email Mega.nz :');
+    if (!email) return;
+    const password = prompt('Entrez votre mot de passe Mega.nz :');
+    if (!password) return;
+
     try {
-        showMessage('Authentification Google Drive en cours...', '#856404');
-        const token = await gdriveAuthenticate();
+        showMessage('Importation depuis Mega.nz en cours...', '#856404');
+        const response = await fetch('/api/archives', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ action: 'import', email, password })
+        });
+        const result = await response.json();
 
-        showMessage('Recherche des fichiers sur Google Drive...', '#856404');
-        const searchResponse = await fetch(
-            `https://www.googleapis.com/drive/v3/files?q=name='${GDRIVE_FILE_NAME}' and trashed=false&fields=files(id,name,modifiedTime)&orderBy=modifiedTime desc`,
-            { headers: { Authorization: `Bearer ${token}` } }
-        );
-        if (!searchResponse.ok) throw new Error(await searchResponse.text());
-        const searchResult = await searchResponse.json();
-        const files = searchResult.files || [];
-
-        if (files.length === 0) {
-            showMessage('Aucun fichier d\'ordonnances archivées trouvé sur Google Drive.', 'red');
+        if (!result.success) {
+            showMessage('Erreur cloud: ' + result.message, 'red');
             return;
         }
 
-        let fileId = files[0].id;
+        const importedData = result.data || {};
 
-        if (files.length > 1) {
-            const fileList = files.map((f, i) => `${i + 1}. ${f.name} (${new Date(f.modifiedTime).toLocaleDateString()})`).join('\n');
-            const choice = prompt(
-                `Plusieurs fichiers trouvés. Choisissez le numéro à importer :\n\n${fileList}`,
-                '1'
-            );
-            const idx = parseInt(choice) - 1;
-            if (isNaN(idx) || idx < 0 || idx >= files.length) {
-                showMessage('Import annulé.', '#856404');
-                return;
-            }
-            fileId = files[idx].id;
-        }
-
-        showMessage('Téléchargement depuis Google Drive...', '#856404');
-        const downloadResponse = await fetch(
-            `https://www.googleapis.com/drive/v3/files/${fileId}?alt=media`,
-            { headers: { Authorization: `Bearer ${token}` } }
-        );
-        if (!downloadResponse.ok) throw new Error(await downloadResponse.text());
-
-        const importedData = await downloadResponse.json();
-
-        if (typeof importedData !== 'object' || Array.isArray(importedData)) {
-            showMessage('Format de fichier invalide sur Google Drive.', 'red');
+        if (Object.keys(importedData).length === 0) {
+            showMessage('Aucune donnée trouvée sur le cloud.', 'red');
             return;
         }
 
@@ -745,8 +614,7 @@ async function importerDepuisGDrive() {
         if (message === "") message = "Aucune donnée à importer.";
         showMessage(message.trim(), "green");
     } catch (error) {
-        showMessage('Erreur Google Drive: ' + error.message, 'red');
-        console.error(error);
+        showMessage('Erreur cloud: ' + error.message, 'red');
     }
 }
 
