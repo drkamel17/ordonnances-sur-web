@@ -20,10 +20,11 @@ export default async function handler(req, res) {
 
   try {
     const storage = await new Storage({ email, password }).ready;
-    await storage.root.loadChildren();
 
     if (action === 'list') {
-      const files = collectJsonFiles(storage.root);
+      const files = storage.root.children
+        .filter(c => !c.directory && c.name.endsWith('.json'))
+        .map(c => ({ name: c.name, size: c.size }));
       return res.json({ success: true, files });
     }
 
@@ -33,41 +34,21 @@ export default async function handler(req, res) {
       }
 
       const name = filename || 'ordonnances-archivees.json';
-
-      let folder = storage.root.children.find(c => c.name === 'Ordonnances' && c.directory);
-      if (!folder) {
-        folder = await storage.mkdir({ name: 'Ordonnances' });
-      }
-
-      const existingFile = folder.children.find(c => c.name === name && !c.directory);
-      if (existingFile) {
-        await existingFile.delete();
-      }
+      const existing = storage.root.children.find(c => c.name === name && !c.directory);
+      if (existing) await existing.delete();
 
       const jsonStr = JSON.stringify(data, null, 2);
-      await storage.upload({ name, folder }, jsonStr).complete;
+      await storage.upload(name, jsonStr).complete;
 
       return res.json({ success: true, message: 'Exporté vers Mega.nz avec succès' });
     }
 
     if (action === 'import') {
       const name = filename || 'ordonnances-archivees.json';
-
-      // Search root first
-      let file = storage.root.children.find(c => c.name === name && !c.directory);
-
-      // If not found, search in subfolders
-      if (!file) {
-        const folders = storage.root.children.filter(c => c.directory);
-        for (const f of folders) {
-          await f.loadChildren();
-          file = f.children.find(c => c.name === name && !c.directory);
-          if (file) break;
-        }
-      }
+      const file = storage.root.children.find(c => c.name === name && !c.directory);
 
       if (!file) {
-        return res.json({ success: true, data: {}, files: collectJsonFiles(storage.root) });
+        return res.json({ success: true, data: {}, notFound: true });
       }
 
       const buffer = await file.downloadBuffer();
@@ -78,16 +59,4 @@ export default async function handler(req, res) {
   } catch (error) {
     return res.status(500).json({ success: false, message: error.message });
   }
-}
-
-function collectJsonFiles(node) {
-  const files = [];
-  if (!node.children) return files;
-  for (const child of node.children) {
-    if (child.directory) continue;
-    if (child.name.endsWith('.json')) {
-      files.push({ name: child.name, size: child.size });
-    }
-  }
-  return files;
 }
