@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <title>Gestion des médicaments et ordonnances types</title>
   <script src="browser-polyfill.js"></script>
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -48,6 +49,18 @@
     }
     .btn-warning:hover {
       background-color: #e0a800;
+    }
+    .btn-cloud-export {
+      background-color: #6f42c1;
+    }
+    .btn-cloud-export:hover {
+      background-color: #5a32a3;
+    }
+    .btn-cloud-import {
+      background-color: #e83e8c;
+    }
+    .btn-cloud-import:hover {
+      background-color: #c72e75;
     }
     #message {
       margin-top: 15px;
@@ -196,10 +209,17 @@
     <button id="btn-importer-ordonnances-archivees" style="background-color: #17a2b8;">
       <i class="fas fa-upload"></i> Importer les ordonnances archivées
     </button>
+    <button id="exporter-ordonnances-cloud" class="btn-cloud-export" style="margin-left: 10px;">
+      <i class="fas fa-cloud-upload-alt"></i> Exporter dans cloud
+    </button>
+    <button id="importer-ordonnances-cloud" class="btn-cloud-import">
+      <i class="fas fa-cloud-download-alt"></i> Importer de cloud
+    </button>
   </div>
 
   <div id="infos-ordonnances-archivees" style="margin-top: 15px; color: #666; font-style: italic;">
     Ces ordonnances sont sauvegardées dans le localStorage de votre navigateur.
+    <span id="gdrive-config-link" style="cursor: pointer; color: #007bff; text-decoration: underline; margin-left: 10px;" title="Configurer Google Drive">Configurer Google Drive</span>
   </div>
 
   <div id="firefox-warning" style="margin-top: 15px; padding: 10px; background: #fff3cd; color: #856404; border-radius: 5px; border-left: 3px solid #ffc107; display: none;">
