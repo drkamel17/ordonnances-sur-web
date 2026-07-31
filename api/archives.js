@@ -38,7 +38,8 @@ export default async function handler(req, res) {
       if (existing) await existing.delete();
 
       const jsonStr = JSON.stringify(data, null, 2);
-      await storage.upload(name, jsonStr).complete;
+      const buffer = Buffer.from(jsonStr, 'utf-8');
+      await storage.upload(name, buffer).complete;
 
       return res.json({ success: true, message: 'Exporté vers Mega.nz avec succès' });
     }
