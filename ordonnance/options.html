@@ -131,7 +131,7 @@
       margin-right: 10px;
     }
     .hidden {
-      display: none;
+      display: none !important;
     }
     .modal-overlay {
       position: fixed;
@@ -144,6 +144,9 @@
       justify-content: center;
       align-items: center;
       z-index: 1000;
+    }
+    .modal-overlay.hidden {
+      display: none;
     }
     .modal {
       background: white;
