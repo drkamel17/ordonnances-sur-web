@@ -265,14 +265,16 @@ const storage = {
     });
 
     document.getElementById("btn-seafile-ok").addEventListener("click", function() {
-        const server = document.getElementById('seafile-server').value.trim();
         const email = document.getElementById('seafile-email').value.trim();
         const password = document.getElementById('seafile-password').value;
 
-        if (!server || !email || !password) {
-            showMessage('Veuillez remplir tous les champs Seafile.', 'red');
+        if (!email || !password) {
+            showMessage('Veuillez remplir votre email et mot de passe Seafile.', 'red');
             return;
         }
+
+        const saved = JSON.parse(localStorage.getItem('seafile_credentials') || 'null');
+        const server = (saved && saved.server) || 'https://cloud.seafile.com';
 
         if (document.getElementById('seafile-remember').checked) {
             localStorage.setItem('seafile_credentials', JSON.stringify({ server, email, password }));
@@ -287,6 +289,15 @@ const storage = {
         } else {
             importerDepuisSeafile(server, email, password);
         }
+    });
+
+    document.getElementById("btn-seafile-deconnecter").addEventListener("click", function() {
+        localStorage.removeItem('seafile_credentials');
+        document.getElementById('seafile-email').value = '';
+        document.getElementById('seafile-password').value = '';
+        document.getElementById('seafile-remember').checked = false;
+        closeModal('modal-seafile');
+        showMessage('Déconnecté de Seafile Cloud.', 'green');
     });
 
     document.getElementById("btn-seafile-annuler").addEventListener("click", function() {
@@ -601,7 +612,6 @@ function openSeafileModal() {
     if (saved) {
         try {
             const creds = JSON.parse(saved);
-            document.getElementById('seafile-server').value = creds.server || '';
             document.getElementById('seafile-email').value = creds.email || '';
             document.getElementById('seafile-password').value = creds.password || '';
             document.getElementById('seafile-remember').checked = true;
