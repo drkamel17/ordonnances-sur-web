@@ -183,8 +183,25 @@ async function handleSeafile(res, { action, email, password, data, filename, ser
       return res.json({ success: true, data: {}, notFound: true });
     }
 
-    const text = await fileRes.text();
-    const importedData = JSON.parse(text);
+    let fileText = await fileRes.text();
+
+    // L'API Seafile renvoie un LIEN de téléchargement (chaîne JSON), pas le contenu.
+    if (fileText.trim().startsWith('"')) {
+      const link = JSON.parse(fileText);
+      if (typeof link === 'string' && link.startsWith('http')) {
+        const dlRes = await fetch(link);
+        if (!dlRes.ok) {
+          throw new Error('Erreur téléchargement du fichier Seafile: ' + dlRes.status);
+        }
+        fileText = await dlRes.text();
+      }
+    }
+
+    const importedData = JSON.parse(fileText);
+
+    if (!importedData || typeof importedData !== 'object' || Array.isArray(importedData)) {
+      throw new Error('Le fichier importé n\'est pas au bon format');
+    }
 
     return res.json({ success: true, data: importedData, filename: name });
   }

@@ -612,15 +612,26 @@ function openSeafileModal() {
 
 function fusionnerDonneesImportees(importedData) {
     let ordonnancesArchivees = JSON.parse(localStorage.getItem('ordonnancesPatients') || '{}');
+
+    // Nettoyer les éventuelles entrées invalides (ex: anciennes clés numériques corrompues)
+    Object.keys(ordonnancesArchivees).forEach(key => {
+        const entry = ordonnancesArchivees[key];
+        if (!entry || typeof entry !== 'object' || !Array.isArray(entry.ordonnance)) {
+            delete ordonnancesArchivees[key];
+        }
+    });
+
     let nbAjoutes = 0;
     let nbMisesAJour = 0;
 
     Object.keys(importedData).forEach(patientName => {
+        const entry = importedData[patientName];
+        if (!entry || typeof entry !== 'object' || !Array.isArray(entry.ordonnance)) return;
         if (ordonnancesArchivees[patientName]) {
-            ordonnancesArchivees[patientName] = importedData[patientName];
+            ordonnancesArchivees[patientName] = entry;
             nbMisesAJour++;
         } else {
-            ordonnancesArchivees[patientName] = importedData[patientName];
+            ordonnancesArchivees[patientName] = entry;
             nbAjoutes++;
         }
     });
