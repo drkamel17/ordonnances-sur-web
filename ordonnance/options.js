@@ -248,11 +248,7 @@ const storage = {
 
     document.getElementById("btn-provider-mega").addEventListener("click", function() {
         closeModal('modal-choix-provider');
-        if (cloudAction === 'export') {
-            exporterVersMega();
-        } else {
-            importerDepuisMega();
-        }
+        openMegaModal();
     });
 
     document.getElementById("btn-provider-seafile").addEventListener("click", function() {
@@ -302,6 +298,52 @@ const storage = {
 
     document.getElementById("btn-seafile-annuler").addEventListener("click", function() {
         closeModal('modal-seafile');
+    });
+
+    document.getElementById("toggle-seafile-password").addEventListener("click", function() {
+        basculerVisibiliteMotDePasse('seafile-password', this);
+    });
+
+    // === Modale Mega.nz ===
+    document.getElementById("btn-mega-ok").addEventListener("click", function() {
+        const email = document.getElementById('mega-email').value.trim();
+        const password = document.getElementById('mega-password').value;
+
+        if (!email || !password) {
+            showMessage('Veuillez remplir votre email et mot de passe Mega.nz.', 'red');
+            return;
+        }
+
+        if (document.getElementById('mega-remember').checked) {
+            localStorage.setItem('mega_credentials', JSON.stringify({ email, password }));
+        } else {
+            localStorage.removeItem('mega_credentials');
+        }
+
+        closeModal('modal-mega');
+
+        if (cloudAction === 'export') {
+            exporterVersMega(email, password);
+        } else {
+            importerDepuisMega(email, password);
+        }
+    });
+
+    document.getElementById("btn-mega-deconnecter").addEventListener("click", function() {
+        localStorage.removeItem('mega_credentials');
+        document.getElementById('mega-email').value = '';
+        document.getElementById('mega-password').value = '';
+        document.getElementById('mega-remember').checked = false;
+        closeModal('modal-mega');
+        showMessage('Déconnecté de Mega.nz.', 'green');
+    });
+
+    document.getElementById("btn-mega-annuler").addEventListener("click", function() {
+        closeModal('modal-mega');
+    });
+
+    document.getElementById("toggle-mega-password").addEventListener("click", function() {
+        basculerVisibiliteMotDePasse('mega-password', this);
     });
 
     if (btnImporterMeds && importMedsInput) {
@@ -620,6 +662,27 @@ function openSeafileModal() {
     openModal('modal-seafile');
 }
 
+function openMegaModal() {
+    const saved = localStorage.getItem('mega_credentials');
+    if (saved) {
+        try {
+            const creds = JSON.parse(saved);
+            document.getElementById('mega-email').value = creds.email || '';
+            document.getElementById('mega-password').value = creds.password || '';
+            document.getElementById('mega-remember').checked = true;
+        } catch (e) {}
+    }
+    openModal('modal-mega');
+}
+
+function basculerVisibiliteMotDePasse(id, bouton) {
+    const input = document.getElementById(id);
+    const icone = bouton.querySelector('i');
+    const estMasque = input.type === 'password';
+    input.type = estMasque ? 'text' : 'password';
+    icone.className = estMasque ? 'fas fa-eye-slash' : 'fas fa-eye';
+}
+
 function fusionnerDonneesImportees(importedData) {
     let ordonnancesArchivees = JSON.parse(localStorage.getItem('ordonnancesPatients') || '{}');
 
@@ -679,17 +742,13 @@ function choisirFichier(fichiers, service) {
 
 // ===================== Mega.nz =====================
 
-async function exporterVersMega() {
+async function exporterVersMega(email, password) {
     const ordonnancesArchivees = JSON.parse(localStorage.getItem('ordonnancesPatients') || '{}');
     if (Object.keys(ordonnancesArchivees).length === 0) {
         showMessage('Aucune ordonnance archivée à exporter.', 'red');
         return;
     }
 
-    const email = prompt('Entrez votre email Mega.nz :');
-    if (!email) return;
-    const password = prompt('Entrez votre mot de passe Mega.nz :');
-    if (!password) return;
     const nomFichier = prompt('Nom du fichier (laisser vide pour "ordonnances-archivees.json") :') || 'ordonnances-archivees.json';
 
     try {
@@ -712,12 +771,7 @@ async function exporterVersMega() {
     }
 }
 
-async function importerDepuisMega() {
-    const email = prompt('Entrez votre email Mega.nz :');
-    if (!email) return;
-    const password = prompt('Entrez votre mot de passe Mega.nz :');
-    if (!password) return;
-
+async function importerDepuisMega(email, password) {
     try {
         showMessage('Connexion à Mega.nz...', '#856404');
 
