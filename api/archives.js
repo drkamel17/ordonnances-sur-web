@@ -150,12 +150,13 @@ async function handleSeafile(res, { action, email, password, data, filename, ser
       headers: authHeaders
     });
 
-    const uploadLinkRes = await fetch(`${server}/api2/repos/${repoId}/upload-link/`, {
+    const uploadLinkRes = await fetch(`${server}/api2/repos/${repoId}/upload-link/?p=/`, {
       method: 'POST',
       headers: authHeaders
     });
     if (!uploadLinkRes.ok) {
-      throw new Error('Erreur obtention du lien d\'upload Seafile');
+      const errText = await uploadLinkRes.text();
+      throw new Error(`Erreur obtention du lien d'upload Seafile (${uploadLinkRes.status}): ${errText.slice(0, 200)}`);
     }
     const uploadUrl = (await uploadLinkRes.json()).trim();
 
@@ -167,7 +168,8 @@ async function handleSeafile(res, { action, email, password, data, filename, ser
     const upRes = await fetch(uploadUrl, { method: 'POST', body: formData });
 
     if (!upRes.ok) {
-      throw new Error('Échec upload Seafile');
+      const upErr = await upRes.text();
+      throw new Error(`Échec upload Seafile (${upRes.status}): ${upErr.slice(0, 200)}`);
     }
 
     return res.json({ success: true, message: 'Exporté vers Seafile avec succès' });
