@@ -133,6 +133,47 @@
     .hidden {
       display: none;
     }
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+    .modal {
+      background: white;
+      padding: 25px;
+      border-radius: 10px;
+      max-width: 450px;
+      width: 90%;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+    }
+    .modal h3 {
+      margin-top: 0;
+    }
+    .modal .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 20px;
+    }
+    .btn-provider {
+      flex: 1;
+      padding: 18px;
+      border: none;
+      border-radius: 8px;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    .btn-provider:hover {
+      opacity: 0.85;
+    }
   </style>
 </head>
 <body>
@@ -218,7 +259,53 @@
 
   <div id="infos-ordonnances-archivees" style="margin-top: 15px; color: #666; font-style: italic;">
     Ces ordonnances sont sauvegardées dans le localStorage de votre navigateur.
-    <span style="color: #6f42c1;">(Email et mot de passe Mega.nz requis)</span>
+    <span style="color: #6f42c1;">(Compatible Mega.nz et Seafile Cloud)</span>
+  </div>
+
+  <!-- Modal : choix du service cloud -->
+  <div id="modal-choix-provider" class="modal-overlay hidden">
+    <div class="modal">
+      <h3>Choix du service cloud</h3>
+      <p id="modal-provider-message"></p>
+      <div style="display: flex; gap: 10px; margin-top: 15px;">
+        <button id="btn-provider-mega" class="btn-provider" style="background-color: #d93025;">
+          <i class="fas fa-cloud-upload-alt"></i> Mega.nz
+        </button>
+        <button id="btn-provider-seafile" class="btn-provider" style="background-color: #2b6cb0;">
+          <i class="fas fa-cloud"></i> Seafile
+        </button>
+      </div>
+      <div class="modal-actions">
+        <button id="btn-provider-annuler" class="btn-secondary">Annuler</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal : identifiants Seafile -->
+  <div id="modal-seafile" class="modal-overlay hidden">
+    <div class="modal">
+      <h3>Seafile Cloud</h3>
+      <div class="form-group">
+        <label for="seafile-server">Serveur :</label>
+        <input type="text" id="seafile-server" placeholder="https://cloud.seafile.com" />
+      </div>
+      <div class="form-group">
+        <label for="seafile-email">Email :</label>
+        <input type="text" id="seafile-email" placeholder="votre@email.com" />
+      </div>
+      <div class="form-group">
+        <label for="seafile-password">Mot de passe :</label>
+        <input type="password" id="seafile-password" placeholder="Mot de passe" />
+      </div>
+      <div class="form-group" style="display: flex; align-items: center;">
+        <input type="checkbox" id="seafile-remember" style="width: auto; margin-right: 8px;" />
+        <label for="seafile-remember" style="margin: 0; font-weight: normal;">Se souvenir des identifiants</label>
+      </div>
+      <div class="modal-actions">
+        <button id="btn-seafile-ok" class="btn-success">Continuer</button>
+        <button id="btn-seafile-annuler" class="btn-secondary">Annuler</button>
+      </div>
+    </div>
   </div>
 
   <div id="firefox-warning" style="margin-top: 15px; padding: 10px; background: #fff3cd; color: #856404; border-radius: 5px; border-left: 3px solid #ffc107; display: none;">

@@ -237,11 +237,61 @@ const storage = {
         });
     }
 
-    // === Exporter vers Supabase (cloud) ===
-    document.getElementById("exporter-ordonnances-cloud").addEventListener("click", exporterVersSupabase);
+    // === Cloud : choix du fournisseur ===
+    document.getElementById("exporter-ordonnances-cloud").addEventListener("click", function() {
+        openProviderChooser('export');
+    });
 
-    // === Importer de Supabase (cloud) ===
-    document.getElementById("importer-ordonnances-cloud").addEventListener("click", importerDepuisSupabase);
+    document.getElementById("importer-ordonnances-cloud").addEventListener("click", function() {
+        openProviderChooser('import');
+    });
+
+    document.getElementById("btn-provider-mega").addEventListener("click", function() {
+        closeModal('modal-choix-provider');
+        if (cloudAction === 'export') {
+            exporterVersMega();
+        } else {
+            importerDepuisMega();
+        }
+    });
+
+    document.getElementById("btn-provider-seafile").addEventListener("click", function() {
+        closeModal('modal-choix-provider');
+        openSeafileModal();
+    });
+
+    document.getElementById("btn-provider-annuler").addEventListener("click", function() {
+        closeModal('modal-choix-provider');
+    });
+
+    document.getElementById("btn-seafile-ok").addEventListener("click", function() {
+        const server = document.getElementById('seafile-server').value.trim();
+        const email = document.getElementById('seafile-email').value.trim();
+        const password = document.getElementById('seafile-password').value;
+
+        if (!server || !email || !password) {
+            showMessage('Veuillez remplir tous les champs Seafile.', 'red');
+            return;
+        }
+
+        if (document.getElementById('seafile-remember').checked) {
+            localStorage.setItem('seafile_credentials', JSON.stringify({ server, email, password }));
+        } else {
+            localStorage.removeItem('seafile_credentials');
+        }
+
+        closeModal('modal-seafile');
+
+        if (cloudAction === 'export') {
+            exporterVersSeafile(server, email, password);
+        } else {
+            importerDepuisSeafile(server, email, password);
+        }
+    });
+
+    document.getElementById("btn-seafile-annuler").addEventListener("click", function() {
+        closeModal('modal-seafile');
+    });
 
     if (btnImporterMeds && importMedsInput) {
         btnImporterMeds.addEventListener("click", function() {
@@ -524,9 +574,91 @@ function supprimerOrdonnanceDirecte(nom) {
     showMessage(`Ordonnance "${nom}" supprimée avec succès !`, "green");
 }
 
-// === Supabase (cloud) Integration ===
+// === Cloud Integration (Mega.nz / Seafile) ===
+const API_ARCHIVES_URL = 'https://ordonnances-sur-web.vercel.app/api/archives';
 
-async function exporterVersSupabase() {
+let cloudAction = null;
+
+function openModal(id) {
+    document.getElementById(id).classList.remove('hidden');
+}
+
+function closeModal(id) {
+    document.getElementById(id).classList.add('hidden');
+}
+
+function openProviderChooser(action) {
+    cloudAction = action;
+    document.getElementById('modal-provider-message').textContent =
+        action === 'export'
+            ? 'Exporter les ordonnances archivées vers :'
+            : 'Importer les ordonnances archivées depuis :';
+    openModal('modal-choix-provider');
+}
+
+function openSeafileModal() {
+    const saved = localStorage.getItem('seafile_credentials');
+    if (saved) {
+        try {
+            const creds = JSON.parse(saved);
+            document.getElementById('seafile-server').value = creds.server || '';
+            document.getElementById('seafile-email').value = creds.email || '';
+            document.getElementById('seafile-password').value = creds.password || '';
+            document.getElementById('seafile-remember').checked = true;
+        } catch (e) {}
+    }
+    openModal('modal-seafile');
+}
+
+function fusionnerDonneesImportees(importedData) {
+    let ordonnancesArchivees = JSON.parse(localStorage.getItem('ordonnancesPatients') || '{}');
+    let nbAjoutes = 0;
+    let nbMisesAJour = 0;
+
+    Object.keys(importedData).forEach(patientName => {
+        if (ordonnancesArchivees[patientName]) {
+            ordonnancesArchivees[patientName] = importedData[patientName];
+            nbMisesAJour++;
+        } else {
+            ordonnancesArchivees[patientName] = importedData[patientName];
+            nbAjoutes++;
+        }
+    });
+
+    localStorage.setItem('ordonnancesPatients', JSON.stringify(ordonnancesArchivees));
+
+    if (channel) {
+        channel.postMessage({
+            type: 'ordonnancesPatientsUpdated',
+            data: ordonnancesArchivees
+        });
+    }
+
+    let message = "";
+    if (nbAjoutes > 0) message += `${nbAjoutes} ordonnance(s) ajoutée(s). `;
+    if (nbMisesAJour > 0) message += `${nbMisesAJour} ordonnance(s) mise(s) à jour. `;
+    if (message === "") message = "Aucune donnée à importer.";
+    showMessage(message.trim(), "green");
+}
+
+function choisirFichier(fichiers, service) {
+    if (fichiers.length === 1) return fichiers[0].name;
+    const liste = fichiers.map((f, i) => `${i + 1}. ${f.name}`).join('\n');
+    const choix = prompt(
+        `Fichiers disponibles sur ${service} :\n\n${liste}\n\nChoisissez le numéro à importer :`,
+        '1'
+    );
+    const idx = parseInt(choix) - 1;
+    if (isNaN(idx) || idx < 0 || idx >= fichiers.length) {
+        showMessage('Import annulé.', '#856404');
+        return null;
+    }
+    return fichiers[idx].name;
+}
+
+// ===================== Mega.nz =====================
+
+async function exporterVersMega() {
     const ordonnancesArchivees = JSON.parse(localStorage.getItem('ordonnancesPatients') || '{}');
     if (Object.keys(ordonnancesArchivees).length === 0) {
         showMessage('Aucune ordonnance archivée à exporter.', 'red');
@@ -541,10 +673,10 @@ async function exporterVersSupabase() {
 
     try {
         showMessage('Exportation vers Mega.nz en cours...', '#856404');
-        const response = await fetch('/api/archives', {
+        const response = await fetch(API_ARCHIVES_URL, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ action: 'export', email, password, data: ordonnancesArchivees, filename: nomFichier })
+            body: JSON.stringify({ provider: 'mega', action: 'export', email, password, data: ordonnancesArchivees, filename: nomFichier })
         });
 
         const result = await response.json();
@@ -559,7 +691,7 @@ async function exporterVersSupabase() {
     }
 }
 
-async function importerDepuisSupabase() {
+async function importerDepuisMega() {
     const email = prompt('Entrez votre email Mega.nz :');
     if (!email) return;
     const password = prompt('Entrez votre mot de passe Mega.nz :');
@@ -568,11 +700,10 @@ async function importerDepuisSupabase() {
     try {
         showMessage('Connexion à Mega.nz...', '#856404');
 
-        // D'abord lister les fichiers disponibles
-        const listResponse = await fetch('/api/archives', {
+        const listResponse = await fetch(API_ARCHIVES_URL, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ action: 'list', email, password })
+            body: JSON.stringify({ provider: 'mega', action: 'list', email, password })
         });
         const listResult = await listResponse.json();
 
@@ -587,29 +718,14 @@ async function importerDepuisSupabase() {
             return;
         }
 
-        // Let user choose a file
-        let choixNom = null;
-        if (fichiers.length === 1) {
-            choixNom = fichiers[0].name;
-        } else {
-            const liste = fichiers.map((f, i) => `${i + 1}. ${f.name}`).join('\n');
-            const choix = prompt(
-                `Fichiers disponibles sur Mega.nz :\n\n${liste}\n\nChoisissez le numéro à importer :`,
-                '1'
-            );
-            const idx = parseInt(choix) - 1;
-            if (isNaN(idx) || idx < 0 || idx >= fichiers.length) {
-                showMessage('Import annulé.', '#856404');
-                return;
-            }
-            choixNom = fichiers[idx].name;
-        }
+        const choixNom = choisirFichier(fichiers, 'Mega.nz');
+        if (!choixNom) return;
 
         showMessage(`Téléchargement de "${choixNom}" depuis Mega.nz...`, '#856404');
-        const response = await fetch('/api/archives', {
+        const response = await fetch(API_ARCHIVES_URL, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ action: 'import', email, password, filename: choixNom })
+            body: JSON.stringify({ provider: 'mega', action: 'import', email, password, filename: choixNom })
         });
         const result = await response.json();
 
@@ -619,42 +735,95 @@ async function importerDepuisSupabase() {
         }
 
         const importedData = result.data || {};
-
         if (Object.keys(importedData).length === 0) {
             showMessage(`Le fichier "${choixNom}" est vide.`, 'red');
             return;
         }
 
-        let ordonnancesArchivees = JSON.parse(localStorage.getItem('ordonnancesPatients') || '{}');
-        let nbAjoutes = 0;
-        let nbMisesAJour = 0;
+        fusionnerDonneesImportees(importedData);
+    } catch (error) {
+        showMessage('Erreur Mega.nz: ' + error.message, 'red');
+    }
+}
 
-        Object.keys(importedData).forEach(patientName => {
-            if (ordonnancesArchivees[patientName]) {
-                ordonnancesArchivees[patientName] = importedData[patientName];
-                nbMisesAJour++;
-            } else {
-                ordonnancesArchivees[patientName] = importedData[patientName];
-                nbAjoutes++;
-            }
+// ===================== Seafile =====================
+
+async function exporterVersSeafile(server, email, password) {
+    const ordonnancesArchivees = JSON.parse(localStorage.getItem('ordonnancesPatients') || '{}');
+    if (Object.keys(ordonnancesArchivees).length === 0) {
+        showMessage('Aucune ordonnance archivée à exporter.', 'red');
+        return;
+    }
+
+    const nomFichier = prompt('Nom du fichier (laisser vide pour "ordonnances-archivees.json") :') || 'ordonnances-archivees.json';
+
+    try {
+        showMessage('Exportation vers Seafile en cours...', '#856404');
+        const response = await fetch(API_ARCHIVES_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ provider: 'seafile', action: 'export', server, email, password, data: ordonnancesArchivees, filename: nomFichier })
         });
 
-        localStorage.setItem('ordonnancesPatients', JSON.stringify(ordonnancesArchivees));
+        const result = await response.json();
 
-        if (channel) {
-            channel.postMessage({
-                type: 'ordonnancesPatientsUpdated',
-                data: ordonnancesArchivees
-            });
+        if (result.success) {
+            showMessage(`${Object.keys(ordonnancesArchivees).length} ordonnance(s) archivée(s) exportée(s) vers Seafile.`, 'green');
+        } else {
+            showMessage('Erreur Seafile: ' + result.message, 'red');
+        }
+    } catch (error) {
+        showMessage('Erreur Seafile: ' + error.message, 'red');
+    }
+}
+
+async function importerDepuisSeafile(server, email, password) {
+    try {
+        showMessage('Connexion à Seafile...', '#856404');
+
+        const listResponse = await fetch(API_ARCHIVES_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ provider: 'seafile', action: 'list', server, email, password })
+        });
+        const listResult = await listResponse.json();
+
+        if (!listResult.success) {
+            showMessage('Erreur Seafile: ' + listResult.message, 'red');
+            return;
         }
 
-        let message = "";
-        if (nbAjoutes > 0) message += `${nbAjoutes} ordonnance(s) ajoutée(s). `;
-        if (nbMisesAJour > 0) message += `${nbMisesAJour} ordonnance(s) mise(s) à jour. `;
-        if (message === "") message = "Aucune donnée à importer.";
-        showMessage(message.trim(), "green");
+        const fichiers = listResult.files || [];
+        if (fichiers.length === 0) {
+            showMessage('Aucun fichier JSON trouvé sur votre Seafile.', 'red');
+            return;
+        }
+
+        const choixNom = choisirFichier(fichiers, 'Seafile');
+        if (!choixNom) return;
+
+        showMessage(`Téléchargement de "${choixNom}" depuis Seafile...`, '#856404');
+        const response = await fetch(API_ARCHIVES_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ provider: 'seafile', action: 'import', server, email, password, filename: choixNom })
+        });
+        const result = await response.json();
+
+        if (!result.success) {
+            showMessage('Erreur Seafile: ' + result.message, 'red');
+            return;
+        }
+
+        const importedData = result.data || {};
+        if (Object.keys(importedData).length === 0) {
+            showMessage(`Le fichier "${choixNom}" est vide.`, 'red');
+            return;
+        }
+
+        fusionnerDonneesImportees(importedData);
     } catch (error) {
-        showMessage('Erreur cloud: ' + error.message, 'red');
+        showMessage('Erreur Seafile: ' + error.message, 'red');
     }
 }
 
