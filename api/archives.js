@@ -151,7 +151,7 @@ async function handleSeafile(res, { action, email, password, data, filename, ser
     });
 
     const uploadLinkRes = await fetch(`${server}/api2/repos/${repoId}/upload-link/?p=/`, {
-      method: 'POST',
+      method: 'GET',
       headers: authHeaders
     });
     if (!uploadLinkRes.ok) {
