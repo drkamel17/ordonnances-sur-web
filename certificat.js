@@ -12309,17 +12309,24 @@ function nombreEnLettres(n) {
 
 // Fonction pour générer un certificat de congé de maternité
 function ouvrirCertificatMaternite() {
-    // Récupérer les informations du patient depuis les champs du formulaire
-    const { nom, prenom, dob } = extractInfo();
+    // Récupérer les informations du patient depuis les champs du formulaire certificat.html
+    const patientNomPrenom = document.getElementById('patientNomPrenom').value || '';
+    const patientAge = document.getElementById('patientAge').value || '';
+    const patientDateNaissance = document.getElementById('patientDateNaissance').value || '';
+    const dateCertificatInput = document.getElementById('dateCertificat').value || '';
 
-    // Calculer l'âge du patient si la date de naissance est disponible
+    // Extraire nom et prénom
+    const nomPrenomArray = patientNomPrenom.split(' ');
+    const nom = nomPrenomArray[nomPrenomArray.length - 1] || '';
+    const prenom = nomPrenomArray.slice(0, -1).join(' ') || '';
+
+    // Âge : utiliser le champ âge, sinon calculer depuis la date de naissance
     let age = '';
-    const ageStored = localStorage.getItem('age') || '';
-    const ageMatch = String(ageStored).match(/(\d+)/);
+    const ageMatch = String(patientAge).match(/(\d+)/);
     if (ageMatch) {
         age = ageMatch[1];
-    } else if (dob) {
-        const parts = dob.split('/');
+    } else if (patientDateNaissance) {
+        const parts = patientDateNaissance.split('/');
         if (parts.length === 3) {
             const birthDate = new Date(`${parts[2]}-${parts[1]}-${parts[0]}`);
             if (!isNaN(birthDate.getTime())) {
@@ -12334,13 +12341,9 @@ function ouvrirCertificatMaternite() {
         }
     }
 
-    // Récupérer la date de consultation depuis localStorage (enregistrée dans ord.html)
-    const dateConsultation = localStorage.getItem('date-consultation') || '';
-
-    let dateCertificat = '';
-    if (dateConsultation && dateConsultation.match(/^\d{2}\/\d{2}\/\d{4}$/)) {
-        dateCertificat = dateConsultation;
-    } else {
+    // Date du certificat : utiliser le champ dateCertificat, sinon la date du jour
+    let dateCertificat = dateCertificatInput;
+    if (!dateCertificat || !dateCertificat.match(/^\d{2}\/\d{2}\/\d{4}$/)) {
         const today = new Date();
         const day = String(today.getDate()).padStart(2, '0');
         const month = String(today.getMonth() + 1).padStart(2, '0');
