@@ -12519,7 +12519,7 @@ ${enteteContent}
             Je soussigné, Dr <span class="editable-field" contenteditable="true" id="docteur">${docteur}</span>,
             certifie avoir examiné ce jour la susnommée <span class="editable-field" contenteditable="true" style="min-width: 180px; display: inline-block;">${nom} ${prenom}</span>,
             âgée de <span class="editable-field" contenteditable="true" style="min-width: 40px; display: inline-block;">${age}</span> ans,
-            déclare qu'elle nécessite d'un congé de maternité de <input type="number" id="nbJours" value="98" min="0" max="9999" style="width: 55px; text-align: center; border: 1px solid #ccc; border-radius: 4px; padding: 2px 4px;"> Jours <span id="nbJoursLettres" style="font-style: italic;">
+            déclare qu'elle nécessite d'un congé de maternité de <input type="number" id="nbJours" value="98" min="0" max="9999" style="min-width: 55px; text-align: center; border: 1px solid #ccc; border-radius: 4px; padding: 2px 4px;"> Jours <span id="nbJoursLettres" style="font-style: italic;">
 (Quatre-vingt-dix-huit jours)
 </span> à daté du
             <span class="editable-field" contenteditable="true" style="min-width: 110px; display: inline-block;">${dateCertificat}</span>,

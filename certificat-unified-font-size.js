@@ -8,7 +8,7 @@ function updateFontSizeInCertificat(fontSize, certificatType) {
                                ".certificat { font-size: " + fontSize + "pt !important; } " +
                                "h1 { font-size: " + (parseInt(fontSize) + 4) + "pt !important; } " +
                                "p { font-size: " + fontSize + "pt !important; } " +
-                               "input[type=text], input[type=date], textarea { font-size: " + fontSize + "pt !important; } " +
+                               "input[type=text], input[type=date], input[type=number], textarea { font-size: " + fontSize + "pt !important; } " +
                                ".print-button { display: none !important; } }";
 
     // Supprimer l'ancien style s'il existe
@@ -35,7 +35,7 @@ function updateFontSizeForLesions(fontSize) {
                                ".certificat { font-size: " + fontSize + "pt !important; } " +
                                "h1 { font-size: " + (parseInt(fontSize) + 4) + "pt !important; } " +
                                "p { font-size: " + fontSize + "pt !important; } " +
-                               "input[type=text], input[type=date], textarea { font-size: " + fontSize + "pt !important; } " +
+                               "input[type=text], input[type=date], input[type=number], textarea { font-size: " + fontSize + "pt !important; } " +
                                "strong { font-size: " + fontSize + "pt !important; } " +
                                ".docteur { font-size: " + fontSize + "pt !important; } " +
                                ".print-button { display: none !important; } " +
