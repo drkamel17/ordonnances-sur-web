@@ -22,6 +22,14 @@ function sauvegarderModifications() {
     });
 }
 
+// Convertir une date ISO (AAAA-MM-JJ, format des inputs date) en format français (JJ/MM/AAAA)
+function convertirDateFr(isoDate) {
+    if (!isoDate) return '';
+    const m = isoDate.match(/^(\d{4})-(\d{2})-(\d{2})/);
+    if (m) return `${m[3]}/${m[2]}/${m[1]}`;
+    return isoDate;
+}
+
 // Fonction pour charger les données
 function loadData() {
     const polyclinique = localStorage.getItem('polyclinique') || '';
@@ -29,11 +37,25 @@ function loadData() {
     const docteur = localStorage.getItem('docteur') || '';
 
     // Charger les données du patient
-    const patientNomPrenom = localStorage.getItem('patientNomPrenom') || '';
-    const patientAge = localStorage.getItem('patientAge') || '';
-    const patientDateNaissance = localStorage.getItem('patientDateNaissance') || '';
-    const dateCertificat = localStorage.getItem('dateCertificat') || '';
-    const patientNumero = localStorage.getItem('patientNumero') || '';
+    let patientNomPrenom = localStorage.getItem('patientNomPrenom') || '';
+    let patientAge = localStorage.getItem('patientAge') || '';
+    let patientDateNaissance = localStorage.getItem('patientDateNaissance') || '';
+    let dateCertificat = localStorage.getItem('dateCertificat') || '';
+    let patientNumero = localStorage.getItem('patientNumero') || '';
+
+    // Pré-remplir par défaut depuis les valeurs saisies dans ord.html
+    const nomOrd = localStorage.getItem('nom') || '';
+    const prenomOrd = localStorage.getItem('prenom') || '';
+    const ageOrd = localStorage.getItem('age') || '';
+    const dateNaissanceOrd = localStorage.getItem('dateNaissance') || '';
+    const numeroOrd = localStorage.getItem('numero') || '';
+    const dateConsultationOrd = localStorage.getItem('date-consultation') || '';
+
+    if (nomOrd || prenomOrd) patientNomPrenom = `${nomOrd} ${prenomOrd}`.trim();
+    if (ageOrd) patientAge = ageOrd;
+    if (dateNaissanceOrd) patientDateNaissance = convertirDateFr(dateNaissanceOrd);
+    if (numeroOrd) patientNumero = numeroOrd;
+    if (dateConsultationOrd) dateCertificat = convertirDateFr(dateConsultationOrd);
 
     document.getElementById('polyclinique').value = polyclinique;
     document.getElementById('polyclinique-ar').value = polycliniqueAr;
@@ -44,7 +66,12 @@ function loadData() {
     document.getElementById('patientAge').value = patientAge;
     document.getElementById('patientDateNaissance').value = patientDateNaissance;
     document.getElementById('dateCertificat').value = dateCertificat;
-    document.getElementById('patientNumero').value = patientNumero;
+
+    // Vérifier si l'élément patientNumero existe avant de lui assigner une valeur
+    const patientNumeroElement = document.getElementById('patientNumero');
+    if (patientNumeroElement) {
+        patientNumeroElement.value = patientNumero;
+    }
 
     // Si aucune date n'est définie, utiliser la date du jour
     if (!dateCertificat) {
@@ -54,12 +81,6 @@ function loadData() {
         const year = today.getFullYear();
         const formattedDate = `${day}/${month}/${year}`;
         document.getElementById('dateCertificat').value = formattedDate;
-    }
-    
-    // Vérifier si l'élément patientNumero existe avant de lui assigner une valeur
-    const patientNumeroElement = document.getElementById('patientNumero');
-    if (patientNumeroElement) {
-        patientNumeroElement.value = patientNumero;
     }
 
     // Initialiser l'état des boutons de format

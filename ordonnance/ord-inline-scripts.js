@@ -45,6 +45,54 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    // Sauvegarde automatique pour la date de naissance, l'âge, le numéro et la date de consultation
+    const dateNaissanceField = document.getElementById('date-naissance');
+    const ageField = document.getElementById('age');
+    const numeroField = document.getElementById('numero');
+    const dateConsultationField = document.querySelector('input[name="date-consultation"]');
+
+    if (dateNaissanceField) {
+        dateNaissanceField.addEventListener('input', function() {
+            localStorage.setItem('dateNaissance', this.value);
+        });
+        dateNaissanceField.addEventListener('change', function() {
+            localStorage.setItem('dateNaissance', this.value);
+            // L'âge est recalculé automatiquement par ord.js : on le sauvegarde après
+            setTimeout(function() {
+                if (ageField && ageField.value) {
+                    localStorage.setItem('age', ageField.value);
+                }
+            }, 50);
+        });
+    }
+
+    if (ageField) {
+        ageField.addEventListener('input', function() {
+            localStorage.setItem('age', this.value);
+        });
+        ageField.addEventListener('change', function() {
+            localStorage.setItem('age', this.value);
+        });
+    }
+
+    if (numeroField) {
+        numeroField.addEventListener('input', function() {
+            localStorage.setItem('numero', this.value);
+        });
+        numeroField.addEventListener('change', function() {
+            localStorage.setItem('numero', this.value);
+        });
+    }
+
+    if (dateConsultationField) {
+        dateConsultationField.addEventListener('input', function() {
+            localStorage.setItem('date-consultation', this.value);
+        });
+        dateConsultationField.addEventListener('change', function() {
+            localStorage.setItem('date-consultation', this.value);
+        });
+    }
+
     // Charger la valeur du poids depuis localStorage
     const savedPoids = localStorage.getItem('poids');
     if (savedPoids && poidsField) {
