@@ -604,9 +604,9 @@ async function sauvegarderVersFichier(data) {
                     showSyncIndicator('✅ Sauvegarde cloud réussie !');
                     afficherMessage('Ordonnance sauvegardée sur le cloud !', 'success');
                 } else {
-                    alert('Mot de passe incorrect.');
+                    alert(result.message || 'Erreur de sauvegarde.');
                     sessionPassword = null;
-                    showSyncIndicator('❌ Mot de passe incorrect.');
+                    showSyncIndicator('❌ ' + (result.message || 'Erreur de sauvegarde.'));
                 }
             } catch (e) {
                 showSyncIndicator('❌ Erreur sauvegarde.');
