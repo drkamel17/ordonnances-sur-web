@@ -124,10 +124,10 @@ export async function POST(request) {
       
       Object.keys(pendingData).forEach(key => { defaultData[key] = pendingData[key]; });
       
-      await fetch(`${supabaseUrl}/rest/v1/ordonnances?id=eq.default`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json', 'apikey': supabaseKey, 'Authorization': `Bearer ${supabaseKey}`, 'Prefer': 'return=minimal' },
-        body: JSON.stringify({ data: defaultData, status: 'confirmed', suggested_by: null, updated_at: new Date().toISOString() })
+      await fetch(`${supabaseUrl}/rest/v1/ordonnances`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'apikey': supabaseKey, 'Authorization': `Bearer ${supabaseKey}`, 'Prefer': 'resolution=merge-duplicates' },
+        body: JSON.stringify({ id: 'default', data: defaultData, status: 'confirmed', suggested_by: null, updated_at: new Date().toISOString() })
       });
       
       await fetch(`${supabaseUrl}/rest/v1/ordonnances?id=eq.${pendingKey}`, {
@@ -277,10 +277,10 @@ export async function POST(request) {
     
     // Avec mot de passe → sauvegarder directement
     if (password === writePassword) {
-      const response = await fetch(`${supabaseUrl}/rest/v1/ordonnances?id=eq.default`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json', 'apikey': supabaseKey, 'Authorization': `Bearer ${supabaseKey}`, 'Prefer': 'return=minimal' },
-        body: JSON.stringify({ data: data, status: 'confirmed', suggested_by: null, updated_at: new Date().toISOString() })
+      const response = await fetch(`${supabaseUrl}/rest/v1/ordonnances`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'apikey': supabaseKey, 'Authorization': `Bearer ${supabaseKey}`, 'Prefer': 'resolution=merge-duplicates' },
+        body: JSON.stringify({ id: 'default', data: data, status: 'confirmed', suggested_by: null, updated_at: new Date().toISOString() })
       });
       
       if (response.ok) {
