@@ -4639,97 +4639,153 @@ ${enteteContent}
     
     <script src="certificat-unified-font-size.js"></script>
     <script>
+    var TERMES_JURIDIQUES = ["Requisition judiciaire","Requisition d un officier de police judiciaire (OPJ)","Requisition du Procureur de la Republique","Examen a la demande de la victime","Certificat etabli a la demande de l autorite judiciaire","Etabli pour valoir ce que de droit","Remis en main propre contre decharge","Exemplaire unique","Identite declaree par l examine","Justificatif d identite officiel presente","Defaut de piece d identite","Refus d examen medical","Presence d un tiers accompagnateur","Presence d un interprete assermente","Unite de consultation medico-judiciaire (UMJ)","Examen aux urgences hospitalieres","Examen en milieu carcéral / garde a vue","Secret professionnel partage","Faits rapportes au conditionnel","Allegations de la victime","Declaration de la victime","Mecanisme lesionnel allegue","Choc direct allegue","Choc indirect allegue","Notion de chute alleguee","Agression par arme blanche alleguee","Agression par arme a feu alleguee","Agression par objet contondant alleguee","Notion de strangulation alleguee","Notion de compression thoracique","Date et heure presumees des faits","Lieu presume des faits","Plaintes spontanees","Douleur spontanee","Douleur provoquee a la palpation","Impregnation ethylique alleguee","Suspicion de soumission chimique","Prise de substances psychoactives","Prise en charge medicale prealable","Notion de soins d urgence anterieurs","Ecchymose","Ecchymose violacee","Ecchymose bleutee","Ecchymose verdatre","Ecchymose jaunatre","Ecchymose roussatre","Ecchymose figuree","Ecchymose en bande","Ecchymose punctiforme","Ecchymose en carte geographique","Ecchymose sous-conjonctivale","Hematome","Hematome sous-cutane","Hematome collecteur","Hematome sous-perioste","Hematome pulsatile","Hematome retro-tympanique","Excoriation","Excoriation lineaire","Excoriation punctiforme","Excoriation en strie","Dermabrasion","Dermabrasion etendue","Ecorchure","Erosion cutanee","Erosion muqueuse","Plaie contuse","Plaie franche","Plaie penetrante","Plaie perforante","Plaie tangentiale","Plaie a bords francs","Plaie a bords irreguliers","Plaie a bords contus","Plaie a bords ecchymotiques","Plaie delabree","Plaie scalpante","Plaie par arme blanche","Plaie par projectile","Plaie de defense sur le bord cubital","Plaie de defense palmaire","Punctuation hemorrhagique","Oedeme traumatique","Oedeme periorbitaire","Tumefaction ecchymotique","Tumefaction douloureuse","Contusion","Contusion musculaire","Laceration tissulaire","Phlyctene","Brulure du premier degre","Brulure du deuxieme degre superficiel","Brulure du deuxieme degre profond","Brulure du troisieme degre","Brulure chimique","Brulure thermique","Morsure humaine","Morsure animale","Sillon de pendaison","Sillon de strangulation","Sillon complet","Sillon incomplet","Sillon horizontal","Sillon oblique","Erytheme traumatique","Petechies sous-cutanees","Petechies sous-conjonctivales","Petechies du visage","Suffusions hemorrhagiques","Saignement actif","Croute de cicatrisation","Desinsertion tissulaire","Infiltration sanglante","Fracture osseuse","Fracture comminutive","Fracture ouverte","Fracture fermee","Fracture en bois vert","Fracture tassement","Fracture engrenee","Fracture spiroide","Disjonction acromio-claviculaire","Entorse benigne","Entorse grave","Luxation articulaire","Subluxation","Impotence fonctionnelle totale","Impotence fonctionnelle partielle","Limitation d amplitude articulaire","Deformation anatomique visible","Epanchement intra-articulaire","Hemarthrose","Laxite articulaire pathologique","Crepitation osseuse","Rupture tendineuse","Rupture ligamentaire","Elongation musculaire","Claquage musculaire","Rhabdomyolyse traumatique","Traumatisme cranio-encephalique (TCE)","Commotion cerebrale","Perte de connaissance initiale (PCI)","Amnesie post-traumatique","Amnesie retrograde","Syndrome post-commotionnel","Deficit moteur focal","Deficit sensitif focal","Paresthesie","Dysesthesie","Anesthesie en gant ou en chaussette","Syndrome meninge traumatique","Cephalees post-traumatiques","Echymo-somnolence","Traces de strangulation cervicale","Traces de ligatures","Traces d agrippement cervical","Excoriations en croissant de lune (ongles)","Hemorrhagie sous-conjonctivale","Oedeme palpebral et periorbitaire","Ecchymose en lunette","Epistaxis bilaterale","Epistaxis unilaterale","Fracture des os propres du nez (OPN)","Fracture du massif facial","Fracture mandibulaire","Otorragie","Perforation tympanique traumatique","Hematome retro-tympanique","Acuphenes post-traumatiques","Hypoacousie traumatique","Vertiges rotatoires","Diplopie","Coup de fouet cervical (Whiplash)","Luxation dentaire","Fracture dentaire","Expulsion dentaire","Plaie de la muqueuse buccale","Plaie linguale","Etat de choc psychique initial","Anxiete aigue post-traumatique","Syndrome de stress post-traumatique (SSPT)","Prostration psychique","Sideration psychique","Hypervigilance neurovegetative","Trouble severe du sommeil","Cauchemars de reviviscence","Flashbacks traumatiques","Labilite emotionnelle","Angoisse de morcellement","Etat de dissociation psychique","Depersonalisation / Derealisation","Evitement phobique des lieux ou personnes","Ralentissement psychomoteur","Mutisme post-traumatique","Radiographie conventionnelle effectuee","TDM / Scanner cerebral sans injection","TDM / Scanner du massif facial","Imagerie par Resonance Magnetique (IRM)","Echographie des tissus mous","Avis specialise ophtalmologique requis","Avis specialise ORL requis","Avis specialise odontologique requis","Evaluation psychiatrique / psychologique requise","Prelevements a visee toxico-legale","Incapacite Totale de Travail (ITT)","ITT au sens penal","ITT personnelle","ITT professionnelle","Incapacite Temporaire Totale","Incapacite Permanente Partielle (IPP)","Incapacite de travail fixee a X jours","Duree fixee sous reserve d evolution","Incapacite non determinable en l etat","Necessite de reevaluation ulterieure","Consolidation non acquise","Guerison sans sequelle previsible","Sequelles fonctionnelles previsibles","Sequelles esthetiques / Cicatrices","Prejudice esthetique","Prejudice d agrement","Prejudice douloureux (Pretium doloris)","Pronostic vital engage","Pronostic fonctionnel reserve","Prise en charge psychologique indispensable","Hospitalisation en milieu specialise requise","Fait a [Lieu], le [Date]","Heure de fin de l examen medical","Remis en main propre au requerant","Remis a l autorite requerante contre decharge","Signature manuscrite du medecin","Cachet professionnel et identifiant Ordinal","Qualite du medecin examinateur (Docteur en medicine)","Inscription au tableau de l Ordre des Medecins","Mentions d archivage du dossier medical"];
+
     (function() {
         var btnCorriger = document.getElementById('btnCorriger');
         var textarea = document.getElementById('texteDescription');
         var status = document.getElementById('correctionStatus');
         var container = document.getElementById('correctionsContainer');
 
-        if (!btnCorriger || !textarea) return;
+        if (!textarea) return;
 
-        btnCorriger.addEventListener('click', function() {
-            var text = textarea.value.trim();
-            if (!text) {
-                status.textContent = 'Veuillez saisir du texte a verifier.';
-                status.style.color = '#e67e22';
-                return;
-            }
+        // --- AUTOCOMPLETE ---
+        var dropdown = document.createElement('div');
+        dropdown.id = 'autocompleteDropdown';
+        dropdown.style.cssText = 'display:none;position:absolute;background:#fff;border:1px solid #2196F3;border-radius:4px;max-height:180px;overflow-y:auto;z-index:9999;width:580px;box-shadow:0 4px 12px rgba(0,0,0,0.15);';
+        textarea.parentElement.style.position = 'relative';
+        textarea.parentElement.appendChild(dropdown);
 
-            status.textContent = 'Verification en cours...';
-            status.style.color = '#2196F3';
-            container.innerHTML = '';
+        textarea.addEventListener('input', function() {
+            var cursorPos = textarea.selectionStart;
+            var textBefore = textarea.value.substring(0, cursorPos);
+            var words = textBefore.split(/[\s\n]/);
+            var currentWord = words[words.length - 1];
 
-            fetch('https://api.languagetool.org/v2/check', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: 'text=' + encodeURIComponent(text) + '&language=fr-FR&enabledOnly=false'
-            })
-            .then(function(response) {
-                if (!response.ok) throw new Error('API error');
-                return response.json();
-            })
-            .then(function(data) {
-                if (data.matches.length === 0) {
-                    status.textContent = 'Aucune erreur trouvee.';
-                    status.style.color = '#4CAF50';
+            if (currentWord.length < 2) { dropdown.style.display = 'none'; return; }
+
+            var search = currentWord.toLowerCase();
+            var matches = TERMES_JURIDIQUES.filter(function(t) {
+                return t.toLowerCase().indexOf(search) !== -1;
+            }).slice(0, 8);
+
+            if (matches.length === 0) { dropdown.style.display = 'none'; return; }
+
+            dropdown.innerHTML = '';
+            matches.forEach(function(match) {
+                var item = document.createElement('div');
+                item.textContent = match;
+                item.style.cssText = 'padding:6px 10px;cursor:pointer;font-size:12px;border-bottom:1px solid #eee;';
+                item.onmouseenter = function() { item.style.background = '#e3f2fd'; };
+                item.onmouseleave = function() { item.style.background = '#fff'; };
+                item.onclick = function() {
+                    var after = textarea.value.substring(cursorPos);
+                    var prefix = textarea.value.substring(0, cursorPos - currentWord.length);
+                    textarea.value = prefix + match + after;
+                    dropdown.style.display = 'none';
+                    textarea.focus();
+                    var newPos = prefix.length + match.length;
+                    textarea.setSelectionRange(newPos, newPos);
+                };
+                dropdown.appendChild(item);
+            });
+            dropdown.style.display = 'block';
+
+            var rect = textarea.getBoundingClientRect();
+            dropdown.style.left = '0px';
+            dropdown.style.top = textarea.offsetHeight + 'px';
+        });
+
+        textarea.addEventListener('blur', function() {
+            setTimeout(function() { dropdown.style.display = 'none'; }, 200);
+        });
+
+        // --- CORRECTION ORTHOGRAPHE ---
+        if (btnCorriger) {
+            btnCorriger.addEventListener('click', function() {
+                var text = textarea.value.trim();
+                if (!text) {
+                    status.textContent = 'Veuillez saisir du texte a verifier.';
+                    status.style.color = '#e67e22';
                     return;
                 }
 
-                status.textContent = data.matches.length + ' erreur(s) trouvee(s).';
-                status.style.color = '#e74c3c';
+                status.textContent = 'Verification en cours...';
+                status.style.color = '#2196F3';
+                container.innerHTML = '';
 
-                data.matches.forEach(function(match) {
-                    var div = document.createElement('div');
-                    div.style.cssText = 'background:#fff3cd;border:1px solid #ffc107;border-radius:4px;padding:8px;margin-bottom:5px;font-size:12px;';
-
-                    var erroneousText = text.substring(match.offset, match.offset + match.length);
-                    var suggestions = match.replacements.slice(0, 5);
-
-                    var html = '<div style="margin-bottom:4px;"><strong style="color:#856404;">&#9888; ' +
-                        match.message + '</strong></div>';
-
-                    html += '<div style="margin-bottom:4px;">Texte : <span style="background:#ffc107;padding:1px 4px;border-radius:2px;">' +
-                        erroneousText + '</span></div>';
-
-                    if (suggestions.length > 0) {
-                        html += '<div style="margin-bottom:2px;">Suggestions :</div>';
-                        suggestions.forEach(function(rep) {
-                            html += '<button class="suggestion-btn" data-original="' +
-                                erroneousText.replace(/"/g, '&quot;') +
-                                '" data-replacement="' + rep.value.replace(/"/g, '&quot;') +
-                                '" data-offset="' + match.offset +
-                                '" data-length="' + match.length +
-                                '" style="display:inline-block;padding:2px 8px;margin:2px;font-size:11px;background:#e3f2fd;border:1px solid #2196F3;border-radius:3px;cursor:pointer;">' +
-                                rep.value + '</button>';
-                        });
+                fetch('https://api.languagetool.org/v2/check', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: 'text=' + encodeURIComponent(text) + '&language=fr-FR&enabledOnly=false'
+                })
+                .then(function(response) {
+                    if (!response.ok) throw new Error('API error');
+                    return response.json();
+                })
+                .then(function(data) {
+                    if (data.matches.length === 0) {
+                        status.textContent = 'Aucune erreur trouvee.';
+                        status.style.color = '#4CAF50';
+                        return;
                     }
 
-                    div.innerHTML = html;
-                    container.appendChild(div);
+                    status.textContent = data.matches.length + ' erreur(s) trouvee(s).';
+                    status.style.color = '#e74c3c';
+
+                    data.matches.forEach(function(match) {
+                        var div = document.createElement('div');
+                        div.style.cssText = 'background:#fff3cd;border:1px solid #ffc107;border-radius:4px;padding:8px;margin-bottom:5px;font-size:12px;';
+
+                        var erroneousText = text.substring(match.offset, match.offset + match.length);
+                        var suggestions = match.replacements.slice(0, 5);
+
+                        var html = '<div style="margin-bottom:4px;"><strong style="color:#856404;">&#9888; ' +
+                            match.message + '</strong></div>';
+
+                        html += '<div style="margin-bottom:4px;">Texte : <span style="background:#ffc107;padding:1px 4px;border-radius:2px;">' +
+                            erroneousText + '</span></div>';
+
+                        if (suggestions.length > 0) {
+                            html += '<div style="margin-bottom:2px;">Suggestions :</div>';
+                            suggestions.forEach(function(rep) {
+                                html += '<button class="suggestion-btn" data-original="' +
+                                    erroneousText.replace(/"/g, '&quot;') +
+                                    '" data-replacement="' + rep.value.replace(/"/g, '&quot;') +
+                                    '" data-offset="' + match.offset +
+                                    '" data-length="' + match.length +
+                                    '" style="display:inline-block;padding:2px 8px;margin:2px;font-size:11px;background:#e3f2fd;border:1px solid #2196F3;border-radius:3px;cursor:pointer;">' +
+                                    rep.value + '</button>';
+                            });
+                        }
+
+                        div.innerHTML = html;
+                        container.appendChild(div);
+                    });
+
+                    container.addEventListener('click', function(e) {
+                        var btn = e.target.closest('.suggestion-btn');
+                        if (!btn) return;
+
+                        var replacement = btn.getAttribute('data-replacement');
+                        var offset = parseInt(btn.getAttribute('data-offset'));
+                        var length = parseInt(btn.getAttribute('data-length'));
+                        var currentText = textarea.value;
+
+                        textarea.value = currentText.substring(0, offset) + replacement + currentText.substring(offset + length);
+
+                        status.textContent = 'Correction appliquee.';
+                        status.style.color = '#4CAF50';
+
+                        btn.parentElement.style.display = 'none';
+                    });
+                })
+                .catch(function() {
+                    status.textContent = 'Erreur reseau. Reessayez.';
+                    status.style.color = '#e74c3c';
                 });
-
-                container.addEventListener('click', function(e) {
-                    var btn = e.target.closest('.suggestion-btn');
-                    if (!btn) return;
-
-                    var replacement = btn.getAttribute('data-replacement');
-                    var offset = parseInt(btn.getAttribute('data-offset'));
-                    var length = parseInt(btn.getAttribute('data-length'));
-                    var currentText = textarea.value;
-
-                    textarea.value = currentText.substring(0, offset) + replacement + currentText.substring(offset + length);
-
-                    status.textContent = 'Correction appliquee.';
-                    status.style.color = '#4CAF50';
-
-                    btn.parentElement.style.display = 'none';
-                });
-            })
-            .catch(function() {
-                status.textContent = 'Erreur reseau. Reessayez.';
-                status.style.color = '#e74c3c';
             });
-        });
+        }
     })();
     </script>
 
