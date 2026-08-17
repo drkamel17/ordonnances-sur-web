@@ -4612,7 +4612,10 @@ ${enteteContent}
     </p>
         </p>
 		<p>
-              <textarea id="texteDescription" lang="fr" spellcheck="true" placeholder="Décrivez ici l'état du patient..." style="width: 580px;height: 100px;"></textarea><br>
+              <div id="autocompleteWrapper" style="position:relative;display:inline-block;">
+                <textarea id="texteDescription" lang="fr" spellcheck="true" placeholder="Décrivez ici l'état du patient..." style="width: 580px;height: 100px;"></textarea>
+                <div id="autocompleteDropdown" style="display:none;position:absolute;left:0;top:100%;background:#fff;border:1px solid #2196F3;border-radius:4px;max-height:180px;overflow-y:auto;z-index:9999;width:580px;box-shadow:0 4px 12px rgba(0,0,0,0.15);"></div>
+              </div><br>
               <div style="margin-top: 5px;">
                 <button id="btnCorriger" type="button" style="padding: 5px 12px; font-size: 12px; background-color: #2196F3; color: white; border: none; border-radius: 4px; cursor: pointer; margin-bottom: 5px;">
                   <i class="fas fa-spell-check"></i> Corriger l'orthographe
@@ -4646,16 +4649,11 @@ ${enteteContent}
         var textarea = document.getElementById('texteDescription');
         var status = document.getElementById('correctionStatus');
         var container = document.getElementById('correctionsContainer');
+        var dropdown = document.getElementById('autocompleteDropdown');
 
-        if (!textarea) return;
+        if (!textarea || !dropdown) return;
 
         // --- AUTOCOMPLETE ---
-        var dropdown = document.createElement('div');
-        dropdown.id = 'autocompleteDropdown';
-        dropdown.style.cssText = 'display:none;position:absolute;background:#fff;border:1px solid #2196F3;border-radius:4px;max-height:180px;overflow-y:auto;z-index:9999;width:580px;box-shadow:0 4px 12px rgba(0,0,0,0.15);';
-        textarea.parentElement.style.position = 'relative';
-        textarea.parentElement.appendChild(dropdown);
-
         textarea.addEventListener('input', function() {
             var cursorPos = textarea.selectionStart;
             var textBefore = textarea.value.substring(0, cursorPos);
@@ -4690,10 +4688,6 @@ ${enteteContent}
                 dropdown.appendChild(item);
             });
             dropdown.style.display = 'block';
-
-            var rect = textarea.getBoundingClientRect();
-            dropdown.style.left = '0px';
-            dropdown.style.top = textarea.offsetHeight + 'px';
         });
 
         textarea.addEventListener('blur', function() {
