@@ -4638,6 +4638,7 @@ ${enteteContent}
     </div>
     
     <script src="certificat-unified-font-size.js"></script>
+    <script src="french-spellcheck.js"></script>
     <script>
     (function() {
         var btnCorriger = document.getElementById('btnCorriger');
@@ -4647,7 +4648,7 @@ ${enteteContent}
 
         if (!btnCorriger || !textarea) return;
 
-        btnCorriger.addEventListener('click', async function() {
+        btnCorriger.addEventListener('click', function() {
             var text = textarea.value.trim();
             if (!text) {
                 status.textContent = 'Veuillez saisir du texte à vérifier.';
@@ -4660,48 +4661,43 @@ ${enteteContent}
             container.innerHTML = '';
 
             try {
-                var response = await fetch('https://api.languagetool.org/v2/check', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                    body: 'text=' + encodeURIComponent(text) + '&language=fr&enabledOnly=false'
-                });
+                var resultats = FrenchSpellCheck.verifier(text);
 
-                if (!response.ok) throw new Error('Erreur API');
-
-                var data = await response.json();
-
-                if (data.matches.length === 0) {
+                if (resultats.erreurs.length === 0) {
                     status.textContent = 'Aucune erreur trouvée.';
                     status.style.color = '#4CAF50';
                     return;
                 }
 
-                status.textContent = data.matches.length + ' erreur(s) trouvée(s).';
+                status.textContent = resultats.erreurs.length + ' erreur(s) trouvée(s).';
                 status.style.color = '#e74c3c';
 
-                data.matches.forEach(function(match) {
+                resultats.erreurs.forEach(function(erreur) {
                     var div = document.createElement('div');
                     div.style.cssText = 'background:#fff3cd;border:1px solid #ffc107;border-radius:4px;padding:8px;margin-bottom:5px;font-size:12px;';
 
-                    var erroneousText = text.substring(match.offset, match.offset + match.length);
-                    var suggestions = match.replacements.slice(0, 5);
-
                     var html = '<div style="margin-bottom:4px;"><strong style="color:#856404;">&#9888; ' +
-                        match.message + '</strong></div>';
+                        erreur.message + '</strong></div>';
 
-                    html += '<div style="margin-bottom:4px;">Texte : <span style="background:#ffc107;padding:1px 4px;border-radius:2px;">' +
-                        erroneousText + '</span></div>';
+                    if (erreur.texte) {
+                        html += '<div style="margin-bottom:4px;">Texte : <span style="background:#ffc107;padding:1px 4px;border-radius:2px;">' +
+                            erreur.texte + '</span></div>';
+                    }
 
-                    if (suggestions.length > 0) {
+                    if (erreur.remplacement) {
+                        html += '<button class="suggestion-btn" data-replacement="' +
+                            erreur.remplacement.replace(/"/g, '&quot;') +
+                            '" data-texte="' + (erreur.texte || '').replace(/"/g, '&quot;') +
+                            '" style="display:inline-block;padding:2px 8px;margin:2px;font-size:11px;background:#e3f2fd;border:1px solid #2196F3;border-radius:3px;cursor:pointer;">' +
+                            erreur.remplacement + '</button>';
+                    } else if (erreur.suggestions && erreur.suggestions.length > 0) {
                         html += '<div style="margin-bottom:2px;">Suggestions :</div>';
-                        suggestions.forEach(function(rep) {
-                            html += '<button class="suggestion-btn" data-original="' +
-                                erroneousText.replace(/"/g, '&quot;') +
-                                '" data-replacement="' + rep.value.replace(/"/g, '&quot;') +
-                                '" data-offset="' + match.offset +
-                                '" data-length="' + match.length +
+                        erreur.suggestions.forEach(function(sug) {
+                            html += '<button class="suggestion-btn" data-replacement="' +
+                                sug.replace(/"/g, '&quot;') +
+                                '" data-texte="' + (erreur.texte || erreur.mot || '').replace(/"/g, '&quot;') +
                                 '" style="display:inline-block;padding:2px 8px;margin:2px;font-size:11px;background:#e3f2fd;border:1px solid #2196F3;border-radius:3px;cursor:pointer;">' +
-                                rep.value + '</button>';
+                                sug + '</button>';
                         });
                     }
 
@@ -4714,11 +4710,14 @@ ${enteteContent}
                     if (!btn) return;
 
                     var replacement = btn.getAttribute('data-replacement');
-                    var offset = parseInt(btn.getAttribute('data-offset'));
-                    var length = parseInt(btn.getAttribute('data-length'));
+                    var texteOriginal = btn.getAttribute('data-texte');
+                    var currentText = textarea.value;
 
-                    var newText = textarea.value.substring(0, offset) + replacement + textarea.value.substring(offset + length);
-                    textarea.value = newText;
+                    if (texteOriginal) {
+                        textarea.value = currentText.replace(texteOriginal, replacement);
+                    } else {
+                        textarea.value = currentText + ' ' + replacement;
+                    }
 
                     status.textContent = 'Correction appliquée.';
                     status.style.color = '#4CAF50';
@@ -4727,7 +4726,7 @@ ${enteteContent}
                 });
 
             } catch (err) {
-                status.textContent = 'Erreur lors de la vérification. Réessayez.';
+                status.textContent = 'Erreur lors de la vérification.';
                 status.style.color = '#e74c3c';
             }
         });
