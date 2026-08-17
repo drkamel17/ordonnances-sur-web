@@ -1728,10 +1728,10 @@ function genererChronique() {
                 display: none !important;
             }
 
-            .editable-field, .editable-area {
-                border: none !important;
-            }
-        }
+.editable-field, .editable-area {
+border: none !important;
+}
+}
 
         /* Masquer les contrôles d'impression et de sauvegarde */
         .print-button div[style*="align-items: center"],
@@ -4564,6 +4564,9 @@ display: none;
 
 .editable-field, .editable-area {
 border: none !important;
+}
+#btnCorriger, #correctionStatus, #correctionsContainer {
+display: none !important;
 }
 }
 </style>
