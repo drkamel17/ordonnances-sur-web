@@ -4638,7 +4638,6 @@ ${enteteContent}
     </div>
     
     <script src="certificat-unified-font-size.js"></script>
-    <script src="french-spellcheck.js"></script>
     <script>
     (function() {
         var btnCorriger = document.getElementById('btnCorriger');
@@ -4651,53 +4650,57 @@ ${enteteContent}
         btnCorriger.addEventListener('click', function() {
             var text = textarea.value.trim();
             if (!text) {
-                status.textContent = 'Veuillez saisir du texte à vérifier.';
+                status.textContent = 'Veuillez saisir du texte a verifier.';
                 status.style.color = '#e67e22';
                 return;
             }
 
-            status.textContent = 'Vérification en cours...';
+            status.textContent = 'Verification en cours...';
             status.style.color = '#2196F3';
             container.innerHTML = '';
 
-            try {
-                var resultats = FrenchSpellCheck.verifier(text);
-
-                if (resultats.erreurs.length === 0) {
-                    status.textContent = 'Aucune erreur trouvée.';
+            fetch('https://api.languagetool.org/v2/check', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: 'text=' + encodeURIComponent(text) + '&language=fr-FR&enabledOnly=false'
+            })
+            .then(function(response) {
+                if (!response.ok) throw new Error('API error');
+                return response.json();
+            })
+            .then(function(data) {
+                if (data.matches.length === 0) {
+                    status.textContent = 'Aucune erreur trouvee.';
                     status.style.color = '#4CAF50';
                     return;
                 }
 
-                status.textContent = resultats.erreurs.length + ' erreur(s) trouvée(s).';
+                status.textContent = data.matches.length + ' erreur(s) trouvee(s).';
                 status.style.color = '#e74c3c';
 
-                resultats.erreurs.forEach(function(erreur) {
+                data.matches.forEach(function(match) {
                     var div = document.createElement('div');
                     div.style.cssText = 'background:#fff3cd;border:1px solid #ffc107;border-radius:4px;padding:8px;margin-bottom:5px;font-size:12px;';
 
+                    var erroneousText = text.substring(match.offset, match.offset + match.length);
+                    var suggestions = match.replacements.slice(0, 5);
+
                     var html = '<div style="margin-bottom:4px;"><strong style="color:#856404;">&#9888; ' +
-                        erreur.message + '</strong></div>';
+                        match.message + '</strong></div>';
 
-                    if (erreur.texte) {
-                        html += '<div style="margin-bottom:4px;">Texte : <span style="background:#ffc107;padding:1px 4px;border-radius:2px;">' +
-                            erreur.texte + '</span></div>';
-                    }
+                    html += '<div style="margin-bottom:4px;">Texte : <span style="background:#ffc107;padding:1px 4px;border-radius:2px;">' +
+                        erroneousText + '</span></div>';
 
-                    if (erreur.remplacement) {
-                        html += '<button class="suggestion-btn" data-replacement="' +
-                            erreur.remplacement.replace(/"/g, '&quot;') +
-                            '" data-texte="' + (erreur.texte || '').replace(/"/g, '&quot;') +
-                            '" style="display:inline-block;padding:2px 8px;margin:2px;font-size:11px;background:#e3f2fd;border:1px solid #2196F3;border-radius:3px;cursor:pointer;">' +
-                            erreur.remplacement + '</button>';
-                    } else if (erreur.suggestions && erreur.suggestions.length > 0) {
+                    if (suggestions.length > 0) {
                         html += '<div style="margin-bottom:2px;">Suggestions :</div>';
-                        erreur.suggestions.forEach(function(sug) {
-                            html += '<button class="suggestion-btn" data-replacement="' +
-                                sug.replace(/"/g, '&quot;') +
-                                '" data-texte="' + (erreur.texte || erreur.mot || '').replace(/"/g, '&quot;') +
+                        suggestions.forEach(function(rep) {
+                            html += '<button class="suggestion-btn" data-original="' +
+                                erroneousText.replace(/"/g, '&quot;') +
+                                '" data-replacement="' + rep.value.replace(/"/g, '&quot;') +
+                                '" data-offset="' + match.offset +
+                                '" data-length="' + match.length +
                                 '" style="display:inline-block;padding:2px 8px;margin:2px;font-size:11px;background:#e3f2fd;border:1px solid #2196F3;border-radius:3px;cursor:pointer;">' +
-                                sug + '</button>';
+                                rep.value + '</button>';
                         });
                     }
 
@@ -4710,25 +4713,22 @@ ${enteteContent}
                     if (!btn) return;
 
                     var replacement = btn.getAttribute('data-replacement');
-                    var texteOriginal = btn.getAttribute('data-texte');
+                    var offset = parseInt(btn.getAttribute('data-offset'));
+                    var length = parseInt(btn.getAttribute('data-length'));
                     var currentText = textarea.value;
 
-                    if (texteOriginal) {
-                        textarea.value = currentText.replace(texteOriginal, replacement);
-                    } else {
-                        textarea.value = currentText + ' ' + replacement;
-                    }
+                    textarea.value = currentText.substring(0, offset) + replacement + currentText.substring(offset + length);
 
-                    status.textContent = 'Correction appliquée.';
+                    status.textContent = 'Correction appliquee.';
                     status.style.color = '#4CAF50';
 
                     btn.parentElement.style.display = 'none';
                 });
-
-            } catch (err) {
-                status.textContent = 'Erreur lors de la vérification.';
+            })
+            .catch(function() {
+                status.textContent = 'Erreur reseau. Reessayez.';
                 status.style.color = '#e74c3c';
-            }
+            });
         });
     })();
     </script>
