@@ -1,0 +1,82 @@
+[
+  {
+    "label": "Anémie",
+    "exams": ["NFS complète", "Réticulocytes", "Frottis sanguin", "Ferritine", "Fer sérique", "Transferrine", "TIBC", "Coefficient de saturation de la transferrine", "Bilirubine totale", "Bilirubine indirecte", "LDH", "Haptoglobine", "CRP", "Vitamine B12", "Acide folique", "Test de Coombs direct"]
+  },
+  {
+    "label": "Carence en fer",
+    "exams": ["NFS complète", "Ferritine", "Fer sérique", "Transferrine", "TIBC", "Coefficient de saturation de la transferrine", "Récepteur soluble de la transferrine", "Réticulocytes", "CRP"]
+  },
+  {
+    "label": "Leishmaniose",
+    "exams": ["NFS complète", "Frotti / Ponction de moelle (recherche de leishmanies)", "Sérologie leishmaniose viscérale", "Électrophorèse des protides", "CRP", "Bilan hépatique"]
+  },
+  {
+    "label": "Diabète",
+    "exams": ["Glycémie à jeun", "Glycémie post-prandiale", "HbA1c", "Insuline à jeun", "Peptide C", "Cholestérol total", "HDL", "LDL", "Triglycérides", "Créatinine", "DFG estimé (CKD-EPI)", "Urée", "Microalbuminurie", "Rapport Albuminurie/Créatininurie", "Ionogramme sanguin", "ECBU"]
+  },
+  {
+    "label": "Bilan hépatique",
+    "exams": ["ASAT (GOT)", "ALAT (GPT)", "GGT", "PAL", "Bilirubine totale", "Bilirubine directe", "Bilirubine indirecte", "TP", "TCA", "INR", "Albumine", "Protéines totales", "LDH", "5'-Nucléotidase"]
+  },
+  {
+    "label": "Bilan rénal",
+    "exams": ["Créatinine", "DFG estimé (CKD-EPI)", "Urée", "Acide urique", "Calcium", "Phosphore", "Sodium Na+", "Potassium K+", "Chlore Cl-", "Bicarbonates (HCO3-)", "Protéinurie 24h", "Rapport Albuminurie/Créatininurie", "ECBU"]
+  },
+  {
+    "label": "Bilan lipidique",
+    "exams": ["Cholestérol total", "HDL", "LDL", "Non-HDL Cholestérol", "Triglycérides", "Apo B", "Apo A1", "Lp(a)", "Glycémie à jeun"]
+  },
+  {
+    "label": "Bilan thyroïdien",
+    "exams": ["TSH", "T4 libre", "T3 libre", "Anticorps anti-TPO", "Anticorps anti-TG", "Anticorps anti-RTSH (TRAK)", "Thyroglobuline"]
+  },
+  {
+    "label": "Bilan infectieux / Sepsis",
+    "exams": ["NFS complète", "CRP quantitative", "VS", "Procalcitonine", "Hémoculture", "ECBU", "Lactates", "Bilan hépatique", "Créatinine", "Fibrinogène"]
+  },
+  {
+    "label": "Bilan préopératoire",
+    "exams": ["NFS complète", "Groupe sanguin (ABO/Rh) et RAI", "TP", "TCA", "Fibrinogène", "Glycémie à jeun", "Créatinine", "Ionogramme sanguin", "Sérologie hépatite B", "Sérologie hépatite C", "Sérologie VIH", "AgHBs"]
+  },
+  {
+    "label": "Grossesse / Bilan T1",
+    "exams": ["NFS complète", "Groupe sanguin (ABO/Rh) et RAI", "Glycémie à jeun", "Sérologie toxoplasmose", "Sérologie rubéole", "Sérologie syphilis (TPHA/VDRL)", "Sérologie VIH", "Sérologie hépatite B", "Sérologie hépatite C", "AgHBs", "Sérologie CMV", "Créatinine", "ECBU", "Albuminurie / Glycosurie urinaire"]
+  },
+  {
+    "label": "Bilan coagulation / Thrombophilie",
+    "exams": ["TP", "TCA", "INR", "Fibrinogène", "D-Dimères", "Facteur II", "Facteur V", "Facteur VII", "Facteur VIII", "Antithrombine III", "Protéine C", "Protéine S", "Anticoagulant circulant de type lupique", "Anticorps anti-cardiolipine", "Anticorps anti-beta2-GPI"]
+  },
+  {
+    "label": "Suivi AVK",
+    "exams": ["INR", "TP", "NFS complète (recherche d'anémie/saignement occulté)"]
+  },
+  {
+    "label": "Suivi Héparine / HBPM",
+    "exams": ["TCA", "Activité anti-Xa (Héparinémie)", "Plaquettes (surveillance TIH)"]
+  },
+  {
+    "label": "Bilan cardiaque / Douleur thoracique",
+    "exams": ["Troponine I / T haute sensibilité", "NT-proBNP / BNP", "CK-MB", "CPK total", "Myoglobine", "NFS complète", "Ionogramme sanguin", "Créatinine", "CRP"]
+  },
+  {
+    "label": "Hypertension Artérielle (HTA / Bilan d'impact)",
+    "exams": ["Créatinine", "DFG estimé (CKD-EPI)", "Ionogramme sanguin (Sodium, Potassium)", "Glycémie à jeun", "Bilan lipidique (Cholestérol total, HDL, LDL, Triglycérides)", "Rapport Albuminurie/Créatininurie", "ECBU", "Acide urique"]
+  },
+  {
+    "label": "Bilan pancréatique",
+    "exams": ["Lipase", "Amylase", "NFS complète", "CRP", "Bilan hépatique (ASAT, ALAT, Bilirubine, PAL, GGT)", "Calcium", "Triglycérides", "Glycémie à jeun"]
+  },
+  {
+    "label": "Brucellose",
+    "exams": ["Rose de Bengale", "Sérologie Wright", "Hémoculture", "NFS complète", "CRP", "Bilan hépatique"]
+  },
+  {
+    "label": "Bilan d'asthénie / Fatigue chronique",
+    "exams": ["NFS complète", "VS", "CRP", "TSH", "Ferritine", "Glycémie à jeun", "Ionogramme sanguin", "Créatinine", "Calcium", "Vitamine D", "Vitamine B12", "Sérologie EBV", "Sérologie CMV"]
+  },
+  {
+    "label": "Bilan auto-immun / Rhumatologique",
+    "exams": ["NFS complète", "VS", "CRP", "Anticorps antinoyaux (AAN)", "Anticorps anti-DNA natif", "Facteur rhumatoïde", "Anticorps anti-CCP", "Électrophorèse des protides", "Complément C3", "Complément C4"]
+  }
+]

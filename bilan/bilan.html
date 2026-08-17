@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demande de Bilan Biologique</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f6f8;
+            margin: 0;
+            padding: 15px;
+        }
+        .container {
+            width: 95%;
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            padding: 20px;
+        }
+        .header { text-align: center; margin-bottom: 15px; }
+        .header h2 { color: #37474f; margin: 0 0 5px 0; }
+        .header i { font-size: 2em; color: #2196F3; }
+        .patient-info {
+            background: #e3f2fd;
+            border-radius: 8px;
+            padding: 12px 15px;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+        .patient-info span { margin-right: 20px; }
+        .patient-info strong { color: #37474f; }
+        .info-editable {
+            border-bottom: 1px dashed transparent;
+            cursor: text;
+            outline: none;
+            transition: border-color 0.2s;
+            min-width: 40px;
+            display: inline-block;
+        }
+        .info-editable:hover { border-bottom-color: #90caf9; }
+        .info-editable:focus { border-bottom-color: #1565c0; background: #fff; border-radius: 3px; padding: 0 3px; }
+        .poly-info {
+            background: #f5f5f5;
+            border-radius: 8px;
+            padding: 10px;
+            margin-bottom: 15px;
+            font-size: 13px;
+            white-space: pre-wrap;
+            text-align: center;
+        }
+        .section-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: #1976d2;
+            border-bottom: 2px solid #1976d2;
+            padding-bottom: 4px;
+            margin: 18px 0 8px 0;
+        }
+        .format-buttons { display: flex; gap: 10px; margin-bottom: 15px; }
+        .format-buttons button {
+            flex: 1;
+            padding: 10px;
+            border: 2px solid #ccc;
+            border-radius: 8px;
+            background: #fff;
+            color: #555;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .format-buttons button:hover { border-color: #1976d2; color: #1976d2; }
+        .format-buttons button.active { border-color: #1976d2; background: #e3f2fd; color: #1976d2; font-weight: 600; }
+
+        /* ── Taille police ── */
+        .font-size-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 15px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+        }
+        .font-size-row input {
+            width: 60px;
+            padding: 6px;
+            border: 1px solid #bdbdbd;
+            border-radius: 4px;
+            font-size: 14px;
+            text-align: center;
+        }
+
+        /* ── Champ d'entrée + autocomplete ── */
+        .input-wrapper { position: relative; margin-bottom: 10px; }
+        #bilanInput {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+        #bilanInput:focus { border-color: #1976d2; outline: none; box-shadow: 0 0 0 2px rgba(25,118,210,0.2); }
+        .autocomplete-list {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: #fff;
+            border: 1px solid #ccc;
+            border-top: none;
+            border-radius: 0 0 6px 6px;
+            max-height: 250px;
+            overflow-y: auto;
+            z-index: 100;
+            display: none;
+        }
+        .autocomplete-item {
+            padding: 8px 12px;
+            font-size: 13px;
+            cursor: pointer;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .autocomplete-item:hover, .autocomplete-item.active { background: #e3f2fd; color: #1976d2; }
+        .autocomplete-item .category { font-size: 11px; color: #999; margin-left: 6px; }
+        .custom-hint {
+            padding: 8px 12px;
+            font-size: 12px;
+            color: #1976d2;
+            font-style: italic;
+            border-bottom: 1px solid #f0f0f0;
+            cursor: pointer;
+        }
+        .custom-hint:hover { background: #e3f2fd; }
+
+        /* ── Tags ── */
+        .tags-area { display: flex; flex-wrap: wrap; gap: 6px; min-height: 10px; margin-bottom: 10px; }
+        .tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background: #e3f2fd;
+            color: #1565c0;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 500;
+        }
+        .tag .remove { cursor: pointer; font-weight: bold; color: #999; font-size: 15px; line-height: 1; }
+        .tag .remove:hover { color: #d32f2f; }
+
+        /* ── Notes ── */
+        .notes-area {
+            width: 100%;
+            min-height: 80px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 13px;
+            resize: vertical;
+            margin-top: 8px;
+            box-sizing: border-box;
+        }
+        .notes-area:focus { border-color: #1976d2; outline: none; }
+
+        /* ── Boutons ── */
+        .buttons-row { display: flex; gap: 10px; margin-top: 20px; }
+        .btn-generate {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 13px;
+            border: none;
+            border-radius: 8px;
+            color: white;
+            background-color: #1976d2;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            transition: background-color 0.3s;
+        }
+        .btn-generate:hover { background-color: #1565c0; }
+        .btn-secondary { background-color: #757575; }
+        .btn-secondary:hover { background-color: #616161; }
+
+        .bilan-type-dropdown { position: relative; }
+        .bilan-type-menu {
+            display: none;
+            position: absolute;
+            bottom: 100%;
+            left: 0;
+            background: #fff;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            box-shadow: 0 -4px 12px rgba(0,0,0,0.12);
+            min-width: 220px;
+            max-height: 300px;
+            overflow-y: auto;
+            z-index: 1000;
+            margin-bottom: 6px;
+        }
+        .bilan-type-menu.open { display: block; }
+        .bilan-type-menu .bilan-type-item {
+            padding: 10px 14px;
+            cursor: pointer;
+            font-size: 13px;
+            color: #333;
+            border-bottom: 1px solid #eee;
+        }
+        .bilan-type-menu .bilan-type-item:last-child { border-bottom: none; }
+        .bilan-type-menu .bilan-type-item:hover { background-color: #e3f2fd; }
+        .bilan-type-menu .bilan-type-item .bt-actions {
+            float: right;
+            display: flex;
+            gap: 6px;
+            margin-top: 2px;
+        }
+        .bilan-type-menu .bilan-type-item .bt-icon {
+            cursor: pointer;
+            font-size: 12px;
+            padding: 3px 5px;
+            border-radius: 4px;
+            transition: background 0.15s;
+        }
+        .bt-icon.bt-edit { color: #1565c0; }
+        .bt-icon.bt-edit:hover { background: #bbdefb; }
+        .bt-icon.bt-delete { color: #c62828; }
+        .bt-icon.bt-delete:hover { background: #ffcdd2; }
+        .bilan-type-menu .bilan-type-item .bt-exams {
+            font-size: 11px;
+            color: #888;
+            margin-top: 3px;
+        }
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.45);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-overlay.open { display: flex; }
+        .modal-box {
+            background: #fff;
+            border-radius: 10px;
+            padding: 24px;
+            width: 380px;
+            max-width: 90vw;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.25);
+        }
+        .modal-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1565c0;
+            margin-bottom: 14px;
+        }
+        .modal-title i { margin-right: 6px; }
+        .modal-box input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 14px;
+            box-sizing: border-box;
+            margin-bottom: 10px;
+        }
+        .modal-exams {
+            width: 100%;
+            min-height: 80px;
+            max-height: 140px;
+            font-size: 12px;
+            color: #333;
+            background: #f5f5f5;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            padding: 8px 10px;
+            margin-bottom: 16px;
+            line-height: 1.6;
+            resize: vertical;
+            box-sizing: border-box;
+            font-family: inherit;
+        }
+        .modal-actions { display: flex; gap: 10px; justify-content: flex-end; }
+        .modal-btn {
+            padding: 8px 18px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+        }
+        .modal-btn.cancel { background: #e0e0e0; color: #333; }
+        .modal-btn.cancel:hover { background: #ccc; }
+        .modal-btn.confirm { background: #1565c0; color: #fff; }
+        .modal-btn.confirm:hover { background: #0d47a1; }
+
+        .hint-text { font-size: 12px; color: #888; margin-bottom: 12px; }
+
+        /* ══════════════════════════════════════
+           ZONE IMPRIMABLE (cachée à l'écran)
+           ══════════════════════════════════════ */
+        #printZone {
+            display: none;
+        }
+
+        @media print {
+            /* Tout masquer sauf la zone d'impression */
+            body { margin: 0 !important; padding: 0 !important; background: #fff; }
+            .container { display: none !important; }
+
+            #printZone {
+                display: block !important;
+                background: white;
+                padding: 0;
+            }
+
+            #printZone #head {
+                border: 1px solid #000;
+                padding: 10px;
+                margin-bottom: 20px;
+            }
+            #printZone #head table { width: 100%; border-collapse: collapse; }
+            #printZone #head td { text-align: center; padding: 2px; }
+            #printZone #head .arabic-text { font-size: 12px; text-align: right; }
+            #printZone #head div { font-size: 12px; white-space: pre-wrap; text-align: left; }
+            #printZone #head td:first-child { text-align: left !important; }
+
+            #printZone .certificat {
+                max-width: 600px;
+                margin: 0 auto;
+                padding: 100px 20px 20px 20px;
+                position: relative;
+            }
+
+            @page { size: A5; margin: 0.2cm; }
+
+            #printZone .info { position: absolute; }
+            #printZone .info.nom { top: 10px; left: 20px; }
+            #printZone .info.prenom { top: 40px; left: 20px; }
+            #printZone .info.date-naissance { top: 70px; left: 20px; }
+            #printZone .info.today { top: 40px; left: 270px; }
+            #printZone .info.numero { top: 10px; left: 270px; color: inherit !important; }
+            #printZone .info.poids { top: 70px; left: 270px; }
+            #printZone .info.barcode { display: block !important; top: -30px !important; left: 420px !important; }
+            #printZone .info.barcode svg { height: 30px !important; width: 150px !important; }
+
+            #printZone .demande-content {
+                padding: 5px;
+            }
+            #printZone .demande-content h1 {
+                text-align: center;
+                color: #333;
+                text-decoration: underline;
+                font-size: 14pt !important;
+                margin: 5px 0 !important;
+            }
+            #printZone #examsList {
+                column-gap: 20px;
+            }
+            #printZone #examsList > div {
+                break-inside: avoid;
+            }
+            #printZone #motifObservations {
+                border: none !important;
+                background: none !important;
+                box-shadow: none !important;
+                outline: none !important;
+                resize: none;
+            }
+            #printZone #motifObservations::placeholder {
+                color: transparent !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- ═══════ ÉDITEUR (visible à l'écran) ═══════ -->
+    <div class="container">
+        <div class="header">
+            <i class="fas fa-flask"></i>
+            <h2>Demande de Bilan Biologique</h2>
+        </div>
+
+        <div class="poly-info" id="polyDisplay"></div>
+        <div class="patient-info" id="patientDisplay"></div>
+
+        <!-- Format -->
+        <div class="section-title">Format</div>
+        <div class="format-buttons">
+            <button id="formatAvecEntete" class="active"><i class="fas fa-heading"></i> Avec en-tête</button>
+            <button id="formatSansEntete"><i class="fas fa-text-width"></i> Sans en-tête</button>
+        </div>
+
+        <!-- Sélection des examens -->
+        <div class="section-title">Examens demandés</div>
+        <p class="hint-text">Tapez pour chercher un examen dans la liste ou écrivez le vôtre puis validez avec Entrée.</p>
+
+        <div class="input-wrapper">
+            <input type="text" id="bilanInput" placeholder="Tapez un examen (ex: NFS, glycémie, TSH...)" autocomplete="off">
+            <div class="autocomplete-list" id="autocompleteList"></div>
+        </div>
+
+        <div class="tags-area" id="tagsArea"></div>
+
+        <!-- Notes / Motif -->
+        <div class="section-title">Motif / Observations</div>
+        <textarea class="notes-area" id="notesBilan" placeholder="Motif de la demande, précisions cliniques..."></textarea>
+
+        <!-- Boutons -->
+        <div class="buttons-row">
+            <div class="font-size-row" style="margin: 0;">
+                <i class="fas fa-text-height"></i>
+                <label for="fontSize">Police :</label>
+                <input type="number" id="fontSize" min="8" max="24" value="14">
+                <span>pt</span>
+            </div>
+            <button class="btn-generate" id="btnGenererDemande">
+                <i class="fas fa-print"></i> Générer et Imprimer
+            </button>
+            <div class="bilan-type-dropdown" id="bilanTypeDropdown">
+                <button class="btn-generate btn-secondary" id="btnBilanType">
+                    <i class="fas fa-list-check"></i> Bilan Type ▾
+                </button>
+                <div class="bilan-type-menu" id="bilanTypeMenu"></div>
+            </div>
+            <button class="btn-generate btn-secondary" id="btnEnregistrerType">
+                <i class="fas fa-bookmark"></i> Enregistrer type
+            </button>
+        </div>
+    </div>
+
+    <!-- ═══════ MODAL NOM BILAN TYPE ═══════ -->
+    <div class="modal-overlay" id="modalTypeOverlay">
+        <div class="modal-box">
+            <div class="modal-title"><i class="fas fa-bookmark"></i> Enregistrer comme bilan type</div>
+            <input type="text" id="inputTypeNom" placeholder="Nom du bilan (ex: Anémie, Bilan foie...)" autocomplete="off">
+            <label for="modalExamsList" style="font-size:12px;color:#888;margin-bottom:4px;display:block;">Examens (séparés par des virgules) :</label>
+            <textarea class="modal-exams" id="modalExamsList" rows="4" placeholder="NFS complète, Fer sérique, Transferrine..."></textarea>
+            <div class="modal-actions">
+                <button class="modal-btn cancel" id="modalTypeCancel">Annuler</button>
+                <button class="modal-btn confirm" id="modalTypeConfirm">Enregistrer</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════ ZONE IMPRIMABLE (cachée, remplie au clic) ═══════ -->
+    <div id="printZone"></div>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="bilan.js"></script>
+</body>
+</html>
