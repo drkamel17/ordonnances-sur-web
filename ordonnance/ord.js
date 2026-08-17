@@ -325,6 +325,13 @@ document.addEventListener('DOMContentLoaded', async function() {
         });
     }
 
+    const bilanBtn = document.getElementById('ouvrir-bilan');
+    if (bilanBtn) {
+        bilanBtn.addEventListener('click', function() {
+            window.open('../bilan/bilan.html', '_blank');
+        });
+    }
+
     const certdeceBtn = document.getElementById('certdece');
     if (certdeceBtn) {
         certdeceBtn.addEventListener('click', function() {
