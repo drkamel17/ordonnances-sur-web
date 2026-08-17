@@ -122,6 +122,10 @@
       "use": "@vercel/static"
     },
     {
+      "src": "bilan/**/*",
+      "use": "@vercel/static"
+    },
+    {
       "src": "api/config.js",
       "use": "@vercel/node"
     },
@@ -164,8 +168,12 @@
       "dest": "/styles/$1"
     },
     {
-      "src": "/dece/(.*)",
-      "dest": "/dece/$1"
+      "src": "/conduite/(.*)",
+      "dest": "/conduite/$1"
+    },
+    {
+      "src": "/bilan/(.*)",
+      "dest": "/bilan/$1"
     },
     {
       "src": "/ordonnance/(.*)",
