@@ -4609,8 +4609,15 @@ ${enteteContent}
     </p>
         </p>
 		<p>
-              <textarea placeholder=" " style="width: 580px;height: 100px;"></textarea><br>
-			   ce certificat est établi et remis en mains propre de l'interesse pour
+              <textarea id="texteDescription" lang="fr" spellcheck="true" placeholder="Décrivez ici l'état du patient..." style="width: 580px;height: 100px;"></textarea><br>
+              <div style="margin-top: 5px;">
+                <button id="btnCorriger" type="button" style="padding: 5px 12px; font-size: 12px; background-color: #2196F3; color: white; border: none; border-radius: 4px; cursor: pointer; margin-bottom: 5px;">
+                  <i class="fas fa-spell-check"></i> Corriger l'orthographe
+                </button>
+                <span id="correctionStatus" style="font-size: 12px; color: #666; margin-left: 8px;"></span>
+              </div>
+              <div id="correctionsContainer" style="margin-top: 5px; max-height: 200px; overflow-y: auto;"></div>
+			   ce certificat est établi et remis en mains propre de l'intéressé(e) pour
  faire valoir ce que de droit .
         </p>
         <p style="text-align: right; margin-top: 30px;">
@@ -5678,11 +5685,106 @@ Confraternellement,<br>
     <button id="printButton">Imprimer la lettre </button>
 </div>
 <script src="print.js"></script>
-<script src="certificat-unified-font-size.js"></script>
+    <script src="certificat-unified-font-size.js"></script>
+    <script>
+    (function() {
+        var btnCorriger = document.getElementById('btnCorriger');
+        var textarea = document.getElementById('texteDescription');
+        var status = document.getElementById('correctionStatus');
+        var container = document.getElementById('correctionsContainer');
+
+        if (!btnCorriger || !textarea) return;
+
+        btnCorriger.addEventListener('click', async function() {
+            var text = textarea.value.trim();
+            if (!text) {
+                status.textContent = 'Veuillez saisir du texte à vérifier.';
+                status.style.color = '#e67e22';
+                return;
+            }
+
+            status.textContent = 'Vérification en cours...';
+            status.style.color = '#2196F3';
+            container.innerHTML = '';
+
+            try {
+                var response = await fetch('https://api.languagetool.org/v2/check', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: 'text=' + encodeURIComponent(text) + '&language=fr&enabledOnly=false'
+                });
+
+                if (!response.ok) throw new Error('Erreur API');
+
+                var data = await response.json();
+
+                if (data.matches.length === 0) {
+                    status.textContent = 'Aucune erreur trouvée.';
+                    status.style.color = '#4CAF50';
+                    return;
+                }
+
+                status.textContent = data.matches.length + ' erreur(s) trouvée(s).';
+                status.style.color = '#e74c3c';
+
+                data.matches.forEach(function(match) {
+                    var div = document.createElement('div');
+                    div.style.cssText = 'background:#fff3cd;border:1px solid #ffc107;border-radius:4px;padding:8px;margin-bottom:5px;font-size:12px;';
+
+                    var erroneousText = text.substring(match.offset, match.offset + match.length);
+                    var suggestions = match.replacements.slice(0, 5);
+
+                    var html = '<div style="margin-bottom:4px;"><strong style="color:#856404;">&#9888; ' +
+                        match.message + '</strong></div>';
+
+                    html += '<div style="margin-bottom:4px;">Texte : <span style="background:#ffc107;padding:1px 4px;border-radius:2px;">' +
+                        erroneousText + '</span></div>';
+
+                    if (suggestions.length > 0) {
+                        html += '<div style="margin-bottom:2px;">Suggestions :</div>';
+                        suggestions.forEach(function(rep) {
+                            html += '<button class="suggestion-btn" data-original="' +
+                                erroneousText.replace(/"/g, '&quot;') +
+                                '" data-replacement="' + rep.value.replace(/"/g, '&quot;') +
+                                '" data-offset="' + match.offset +
+                                '" data-length="' + match.length +
+                                '" style="display:inline-block;padding:2px 8px;margin:2px;font-size:11px;background:#e3f2fd;border:1px solid #2196F3;border-radius:3px;cursor:pointer;">' +
+                                rep.value + '</button>';
+                        });
+                    }
+
+                    div.innerHTML = html;
+                    container.appendChild(div);
+                });
+
+                container.addEventListener('click', function(e) {
+                    var btn = e.target.closest('.suggestion-btn');
+                    if (!btn) return;
+
+                    var replacement = btn.getAttribute('data-replacement');
+                    var offset = parseInt(btn.getAttribute('data-offset'));
+                    var length = parseInt(btn.getAttribute('data-length'));
+
+                    var newText = textarea.value.substring(0, offset) + replacement + textarea.value.substring(offset + length);
+                    textarea.value = newText;
+
+                    status.textContent = 'Correction appliquée.';
+                    status.style.color = '#4CAF50';
+
+                    btn.parentElement.style.display = 'none';
+                });
+
+            } catch (err) {
+                status.textContent = 'Erreur lors de la vérification. Réessayez.';
+                status.style.color = '#e74c3c';
+            }
+        });
+    })();
+    </script>
+
 </body>
 </html>
 `;
-
     const newWindow = window.open("", "_blank");
     newWindow.document.write(certificatContent);
     newWindow.document.close();
