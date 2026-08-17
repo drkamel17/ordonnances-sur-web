@@ -4568,6 +4568,15 @@ border: none !important;
 #btnCorriger, #correctionStatus, #correctionsContainer {
 display: none !important;
 }
+.spell-error {
+text-decoration: none !important;
+background-color: transparent !important;
+}
+#texteDescription {
+border: none !important;
+min-height: auto !important;
+padding: 0 !important;
+}
 }
 </style>
 </head>
@@ -4612,7 +4621,36 @@ ${enteteContent}
     </p>
         </p>
 		<p>
-              <textarea id="texteDescription" lang="fr" spellcheck="true" placeholder="Décrivez ici l'état du patient..." style="width: 580px;height: 100px;"></textarea><br>
+              <div id="texteDescription" contenteditable="true" lang="fr" placeholder="Décrivez ici l'état du patient..." style="width: 580px;min-height: 100px;padding:10px;border:1px solid #bdbdbd;border-radius:5px;font-size:1em;font-family:inherit;line-height:1.5;overflow-y:auto;white-space:pre-wrap;word-wrap:break-word;"></div><br>
+              <style>
+                .spell-error {
+                  background-color: rgba(255, 0, 0, 0.08);
+                  text-decoration: wavy red underline;
+                  text-decoration-skip-ink: none;
+                  text-underline-offset: 3px;
+                  cursor: pointer;
+                  position: relative;
+                }
+                .spell-error:hover::after {
+                  content: attr(data-msg);
+                  position: absolute;
+                  bottom: 100%;
+                  left: 0;
+                  background: #333;
+                  color: #fff;
+                  padding: 4px 8px;
+                  border-radius: 4px;
+                  font-size: 11px;
+                  white-space: nowrap;
+                  z-index: 10;
+                  pointer-events: none;
+                }
+                #texteDescription:empty::before {
+                  content: attr(placeholder);
+                  color: #999;
+                  pointer-events: none;
+                }
+              </style>
               <div style="margin-top: 5px;">
                 <button id="btnCorriger" type="button" style="padding: 5px 12px; font-size: 12px; background-color: #2196F3; color: white; border: none; border-radius: 4px; cursor: pointer; margin-bottom: 5px;">
                   <i class="fas fa-spell-check"></i> Corriger l'orthographe
@@ -4642,94 +4680,151 @@ ${enteteContent}
     <script>
     (function() {
         var btnCorriger = document.getElementById('btnCorriger');
-        var textarea = document.getElementById('texteDescription');
+        var editor = document.getElementById('texteDescription');
         var status = document.getElementById('correctionStatus');
         var container = document.getElementById('correctionsContainer');
 
-        if (!btnCorriger || !textarea) return;
+        if (!btnCorriger || !editor) return;
 
-        btnCorriger.addEventListener('click', function() {
-            var text = textarea.value.trim();
-            if (!text) {
-                status.textContent = 'Veuillez saisir du texte à vérifier.';
-                status.style.color = '#e67e22';
+        var ignoreList = new Set();
+        var checkTimeout = null;
+
+        function getText() {
+            return editor.textContent || '';
+        }
+
+        function surlignerErreurs() {
+            var text = getText().trim();
+            if (!text) { editor.innerHTML = ''; return; }
+
+            var resultats = FrenchSpellCheck.verifier(text);
+            var erreurs = resultats.erreurs.filter(function(e) {
+                return e.texte && !ignoreList.has(e.texte.toLowerCase());
+            });
+
+            if (erreurs.length === 0) {
+                status.textContent = '';
+                editor.innerHTML = text;
                 return;
             }
 
-            status.textContent = 'Vérification en cours...';
-            status.style.color = '#2196F3';
-            container.innerHTML = '';
+            status.textContent = erreurs.length + ' faute(s) soulignée(s)';
+            status.style.color = '#e74c3c';
 
-            try {
-                var resultats = FrenchSpellCheck.verifier(text);
+            erreurs.sort(function(a, b) { return a.position - b.position; });
 
-                if (resultats.erreurs.length === 0) {
-                    status.textContent = 'Aucune erreur trouvée.';
-                    status.style.color = '#4CAF50';
-                    return;
+            var html = '';
+            var pos = 0;
+
+            for (var i = 0; i < erreurs.length; i++) {
+                var e = erreurs[i];
+                if (e.position >= pos) {
+                    html += echappHTML(text.substring(pos, e.position));
+                    var motErrone = text.substring(e.position, e.position + e.longueur);
+                    html += '<span class="spell-error" data-msg="' + echappAttr(e.message) + '" data-pos="' + e.position + '" data-len="' + e.longueur + '">' + echappHTML(motErrone) + '</span>';
+                    pos = e.position + e.longueur;
                 }
-
-                status.textContent = resultats.erreurs.length + ' erreur(s) trouvée(s).';
-                status.style.color = '#e74c3c';
-
-                resultats.erreurs.forEach(function(erreur) {
-                    var div = document.createElement('div');
-                    div.style.cssText = 'background:#fff3cd;border:1px solid #ffc107;border-radius:4px;padding:8px;margin-bottom:5px;font-size:12px;';
-
-                    var html = '<div style="margin-bottom:4px;"><strong style="color:#856404;">&#9888; ' +
-                        erreur.message + '</strong></div>';
-
-                    if (erreur.texte) {
-                        html += '<div style="margin-bottom:4px;">Texte : <span style="background:#ffc107;padding:1px 4px;border-radius:2px;">' +
-                            erreur.texte + '</span></div>';
-                    }
-
-                    if (erreur.remplacement) {
-                        html += '<button class="suggestion-btn" data-replacement="' +
-                            erreur.remplacement.replace(/"/g, '&quot;') +
-                            '" data-texte="' + (erreur.texte || '').replace(/"/g, '&quot;') +
-                            '" style="display:inline-block;padding:2px 8px;margin:2px;font-size:11px;background:#e3f2fd;border:1px solid #2196F3;border-radius:3px;cursor:pointer;">' +
-                            erreur.remplacement + '</button>';
-                    } else if (erreur.suggestions && erreur.suggestions.length > 0) {
-                        html += '<div style="margin-bottom:2px;">Suggestions :</div>';
-                        erreur.suggestions.forEach(function(sug) {
-                            html += '<button class="suggestion-btn" data-replacement="' +
-                                sug.replace(/"/g, '&quot;') +
-                                '" data-texte="' + (erreur.texte || erreur.mot || '').replace(/"/g, '&quot;') +
-                                '" style="display:inline-block;padding:2px 8px;margin:2px;font-size:11px;background:#e3f2fd;border:1px solid #2196F3;border-radius:3px;cursor:pointer;">' +
-                                sug + '</button>';
-                        });
-                    }
-
-                    div.innerHTML = html;
-                    container.appendChild(div);
-                });
-
-                container.addEventListener('click', function(e) {
-                    var btn = e.target.closest('.suggestion-btn');
-                    if (!btn) return;
-
-                    var replacement = btn.getAttribute('data-replacement');
-                    var texteOriginal = btn.getAttribute('data-texte');
-                    var currentText = textarea.value;
-
-                    if (texteOriginal) {
-                        textarea.value = currentText.replace(texteOriginal, replacement);
-                    } else {
-                        textarea.value = currentText + ' ' + replacement;
-                    }
-
-                    status.textContent = 'Correction appliquée.';
-                    status.style.color = '#4CAF50';
-
-                    btn.parentElement.style.display = 'none';
-                });
-
-            } catch (err) {
-                status.textContent = 'Erreur lors de la vérification.';
-                status.style.color = '#e74c3c';
             }
+            html += echappHTML(text.substring(pos));
+            editor.innerHTML = html;
+        }
+
+        function echappHTML(str) {
+            return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function echappAttr(str) {
+            return str.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        editor.addEventListener('input', function() {
+            clearTimeout(checkTimeout);
+            checkTimeout = setTimeout(surlignerErreurs, 800);
         });
+
+        btnCorriger.addEventListener('click', function() {
+            clearTimeout(checkTimeout);
+            ignoreList.clear();
+            surlignerErreurs();
+        });
+
+        editor.addEventListener('click', function(e) {
+            var span = e.target.closest('.spell-error');
+            if (!span) return;
+
+            var msg = span.getAttribute('data-msg');
+            var motErrone = span.textContent;
+            var pos = parseInt(span.getAttribute('data-pos'));
+            var len = parseInt(span.getAttribute('data-len'));
+            var corrections = FrenchSpellCheck.trouverCorrections(motErrone);
+
+            var popup = document.createElement('div');
+            popup.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:#fff;border:1px solid #ccc;border-radius:8px;padding:15px;z-index:9999;box-shadow:0 4px 20px rgba(0,0,0,0.3);max-width:350px;font-size:13px;';
+
+            var html = '<div style="margin-bottom:8px;"><strong style="color:#856404;">&#9888; ' + echappHTML(msg) + '</strong></div>';
+            html += '<div style="margin-bottom:8px;">Texte : <span style="background:#ffc107;padding:1px 4px;border-radius:2px;">' + echappHTML(motErrone) + '</span></div>';
+
+            var allSuggestions = [];
+            var regexErreur = null;
+            var regles = FrenchSpellCheck._regles || [];
+            for (var r = 0; r < regles.length; r++) {
+                if (regles[r].rep && regles[r].regex.test(motErrone)) {
+                    allSuggestions.push(regles[r].rep);
+                }
+            }
+            if (corrections) {
+                for (var c = 0; c < corrections.length; c++) {
+                    if (allSuggestions.indexOf(corrections[c]) === -1) {
+                        allSuggestions.push(corrections[c]);
+                    }
+                }
+            }
+
+            if (allSuggestions.length > 0) {
+                html += '<div style="margin-bottom:6px;">Suggestions :</div>';
+                for (var s = 0; s < allSuggestions.length; s++) {
+                    html += '<button class="sug-btn" data-sug="' + echappAttr(allSuggestions[s]) + '" style="display:inline-block;padding:3px 10px;margin:2px;font-size:12px;background:#e3f2fd;border:1px solid #2196F3;border-radius:3px;cursor:pointer;">' + echappHTML(allSuggestions[s]) + '</button>';
+                }
+            }
+
+            html += '<div style="margin-top:8px;text-align:right;">';
+            html += '<button id="ignoreBtn" style="padding:3px 10px;margin:2px;font-size:11px;background:#f5f5f5;border:1px solid #999;border-radius:3px;cursor:pointer;">Ignorer</button>';
+            html += '<button id="fermerPopup" style="padding:3px 10px;margin:2px;font-size:11px;background:#e74c3c;color:#fff;border:none;border-radius:3px;cursor:pointer;">Fermer</button>';
+            html += '</div>';
+
+            popup.innerHTML = html;
+            document.body.appendChild(popup);
+
+            var overlay = document.createElement('div');
+            overlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.3);z-index:9998;';
+            document.body.appendChild(overlay);
+
+            function fermer() {
+                popup.remove();
+                overlay.remove();
+            }
+
+            overlay.addEventListener('click', fermer);
+            popup.querySelector('#fermerPopup').addEventListener('click', fermer);
+            popup.querySelector('#ignoreBtn').addEventListener('click', function() {
+                ignoreList.add(motErrone.toLowerCase());
+                fermer();
+                surlignerErreurs();
+            });
+
+            popup.querySelectorAll('.sug-btn').forEach(function(btn) {
+                btn.addEventListener('click', function() {
+                    var sug = btn.getAttribute('data-sug');
+                    var currentText = getText();
+                    var avant = currentText.substring(0, pos);
+                    var apres = currentText.substring(pos + len);
+                    editor.textContent = avant + sug + apres;
+                    fermer();
+                    surlignerErreurs();
+                });
+            });
+        });
+
     })();
     </script>
 

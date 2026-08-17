@@ -593,7 +593,8 @@ var FrenchSpellCheck = (function() {
 
     return {
         verifier: verifier,
-        trouverCorrections: trouverCorrections
+        trouverCorrections: trouverCorrections,
+        _regles: motsConfondus.concat(orthographeMedicale).concat(accordRules).concat(conjugaisonRules).concat(grammaireRules)
     };
 
 })();
