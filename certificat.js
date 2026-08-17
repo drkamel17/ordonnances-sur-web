@@ -4611,7 +4611,7 @@ ${enteteContent}
     <input type="text" id="descriptionAccident" placeholder="" style="width: 180px; margin: 5px 0;" value=" ">
     </p>
         </p>
-		<p>
+		<div>
               <div id="autocompleteWrapper" style="position:relative;display:inline-block;">
                 <textarea id="texteDescription" lang="fr" spellcheck="true" placeholder="Décrivez ici l'état du patient..." style="width: 580px;height: 100px;"></textarea>
                 <div id="autocompleteDropdown" style="display:none;position:absolute;left:0;top:100%;background:#fff;border:1px solid #2196F3;border-radius:4px;max-height:180px;overflow-y:auto;z-index:9999;width:580px;box-shadow:0 4px 12px rgba(0,0,0,0.15);"></div>
@@ -4625,7 +4625,7 @@ ${enteteContent}
               <div id="correctionsContainer" style="margin-top: 5px; max-height: 200px; overflow-y: auto;"></div>
 			   ce certificat est établi et remis en mains propre de l'intéressé(e) pour
  faire valoir ce que de droit .
-        </p>
+        </div>
         <p style="text-align: right; margin-top: 30px;">
             Dont certificat<br>
             <span class="docteur" style="font-weight: bold;">Dr ${docteur}</span>
