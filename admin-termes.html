@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion des termes juridiques</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f6f8;
+            margin: 0; padding: 20px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 900px; margin: 0 auto;
+            background: #fff; border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            padding: 25px;
+        }
+        .header {
+            display: flex; align-items: center; justify-content: center;
+            color: #37474f; margin-bottom: 20px; gap: 10px;
+        }
+        .header i { font-size: 1.8em; color: #2196F3; }
+        .header h2 { margin: 0; }
+        .section-title {
+            color: #37474f; font-weight: bold;
+            margin-top: 15px; margin-bottom: 10px;
+            padding-bottom: 5px; border-bottom: 2px solid #e0e0e0;
+        }
+        .toolbar { display:flex; gap:10px; margin-bottom:15px; flex-wrap:wrap; align-items:center; }
+        .toolbar input[type="text"] {
+            flex:1; min-width:200px; padding:8px 10px;
+            border:2px solid #e0e0e0; border-radius:4px; font-size:0.9em;
+        }
+        .toolbar input[type="text"]:focus { outline:none; border-color:#2196F3; }
+        .toolbar select {
+            padding:8px 10px; border:2px solid #e0e0e0; border-radius:4px; font-size:0.9em; min-width:180px;
+        }
+        .toolbar select:focus { outline:none; border-color:#2196F3; }
+        .btn {
+            display:inline-flex; align-items:center; gap:6px;
+            padding:8px 14px; color:white; border:none; border-radius:4px;
+            cursor:pointer; font-size:0.9em; white-space:nowrap;
+        }
+        .btn-green { background:#4CAF50; }
+        .btn-green:hover { background:#43a047; }
+        .btn-blue { background:#1976d2; }
+        .btn-blue:hover { background:#1565c0; }
+        .btn-orange { background:#ff9800; }
+        .btn-orange:hover { background:#f57c00; }
+        .btn-purple { background:#7b1fa2; }
+        .btn-purple:hover { background:#6a1b9a; }
+        .btn-red { background:#d32f2f; }
+        .btn-red:hover { background:#c62828; }
+        .btn-sm { padding:4px 10px; font-size:0.8em; }
+        .btn-icon {
+            display:inline-flex; align-items:center; justify-content:center;
+            width:24px; height:24px; padding:0; margin:0;
+            background:none; border:none; border-radius:50%; cursor:pointer;
+        }
+        .btn-icon:hover { background:#fee; }
+        #adminStatus { font-size:0.85em; margin-bottom:10px; color:#666; min-height:1.2em; }
+        .category-section {
+            margin-bottom:10px; border:1px solid #e0e0e0; border-radius:6px;
+        }
+        .category-header {
+            padding:10px 12px; cursor:pointer; font-weight:600; font-size:0.95em;
+            color:#37474f; display:flex; justify-content:space-between; align-items:center;
+            background:#f5f5f5; border-radius:6px; user-select:none;
+        }
+        .category-header:hover { background:#eeeeee; }
+        .category-header .fa-chevron-down { transition:transform 0.2s; }
+        .category-body { display:none; padding:8px 12px; }
+        .term-row {
+            display:flex; align-items:center; justify-content:space-between;
+            padding:6px 0; border-bottom:1px solid #f0f0f0; font-size:0.9em;
+        }
+        .term-row:last-child { border-bottom:none; }
+        .term-text { cursor:pointer; color:#333; flex:1; }
+        .term-text:hover { color:#1976d2; }
+        .term-count { font-weight:normal; color:#999; font-size:0.85em; }
+        .back-link { display:inline-block; margin-bottom:15px; color:#1976d2; text-decoration:none; font-size:0.9em; }
+        .back-link:hover { text-decoration:underline; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="certificat.html" class="back-link"><i class="fas fa-arrow-left"></i> Retour au générateur</a>
+
+        <div class="header">
+            <i class="fas fa-book-medical"></i>
+            <h2>Gestion des termes juridiques</h2>
+        </div>
+
+        <p style="text-align:center; color:#666; font-size:0.85em; margin-top:-10px;">
+            Ajoutez, modifiez ou supprimez les termes proposés dans l'autocomplete du CBV.
+        </p>
+
+        <div class="section-title">Ajouter un terme</div>
+        <div class="toolbar">
+            <input type="text" id="adminNewTerm" placeholder="Nouveau terme...">
+            <select id="adminCategorySelect"></select>
+            <button id="adminAddTerm" class="btn btn-green"><i class="fas fa-plus"></i> Ajouter</button>
+        </div>
+
+        <div class="section-title">Nouvelle catégorie</div>
+        <div class="toolbar">
+            <input type="text" id="adminNewCategory" placeholder="Nom de la catégorie...">
+            <button id="adminAddCategory" class="btn btn-blue"><i class="fas fa-folder-plus"></i> Créer</button>
+        </div>
+
+        <div class="section-title">Import / Export / Reset</div>
+        <div class="toolbar">
+            <button id="adminExport" class="btn btn-orange"><i class="fas fa-download"></i> Exporter JSON</button>
+            <button id="adminImport" class="btn btn-purple"><i class="fas fa-upload"></i> Importer JSON</button>
+            <input type="file" id="adminImportFile" accept=".json" style="display:none;">
+            <button id="adminReset" class="btn btn-red"><i class="fas fa-undo"></i> Réinitialiser</button>
+        </div>
+
+        <div id="adminStatus"></div>
+
+        <div class="section-title">Catégories et termes</div>
+        <div id="adminTermList"></div>
+    </div>
+
+    <script>
+    (function() {
+        var STORAGE_KEY = 'termesJuridiques';
+        var DEFAULT_KEY = 'termesJuridiquesDefaut';
+
+        function chargerTermes() {
+            var data = localStorage.getItem(STORAGE_KEY);
+            if (data) return JSON.parse(data);
+            return null;
+        }
+
+        function sauvegarderTermes(obj) {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(obj));
+        }
+
+        function getCategories(obj) {
+            var cats = [];
+            for (var key in obj) {
+                if (obj.hasOwnProperty(key) && Array.isArray(obj[key])) {
+                    cats.push(key);
+                }
+            }
+            return cats;
+        }
+
+        function showStatus(msg, color) {
+            var el = document.getElementById('adminStatus');
+            if (el) { el.textContent = msg; el.style.color = color || '#666'; }
+        }
+
+        function genererTermesParDefaut() {
+            return {
+                "Cadre juridique et requisition": ["Requisition judiciaire","Requisition d un officier de police judiciaire (OPJ)","Requisition du Procureur de la Republique","Examen a la demande de la victime","Certificat etabli a la demande de l autorite judiciaire","Etabli pour valoir ce que de droit","Remis en main propre contre decharge","Exemplaire unique","Identite declaree par l examine","Justificatif d identite officiel presente","Defaut de piece d identite","Refus d examen medical","Presence d un tiers accompagnateur","Presence d un interprete assermente","Unite de consultation medico-judiciaire (UMJ)","Examen aux urgences hospitalieres","Examen en milieu carcerale / garde a vue","Secret professionnel partage"],
+                "Anamnese et mecanismes": ["Faits rapportes au conditionnel","Allegations de la victime","Declaration de la victime","Mecanisme lesionnel allegue","Choc direct allegue","Choc indirect allegue","Notion de chute alleguee","Agression par arme blanche alleguee","Agression par arme a feu alleguee","Agression par objet contondant alleguee","Notion de strangulation alleguee","Notion de compression thoracique","Date et heure presumees des faits","Lieu presume des faits","Plaintes spontanees","Douleur spontanee","Douleur provoquee a la palpation","Impregnation ethylique alleguee","Suspicion de soumission chimique","Prise de substances psychoactives","Prise en charge medicale prealable","Notion de soins d urgence anterieurs"],
+                "Lesions cutanees et tissus mous": ["Ecchymose","Ecchymose violacee","Ecchymose bleutee","Ecchymose verdatre","Ecchymose jaunatre","Ecchymose roussatre","Ecchymose figuree","Ecchymose en bande","Ecchymose punctiforme","Ecchymose en carte geographique","Ecchymose sous-conjonctivale","Hematome","Hematome sous-cutane","Hematome collecteur","Hematome sous-perioste","Hematome pulsatile","Hematome retro-tympanique","Excoriation","Excoriation lineaire","Excoriation punctiforme","Excoriation en strie","Dermabrasion","Dermabrasion etendue","Ecorchure","Erosion cutanee","Erosion muqueuse","Plaie contuse","Plaie franche","Plaie penetrante","Plaie perforante","Plaie tangentiale","Plaie a bords francs","Plaie a bords irreguliers","Plaie a bords contus","Plaie a bords ecchymotiques","Plaie delabree","Plaie scalpante","Plaie par arme blanche","Plaie par projectile","Plaie de defense sur le bord cubital","Plaie de defense palmaire","Punctuation hemorrhagique","Oedeme traumatique","Oedeme periorbitaire","Tumefaction ecchymotique","Tumefaction douloureuse","Contusion","Contusion musculaire","Laceration tissulaire","Phlyctene","Brulure du premier degre","Brulure du deuxieme degre superficiel","Brulure du deuxieme degre profond","Brulure du troisieme degre","Brulure chimique","Brulure thermique","Morsure humaine","Morsure animale","Sillon de pendaison","Sillon de strangulation","Sillon complet","Sillon incomplet","Sillon horizontal","Sillon oblique","Erytheme traumatique","Petechies sous-cutanees","Petechies sous-conjonctivales","Petechies du visage","Suffusions hemorrhagiques","Saignement actif","Croute de cicatrisation","Desinsertion tissulaire","Infiltration sanglante"],
+                "Lesions osteo-articulaires et musculaires": ["Fracture osseuse","Fracture comminutive","Fracture ouverte","Fracture fermee","Fracture en bois vert","Fracture tassement","Fracture engrenee","Fracture spiroide","Disjonction acromio-claviculaire","Entorse benigne","Entorse grave","Luxation articulaire","Subluxation","Impotence fonctionnelle totale","Impotence fonctionnelle partielle","Limitation d amplitude articulaire","Deformation anatomique visible","Epanchement intra-articulaire","Hemarthrose","Laxite articulaire pathologique","Crepitation osseuse","Rupture tendineuse","Rupture ligamentaire","Elongation musculaire","Claquage musculaire","Rhabdomyolyse traumatique"],
+                "Tete, cou et neurologie": ["Traumatisme cranio-encephalique (TCE)","Commotion cerebrale","Perte de connaissance initiale (PCI)","Amnesie post-traumatique","Amnesie retrograde","Syndrome post-commotionnel","Deficit moteur focal","Deficit sensitif focal","Paresthesie","Dysesthesie","Anesthesie en gant ou en chaussette","Syndrome meninge traumatique","Cephalees post-traumatiques","Echymo-somnolence","Traces de strangulation cervicale","Traces de ligatures","Traces d agrippement cervical","Excoriations en croissant de lune (ongles)"],
+                "ORL, ophtalmologie et stomatologie": ["Hemorrhagie sous-conjonctivale","Oedeme palpebral et periorbitaire","Ecchymose en lunette","Epistaxis bilaterale","Epistaxis unilaterale","Fracture des os propres du nez (OPN)","Fracture du massif facial","Fracture mandibulaire","Otorragie","Perforation tympanique traumatique","Acuphenes post-traumatiques","Hypoacousie traumatique","Vertiges rotatoires","Diplopie","Coup de fouet cervical (Whiplash)","Luxation dentaire","Fracture dentaire","Expulsion dentaire","Plaie de la muqueuse buccale","Plaie linguale"],
+                "Retentissement psychologique": ["Etat de choc psychique initial","Anxiete aigue post-traumatique","Syndrome de stress post-traumatique (SSPT)","Prostration psychique","Sideration psychique","Hypervigilance neurovegetative","Trouble severe du sommeil","Cauchemars de reviviscence","Flashbacks traumatiques","Labilite emotionnelle","Angoisse de morcellement","Etat de dissociation psychique","Depersonalisation / Derealisation","Evitement phobique des lieux ou personnes","Ralentissement psychomoteur","Mutisme post-traumatique"],
+                "Examens complementaires et avis": ["Radiographie conventionnelle effectuee","TDM / Scanner cerebral sans injection","TDM / Scanner du massif facial","Imagerie par Resonance Magnetique (IRM)","Echographie des tissus mous","Avis specialise ophtalmologique requis","Avis specialise ORL requis","Avis specialise odontologique requis","Evaluation psychiatrique / psychologique requise","Prelevements a visee toxico-legale"],
+                "Incapacite et conclusions": ["Incapacite Totale de Travail (ITT)","ITT au sens penal","ITT personnelle","ITT professionnelle","Incapacite Temporaire Totale","Incapacite Permanente Partielle (IPP)","Incapacite de travail fixee a X jours","Duree fixee sous reserve d evolution","Incapacite non determinable en l etat","Necessite de reevaluation ulterieure","Consolidation non acquise","Guerison sans sequelle previsible","Sequelles fonctionnelles previsibles","Sequelles esthetiques / Cicatrices","Prejudice esthetique","Prejudice d agrement","Prejudice douloureux (Pretium doloris)","Pronostic vital engage","Pronostic fonctionnel reserve","Prise en charge psychologique indispensable","Hospitalisation en milieu specialise requise"],
+                "Mentions legales et validation": ["Fait a [Lieu], le [Date]","Heure de fin de l examen medical","Remis en main propre au requerant","Remis a l autorite requerante contre decharge","Signature manuscrite du medecin","Cachet professionnel et identifiant Ordinal","Qualite du medecin examinateur (Docteur en medicine)","Inscription au tableau de l Ordre des Medecins","Mentions d archivage du dossier medical"]
+            };
+        }
+
+        function renderPanel() {
+            var data = chargerTermes();
+            if (!data) {
+                var defaut = genererTermesParDefaut();
+                localStorage.setItem(DEFAULT_KEY, JSON.stringify(defaut));
+                sauvegarderTermes(defaut);
+                data = defaut;
+            }
+
+            var cats = getCategories(data);
+            var selectEl = document.getElementById('adminCategorySelect');
+            var listEl = document.getElementById('adminTermList');
+            if (!selectEl || !listEl) return;
+
+            selectEl.innerHTML = '';
+            cats.forEach(function(c) {
+                var opt = document.createElement('option');
+                opt.value = c; opt.textContent = c;
+                selectEl.appendChild(opt);
+            });
+
+            listEl.innerHTML = '';
+            cats.forEach(function(cat) {
+                var section = document.createElement('div');
+                section.className = 'category-section';
+
+                var header = document.createElement('div');
+                header.className = 'category-header';
+                header.innerHTML = '<span><i class="fas fa-folder" style="margin-right:6px; color:#ff9800;"></i>' +
+                    cat + ' <span class="term-count">(' + data[cat].length + ')</span></span>' +
+                    '<i class="fas fa-chevron-down"></i>';
+
+                var body = document.createElement('div');
+                body.className = 'category-body';
+
+                header.onclick = function() {
+                    var visible = body.style.display !== 'none';
+                    body.style.display = visible ? 'none' : 'block';
+                    header.querySelector('.fa-chevron-down').style.transform = visible ? '' : 'rotate(180deg)';
+                };
+
+                data[cat].forEach(function(term) {
+                    var row = document.createElement('div');
+                    row.className = 'term-row';
+
+                    var span = document.createElement('span');
+                    span.className = 'term-text';
+                    span.textContent = term;
+                    span.title = 'Cliquer pour modifier';
+                    span.onclick = function() {
+                        var newVal = prompt('Modifier le terme:', term);
+                        if (newVal !== null && newVal.trim() !== '' && newVal.trim() !== term) {
+                            var d = chargerTermes();
+                            var idx = d[cat].indexOf(term);
+                            if (idx !== -1) { d[cat][idx] = newVal.trim(); sauvegarderTermes(d); renderPanel(); showStatus('Terme modifie.', '#4CAF50'); }
+                        }
+                    };
+
+                    var delBtn = document.createElement('button');
+                    delBtn.innerHTML = '<i class="fas fa-times" style="color:#d32f2f;"></i>';
+                    delBtn.className = 'btn-icon';
+                    delBtn.title = 'Supprimer';
+                    delBtn.onclick = function() {
+                        if (confirm('Supprimer "' + term + '" ?')) {
+                            var d = chargerTermes();
+                            d[cat] = d[cat].filter(function(t) { return t !== term; });
+                            sauvegarderTermes(d); renderPanel(); showStatus('Termesupprime.', '#e74c3c');
+                        }
+                    };
+
+                    row.appendChild(span);
+                    row.appendChild(delBtn);
+                    body.appendChild(row);
+                });
+
+                section.appendChild(header);
+                section.appendChild(body);
+                listEl.appendChild(section);
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            renderPanel();
+
+            var addTermBtn = document.getElementById('adminAddTerm');
+            if (addTermBtn) {
+                addTermBtn.onclick = function() {
+                    var input = document.getElementById('adminNewTerm');
+                    var select = document.getElementById('adminCategorySelect');
+                    var term = input.value.trim();
+                    var cat = select.value;
+                    if (!term) { showStatus('Saisissez un terme.', '#e67e22'); return; }
+                    if (!cat) { showStatus('Selectionnez une categorie.', '#e67e22'); return; }
+                    var d = chargerTermes();
+                    if (!d[cat]) d[cat] = [];
+                    d[cat].push(term);
+                    sauvegarderTermes(d);
+                    input.value = '';
+                    renderPanel();
+                    showStatus('Terme ajoute : ' + term, '#4CAF50');
+                };
+            }
+
+            var addCatBtn = document.getElementById('adminAddCategory');
+            if (addCatBtn) {
+                addCatBtn.onclick = function() {
+                    var input = document.getElementById('adminNewCategory');
+                    var cat = input.value.trim();
+                    if (!cat) { showStatus('Saisissez un nom de categorie.', '#e67e22'); return; }
+                    var d = chargerTermes();
+                    if (d[cat]) { showStatus('Cette categorie existe deja.', '#e67e22'); return; }
+                    d[cat] = [];
+                    sauvegarderTermes(d);
+                    input.value = '';
+                    renderPanel();
+                    showStatus('Categorie creee : ' + cat, '#4CAF50');
+                };
+            }
+
+            var exportBtn = document.getElementById('adminExport');
+            if (exportBtn) {
+                exportBtn.onclick = function() {
+                    var d = chargerTermes();
+                    var json = JSON.stringify({ certificat_medico_legal_cbv: d }, null, 2);
+                    var blob = new Blob([json], { type: 'application/json' });
+                    var url = URL.createObjectURL(blob);
+                    var a = document.createElement('a');
+                    a.href = url; a.download = 'termeslegale.json';
+                    a.click();
+                    URL.revokeObjectURL(url);
+                    showStatus('Fichier exporte.', '#4CAF50');
+                };
+            }
+
+            var importBtn = document.getElementById('adminImport');
+            var importFile = document.getElementById('adminImportFile');
+            if (importBtn && importFile) {
+                importBtn.onclick = function() { importFile.click(); };
+                importFile.onchange = function(e) {
+                    var file = e.target.files[0];
+                    if (!file) return;
+                    var reader = new FileReader();
+                    reader.onload = function(ev) {
+                        try {
+                            var json = JSON.parse(ev.target.result);
+                            var data;
+                            if (json.certificat_medico_legal_cbv) {
+                                data = json.certificat_medico_legal_cbv;
+                            } else {
+                                data = json;
+                            }
+                            var cats = getCategories(data);
+                            if (cats.length === 0) { showStatus('Format JSON invalide.', '#e74c3c'); return; }
+                            sauvegarderTermes(data);
+                            renderPanel();
+                            showStatus('Importe : ' + cats.length + ' categories.', '#4CAF50');
+                        } catch(err) {
+                            showStatus('Erreur de lecture du fichier.', '#e74c3c');
+                        }
+                    };
+                    reader.readAsText(file);
+                    importFile.value = '';
+                };
+            }
+
+            var resetBtn = document.getElementById('adminReset');
+            if (resetBtn) {
+                resetBtn.onclick = function() {
+                    if (confirm('Reinitialiser tous les termes aux valeurs par defaut ?')) {
+                        var defaut = genererTermesParDefaut();
+                        localStorage.setItem(DEFAULT_KEY, JSON.stringify(defaut));
+                        sauvegarderTermes(defaut);
+                        renderPanel();
+                        showStatus('Termes reinitialises.', '#4CAF50');
+                    }
+                };
+            }
+
+            var newTermInput = document.getElementById('adminNewTerm');
+            if (newTermInput) {
+                newTermInput.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter') { document.getElementById('adminAddTerm').click(); }
+                });
+            }
+            var newCatInput = document.getElementById('adminNewCategory');
+            if (newCatInput) {
+                newCatInput.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter') { document.getElementById('adminAddCategory').click(); }
+                });
+            }
+        });
+    })();
+    </script>
+</body>
+</html>
