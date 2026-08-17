@@ -10,12 +10,12 @@
     var activeIndex = -1;
 
     function loadBilanListe() {
-        try {
-            var url = chrome.runtime.getURL('bilan/bilan_liste.json');
-            fetch(url).then(function(r) { return r.json(); }).then(function(data) {
-                BILANS = data;
-            }).catch(function() {});
-        } catch(e) {}
+        var url;
+        try { url = chrome.runtime.getURL('bilan/bilan_liste.json'); } catch(e) {}
+        if (!url) url = 'bilan_liste.json';
+        fetch(url).then(function(r) { return r.json(); }).then(function(data) {
+            BILANS = data;
+        }).catch(function() {});
     }
 
     document.addEventListener('DOMContentLoaded', function () {
@@ -185,9 +185,10 @@
             if (rawDel) deleted = JSON.parse(rawDel);
         } catch(e) {}
 
-        try {
-            var url = chrome.runtime.getURL('bilan/bilan_types.json');
-            fetch(url).then(function(r) { return r.json(); }).then(function(data) {
+        var url;
+        try { url = chrome.runtime.getURL('bilan/bilan_types.json'); } catch(e) {}
+        if (!url) url = 'bilan_types.json';
+        fetch(url).then(function(r) { return r.json(); }).then(function(data) {
                 allBilanTypes = [];
                 data.forEach(function(t) {
                     if (deleted.indexOf(t.label) === -1) allBilanTypes.push({ label: t.label, exams: t.exams, source: 'json' });
@@ -199,11 +200,6 @@
                 custom.forEach(function(t) { allBilanTypes.push({ label: t.label, exams: t.exams, source: 'custom' }); });
                 populateBilanTypeMenu();
             });
-        } catch(e) {
-            allBilanTypes = [];
-            custom.forEach(function(t) { allBilanTypes.push({ label: t.label, exams: t.exams, source: 'custom' }); });
-            populateBilanTypeMenu();
-        }
     }
 
     function populateBilanTypeMenu() {
