@@ -4454,6 +4454,7 @@ function genererCvb() {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CBV</title>
+    <base href="${window.location.href.replace(/[^\/]*$/, '')}">
     <style>
 body {
 font-family: Arial, sans-serif;
@@ -4686,10 +4687,7 @@ ${enteteContent}
 
         var ignoreList = new Set();
         var checkTimeout = null;
-
-        function getText() {
-            return editor.textContent || '';
-        }
+        var isUpdating = false;
 
         function echappHTML(str) {
             return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
@@ -4699,44 +4697,109 @@ ${enteteContent}
             return str.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
         }
 
+        function getPlainText() {
+            return editor.textContent || '';
+        }
+
+        function saveCaret() {
+            var sel = window.getSelection();
+            if (!sel.rangeCount) return 0;
+            var range = sel.getRangeAt(0);
+            var pre = range.cloneRange();
+            pre.selectNodeContents(editor);
+            pre.setEnd(range.startContainer, range.startOffset);
+            return pre.toString().length;
+        }
+
+        function restoreCaret(offset) {
+            var sel = window.getSelection();
+            var chars = 0;
+            var found = false;
+            var walk = document.createTreeWalker(editor, NodeFilter.SHOW_TEXT, null, false);
+            var node;
+            while ((node = walk.nextNode())) {
+                var len = node.textContent.length;
+                if (chars + len >= offset) {
+                    var r = document.createRange();
+                    r.setStart(node, offset - chars);
+                    r.collapse(true);
+                    sel.removeAllRanges();
+                    sel.addRange(r);
+                    found = true;
+                    break;
+                }
+                chars += len;
+            }
+            if (!found) {
+                var lastNode = editor.lastChild;
+                if (lastNode) {
+                    var r2 = document.createRange();
+                    r2.selectNodeContents(lastNode);
+                    r2.collapse(false);
+                    sel.removeAllRanges();
+                    sel.addRange(r2);
+                }
+            }
+        }
+
         function surlignerErreurs() {
-            var plain = getText();
-            if (!plain || !plain.trim()) { editor.innerHTML = ''; return; }
-
-            var resultats = FrenchSpellCheck.verifier(plain);
-            var erreurs = resultats.erreurs.filter(function(e) {
-                return e.texte && e.position >= 0 && e.longueur > 0 && !ignoreList.has(e.texte.toLowerCase());
-            });
-
-            if (erreurs.length === 0) {
-                status.textContent = 'Aucune faute';
-                status.style.color = '#27ae60';
-                editor.innerHTML = echappHTML(plain);
+            if (typeof FrenchSpellCheck === 'undefined') {
+                status.textContent = 'Module de correction non chargé';
+                status.style.color = '#e74c3c';
                 return;
             }
+            try {
+                var plain = getPlainText();
+                if (!plain || !plain.trim()) {
+                    editor.innerHTML = '';
+                    status.textContent = '';
+                    return;
+                }
 
-            erreurs.sort(function(a, b) { return a.position - b.position; });
+                var resultats = FrenchSpellCheck.verifier(plain);
+                var erreurs = resultats.erreurs.filter(function(e) {
+                    return e.texte && e.position >= 0 && e.longueur > 0 && !ignoreList.has(e.texte.toLowerCase());
+                });
 
-            var html = '';
-            var pos = 0;
+                if (erreurs.length === 0) {
+                    status.textContent = 'Aucune faute';
+                    status.style.color = '#27ae60';
+                    editor.innerHTML = echappHTML(plain);
+                    return;
+                }
 
-            for (var i = 0; i < erreurs.length; i++) {
-                var e = erreurs[i];
-                if (e.position < pos) continue;
-                if (e.position >= plain.length) continue;
-                html += echappHTML(plain.substring(pos, e.position));
-                var motErrone = plain.substring(e.position, e.position + e.longueur);
-                html += '<span class="spell-error" data-msg="' + echappAttr(e.message) + '" data-pos="' + e.position + '" data-len="' + e.longueur + '">' + echappHTML(motErrone) + '</span>';
-                pos = e.position + e.longueur;
+                erreurs.sort(function(a, b) { return a.position - b.position; });
+
+                var html = '';
+                var pos = 0;
+
+                for (var i = 0; i < erreurs.length; i++) {
+                    var e = erreurs[i];
+                    if (e.position < pos) continue;
+                    if (e.position >= plain.length) continue;
+                    html += echappHTML(plain.substring(pos, e.position));
+                    var motErrone = plain.substring(e.position, e.position + e.longueur);
+                    html += '<span class="spell-error" data-msg="' + echappAttr(e.message) + '" data-pos="' + e.position + '" data-len="' + e.longueur + '">' + echappHTML(motErrone) + '</span>';
+                    pos = e.position + e.longueur;
+                }
+                html += echappHTML(plain.substring(pos));
+
+                var caretOffset = saveCaret();
+                isUpdating = true;
+                editor.innerHTML = html;
+                isUpdating = false;
+                restoreCaret(caretOffset);
+
+                status.textContent = erreurs.length + ' faute(s) soulignée(s)';
+                status.style.color = '#e74c3c';
+            } catch (err) {
+                status.textContent = 'Erreur de correction';
+                status.style.color = '#e74c3c';
             }
-            html += echappHTML(plain.substring(pos));
-
-            status.textContent = erreurs.length + ' faute(s) soulignée(s)';
-            status.style.color = '#e74c3c';
-            editor.innerHTML = html;
         }
 
         editor.addEventListener('input', function() {
+            if (isUpdating) return;
             clearTimeout(checkTimeout);
             checkTimeout = setTimeout(surlignerErreurs, 800);
         });
@@ -4755,7 +4818,8 @@ ${enteteContent}
             var motErrone = span.textContent;
             var errPos = parseInt(span.getAttribute('data-pos'), 10);
             var errLen = parseInt(span.getAttribute('data-len'), 10);
-            var corrections = FrenchSpellCheck.trouverCorrections(motErrone);
+            var corrections = [];
+            try { corrections = FrenchSpellCheck.trouverCorrections(motErrone) || []; } catch(ex) {}
 
             var popup = document.createElement('div');
             popup.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:#fff;border:1px solid #ccc;border-radius:8px;padding:15px;z-index:9999;box-shadow:0 4px 20px rgba(0,0,0,0.3);max-width:350px;font-size:13px;';
@@ -4775,11 +4839,9 @@ ${enteteContent}
                     }
                 }
             }
-            if (corrections) {
-                for (var c = 0; c < corrections.length; c++) {
-                    if (allSuggestions.indexOf(corrections[c]) === -1) {
-                        allSuggestions.push(corrections[c]);
-                    }
+            for (var c = 0; c < corrections.length; c++) {
+                if (allSuggestions.indexOf(corrections[c]) === -1) {
+                    allSuggestions.push(corrections[c]);
                 }
             }
 
@@ -4818,7 +4880,7 @@ ${enteteContent}
             popup.querySelectorAll('.sug-btn').forEach(function(btn) {
                 btn.addEventListener('click', function() {
                     var sug = btn.getAttribute('data-sug');
-                    var currentText = getText();
+                    var currentText = getPlainText();
                     var avant = currentText.substring(0, errPos);
                     var apres = currentText.substring(errPos + errLen);
                     editor.textContent = avant + sug + apres;
