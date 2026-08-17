@@ -574,15 +574,27 @@ var FrenchSpellCheck = (function() {
         }
 
         // 6. Vérifier les mots inconnus (dyslexie / typos)
+        var searchPos = 0;
         var mots = texte.split(/\s+/);
         for (var i = 0; i < mots.length; i++) {
-            var mot = mots[i].replace(/[.,;:!?'"()\-]/g, '');
+            var motBrut = mots[i];
+            var mot = motBrut.replace(/[.,;:!?'"()\-]/g, '');
+            var wordStart = texte.indexOf(motBrut, searchPos);
             if (mot.length >= 3) {
                 var erreur = verifierMot(mot);
                 if (erreur) {
-                    erreurs.push(erreur);
+                    erreurs.push({
+                        position: wordStart,
+                        longueur: motBrut.length,
+                        texte: motBrut,
+                        type: erreur.type,
+                        message: erreur.message,
+                        remplacement: erreur.suggestions && erreur.suggestions.length > 0 ? erreur.suggestions[0] : null,
+                        suggestions: erreur.suggestions
+                    });
                 }
             }
+            searchPos = wordStart + motBrut.length;
         }
 
         return {

@@ -1634,11 +1634,38 @@ function genererChronique() {
             font-size: inherit;
             line-height: inherit;
         }
-        .editable-area:focus {
-            outline: none;
-            border-color: #007bff;
-        }
-        #head {
+.editable-area:focus {
+outline: none;
+border-color: #007bff;
+}
+.spell-error {
+background-color: rgba(255, 0, 0, 0.08);
+text-decoration: wavy red underline;
+text-decoration-skip-ink: none;
+text-underline-offset: 3px;
+cursor: pointer;
+position: relative;
+}
+.spell-error:hover::after {
+content: attr(data-msg);
+position: absolute;
+bottom: 100%;
+left: 0;
+background: #333;
+color: #fff;
+padding: 4px 8px;
+border-radius: 4px;
+font-size: 11px;
+white-space: nowrap;
+z-index: 10;
+pointer-events: none;
+}
+#texteDescription:empty::before {
+content: attr(placeholder);
+color: #999;
+pointer-events: none;
+}
+#head {
             margin-bottom: 20px;
         }
         #head table {
@@ -4622,35 +4649,6 @@ ${enteteContent}
         </p>
 		<p>
               <div id="texteDescription" contenteditable="true" lang="fr" placeholder="Décrivez ici l'état du patient..." style="width: 580px;min-height: 100px;padding:10px;border:1px solid #bdbdbd;border-radius:5px;font-size:1em;font-family:inherit;line-height:1.5;overflow-y:auto;white-space:pre-wrap;word-wrap:break-word;"></div><br>
-              <style>
-                .spell-error {
-                  background-color: rgba(255, 0, 0, 0.08);
-                  text-decoration: wavy red underline;
-                  text-decoration-skip-ink: none;
-                  text-underline-offset: 3px;
-                  cursor: pointer;
-                  position: relative;
-                }
-                .spell-error:hover::after {
-                  content: attr(data-msg);
-                  position: absolute;
-                  bottom: 100%;
-                  left: 0;
-                  background: #333;
-                  color: #fff;
-                  padding: 4px 8px;
-                  border-radius: 4px;
-                  font-size: 11px;
-                  white-space: nowrap;
-                  z-index: 10;
-                  pointer-events: none;
-                }
-                #texteDescription:empty::before {
-                  content: attr(placeholder);
-                  color: #999;
-                  pointer-events: none;
-                }
-              </style>
               <div style="margin-top: 5px;">
                 <button id="btnCorriger" type="button" style="padding: 5px 12px; font-size: 12px; background-color: #2196F3; color: white; border: none; border-radius: 4px; cursor: pointer; margin-bottom: 5px;">
                   <i class="fas fa-spell-check"></i> Corriger l'orthographe
@@ -4693,23 +4691,29 @@ ${enteteContent}
             return editor.textContent || '';
         }
 
-        function surlignerErreurs() {
-            var text = getText().trim();
-            if (!text) { editor.innerHTML = ''; return; }
+        function echappHTML(str) {
+            return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
 
-            var resultats = FrenchSpellCheck.verifier(text);
+        function echappAttr(str) {
+            return str.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function surlignerErreurs() {
+            var plain = getText();
+            if (!plain || !plain.trim()) { editor.innerHTML = ''; return; }
+
+            var resultats = FrenchSpellCheck.verifier(plain);
             var erreurs = resultats.erreurs.filter(function(e) {
-                return e.texte && !ignoreList.has(e.texte.toLowerCase());
+                return e.texte && e.position >= 0 && e.longueur > 0 && !ignoreList.has(e.texte.toLowerCase());
             });
 
             if (erreurs.length === 0) {
-                status.textContent = '';
-                editor.innerHTML = text;
+                status.textContent = 'Aucune faute';
+                status.style.color = '#27ae60';
+                editor.innerHTML = echappHTML(plain);
                 return;
             }
-
-            status.textContent = erreurs.length + ' faute(s) soulignée(s)';
-            status.style.color = '#e74c3c';
 
             erreurs.sort(function(a, b) { return a.position - b.position; });
 
@@ -4718,23 +4722,18 @@ ${enteteContent}
 
             for (var i = 0; i < erreurs.length; i++) {
                 var e = erreurs[i];
-                if (e.position >= pos) {
-                    html += echappHTML(text.substring(pos, e.position));
-                    var motErrone = text.substring(e.position, e.position + e.longueur);
-                    html += '<span class="spell-error" data-msg="' + echappAttr(e.message) + '" data-pos="' + e.position + '" data-len="' + e.longueur + '">' + echappHTML(motErrone) + '</span>';
-                    pos = e.position + e.longueur;
-                }
+                if (e.position < pos) continue;
+                if (e.position >= plain.length) continue;
+                html += echappHTML(plain.substring(pos, e.position));
+                var motErrone = plain.substring(e.position, e.position + e.longueur);
+                html += '<span class="spell-error" data-msg="' + echappAttr(e.message) + '" data-pos="' + e.position + '" data-len="' + e.longueur + '">' + echappHTML(motErrone) + '</span>';
+                pos = e.position + e.longueur;
             }
-            html += echappHTML(text.substring(pos));
+            html += echappHTML(plain.substring(pos));
+
+            status.textContent = erreurs.length + ' faute(s) soulignée(s)';
+            status.style.color = '#e74c3c';
             editor.innerHTML = html;
-        }
-
-        function echappHTML(str) {
-            return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-        }
-
-        function echappAttr(str) {
-            return str.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
         }
 
         editor.addEventListener('input', function() {
@@ -4754,8 +4753,8 @@ ${enteteContent}
 
             var msg = span.getAttribute('data-msg');
             var motErrone = span.textContent;
-            var pos = parseInt(span.getAttribute('data-pos'));
-            var len = parseInt(span.getAttribute('data-len'));
+            var errPos = parseInt(span.getAttribute('data-pos'), 10);
+            var errLen = parseInt(span.getAttribute('data-len'), 10);
             var corrections = FrenchSpellCheck.trouverCorrections(motErrone);
 
             var popup = document.createElement('div');
@@ -4765,11 +4764,15 @@ ${enteteContent}
             html += '<div style="margin-bottom:8px;">Texte : <span style="background:#ffc107;padding:1px 4px;border-radius:2px;">' + echappHTML(motErrone) + '</span></div>';
 
             var allSuggestions = [];
-            var regexErreur = null;
             var regles = FrenchSpellCheck._regles || [];
             for (var r = 0; r < regles.length; r++) {
-                if (regles[r].rep && regles[r].regex.test(motErrone)) {
-                    allSuggestions.push(regles[r].rep);
+                if (regles[r].rep && regles[r].regex) {
+                    var testRegex = new RegExp(regles[r].regex.source, regles[r].regex.flags);
+                    if (testRegex.test(motErrone)) {
+                        if (allSuggestions.indexOf(regles[r].rep) === -1) {
+                            allSuggestions.push(regles[r].rep);
+                        }
+                    }
                 }
             }
             if (corrections) {
@@ -4816,8 +4819,8 @@ ${enteteContent}
                 btn.addEventListener('click', function() {
                     var sug = btn.getAttribute('data-sug');
                     var currentText = getText();
-                    var avant = currentText.substring(0, pos);
-                    var apres = currentText.substring(pos + len);
+                    var avant = currentText.substring(0, errPos);
+                    var apres = currentText.substring(errPos + errLen);
                     editor.textContent = avant + sug + apres;
                     fermer();
                     surlignerErreurs();
