@@ -1634,49 +1634,11 @@ function genererChronique() {
             font-size: inherit;
             line-height: inherit;
         }
-.editable-area:focus {
-outline: none;
-border-color: #007bff;
-}
-#correctionsContainer .err-line {
-padding: 6px 10px;
-margin: 4px 0;
-background: #fff3cd;
-border-left: 3px solid #e74c3c;
-border-radius: 4px;
-font-size: 12px;
-cursor: default;
-}
-#correctionsContainer .err-line:hover {
-background: #ffeeba;
-}
-#correctionsContainer .err-word {
-background: #ffc107;
-padding: 1px 4px;
-border-radius: 2px;
-font-weight: bold;
-}
-#correctionsContainer .err-msg {
-color: #856404;
-margin-bottom: 3px;
-}
-#correctionsContainer .err-sugs {
-margin-top: 4px;
-}
-#correctionsContainer .err-sugs button {
-display: inline-block;
-padding: 2px 8px;
-margin: 1px;
-font-size: 11px;
-background: #e3f2fd;
-border: 1px solid #2196F3;
-border-radius: 3px;
-cursor: pointer;
-}
-#correctionsContainer .err-sugs button:hover {
-background: #bbdefb;
-}
-#head {
+        .editable-area:focus {
+            outline: none;
+            border-color: #007bff;
+        }
+        #head {
             margin-bottom: 20px;
         }
         #head table {
@@ -4465,7 +4427,6 @@ function genererCvb() {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CBV</title>
-    <base href="${window.location.href.replace(/[^\/]*$/, '')}">
     <style>
 body {
 font-family: Arial, sans-serif;
@@ -4607,11 +4568,6 @@ border: none !important;
 #btnCorriger, #correctionStatus, #correctionsContainer {
 display: none !important;
 }
-#texteDescription {
-border: none !important;
-min-height: auto !important;
-padding: 0 !important;
-}
 }
 </style>
 </head>
@@ -4656,7 +4612,7 @@ ${enteteContent}
     </p>
         </p>
 		<p>
-              <textarea id="texteDescription" lang="fr" placeholder="Décrivez ici l'état du patient..." style="width: 580px;min-height: 100px;padding:10px;border:1px solid #bdbdbd;border-radius:5px;font-size:1em;font-family:inherit;line-height:1.5;resize:vertical;"></textarea><br>
+              <textarea id="texteDescription" lang="fr" spellcheck="true" placeholder="Décrivez ici l'état du patient..." style="width: 580px;height: 100px;"></textarea><br>
               <div style="margin-top: 5px;">
                 <button id="btnCorriger" type="button" style="padding: 5px 12px; font-size: 12px; background-color: #2196F3; color: white; border: none; border-radius: 4px; cursor: pointer; margin-bottom: 5px;">
                   <i class="fas fa-spell-check"></i> Corriger l'orthographe
@@ -4686,131 +4642,94 @@ ${enteteContent}
     <script>
     (function() {
         var btnCorriger = document.getElementById('btnCorriger');
-        var editor = document.getElementById('texteDescription');
+        var textarea = document.getElementById('texteDescription');
         var status = document.getElementById('correctionStatus');
         var container = document.getElementById('correctionsContainer');
 
-        if (!btnCorriger || !editor) return;
+        if (!btnCorriger || !textarea) return;
 
-        var ignoreList = new Set();
-
-        function getPlainText() {
-            return editor.value || '';
-        }
-
-        function echappHTML(str) {
-            return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-        }
-
-        function echappAttr(str) {
-            return str.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-        }
-
-        function afficherCorrections() {
-            if (typeof FrenchSpellCheck === 'undefined') {
-                status.textContent = 'Module de correction non charg\u00e9';
-                status.style.color = '#e74c3c';
+        btnCorriger.addEventListener('click', function() {
+            var text = textarea.value.trim();
+            if (!text) {
+                status.textContent = 'Veuillez saisir du texte à vérifier.';
+                status.style.color = '#e67e22';
                 return;
             }
+
+            status.textContent = 'Vérification en cours...';
+            status.style.color = '#2196F3';
+            container.innerHTML = '';
+
             try {
-                var plain = getPlainText();
-                if (!plain || !plain.trim()) {
-                    container.innerHTML = '';
-                    status.textContent = '';
+                var resultats = FrenchSpellCheck.verifier(text);
+
+                if (resultats.erreurs.length === 0) {
+                    status.textContent = 'Aucune erreur trouvée.';
+                    status.style.color = '#4CAF50';
                     return;
                 }
 
-                var resultats = FrenchSpellCheck.verifier(plain);
-                var erreurs = resultats.erreurs.filter(function(e) {
-                    return e.texte && e.position >= 0 && e.longueur > 0 && !ignoreList.has(e.texte.toLowerCase());
-                });
-
-                if (erreurs.length === 0) {
-                    status.textContent = 'Aucune faute';
-                    status.style.color = '#27ae60';
-                    container.innerHTML = '';
-                    return;
-                }
-
-                status.textContent = erreurs.length + ' faute(s) trouv\u00e9e(s)';
+                status.textContent = resultats.erreurs.length + ' erreur(s) trouvée(s).';
                 status.style.color = '#e74c3c';
 
-                erreurs.sort(function(a, b) { return a.position - b.position; });
+                resultats.erreurs.forEach(function(erreur) {
+                    var div = document.createElement('div');
+                    div.style.cssText = 'background:#fff3cd;border:1px solid #ffc107;border-radius:4px;padding:8px;margin-bottom:5px;font-size:12px;';
 
-                var html = '';
-                for (var i = 0; i < erreurs.length; i++) {
-                    var e = erreurs[i];
-                    var motErrone = plain.substring(e.position, e.position + e.longueur);
-                    html += '<div class="err-line" data-pos="' + e.position + '" data-len="' + e.longueur + '">';
-                    html += '<div class="err-msg">&#9888; ' + echappHTML(e.message) + '</div>';
-                    html += '<div>Texte : <span class="err-word">' + echappHTML(motErrone) + '</span></div>';
+                    var html = '<div style="margin-bottom:4px;"><strong style="color:#856404;">&#9888; ' +
+                        erreur.message + '</strong></div>';
 
-                    var allSuggestions = [];
-                    var regles = FrenchSpellCheck._regles || [];
-                    for (var r = 0; r < regles.length; r++) {
-                        if (regles[r].rep && regles[r].regex) {
-                            var testRegex = new RegExp(regles[r].regex.source, regles[r].regex.flags);
-                            if (testRegex.test(motErrone)) {
-                                if (allSuggestions.indexOf(regles[r].rep) === -1) {
-                                    allSuggestions.push(regles[r].rep);
-                                }
-                            }
-                        }
-                    }
-                    var corrections = [];
-                    try { corrections = FrenchSpellCheck.trouverCorrections(motErrone) || []; } catch(ex) {}
-                    for (var c = 0; c < corrections.length; c++) {
-                        if (allSuggestions.indexOf(corrections[c]) === -1) {
-                            allSuggestions.push(corrections[c]);
-                        }
+                    if (erreur.texte) {
+                        html += '<div style="margin-bottom:4px;">Texte : <span style="background:#ffc107;padding:1px 4px;border-radius:2px;">' +
+                            erreur.texte + '</span></div>';
                     }
 
-                    if (allSuggestions.length > 0) {
-                        html += '<div class="err-sugs">';
-                        for (var s = 0; s < allSuggestions.length; s++) {
-                            html += '<button class="corr-btn" data-sug="' + echappAttr(allSuggestions[s]) + '">' + echappHTML(allSuggestions[s]) + '</button>';
-                        }
+                    if (erreur.remplacement) {
+                        html += '<button class="suggestion-btn" data-replacement="' +
+                            erreur.remplacement.replace(/"/g, '&quot;') +
+                            '" data-texte="' + (erreur.texte || '').replace(/"/g, '&quot;') +
+                            '" style="display:inline-block;padding:2px 8px;margin:2px;font-size:11px;background:#e3f2fd;border:1px solid #2196F3;border-radius:3px;cursor:pointer;">' +
+                            erreur.remplacement + '</button>';
+                    } else if (erreur.suggestions && erreur.suggestions.length > 0) {
+                        html += '<div style="margin-bottom:2px;">Suggestions :</div>';
+                        erreur.suggestions.forEach(function(sug) {
+                            html += '<button class="suggestion-btn" data-replacement="' +
+                                sug.replace(/"/g, '&quot;') +
+                                '" data-texte="' + (erreur.texte || erreur.mot || '').replace(/"/g, '&quot;') +
+                                '" style="display:inline-block;padding:2px 8px;margin:2px;font-size:11px;background:#e3f2fd;border:1px solid #2196F3;border-radius:3px;cursor:pointer;">' +
+                                sug + '</button>';
+                        });
                     }
-                    html += '<button class="corr-ignore" data-word="' + echappAttr(motErrone.toLowerCase()) + '" style="margin-left:6px;padding:2px 8px;font-size:11px;background:#f5f5f5;border:1px solid #999;border-radius:3px;cursor:pointer;">Ignorer</button>';
-                    html += '</div>';
-                    html += '</div>';
-                }
-                container.innerHTML = html;
 
-                container.querySelectorAll('.corr-btn').forEach(function(btn) {
-                    btn.addEventListener('click', function() {
-                        var sug = btn.getAttribute('data-sug');
-                        var line = btn.closest('.err-line');
-                        var pos = parseInt(line.getAttribute('data-pos'), 10);
-                        var len = parseInt(line.getAttribute('data-len'), 10);
-                        var text = getPlainText();
-                        var avant = text.substring(0, pos);
-                        var apres = text.substring(pos + len);
-                        editor.value = avant + sug + apres;
-                        afficherCorrections();
-                        editor.focus();
-                    });
+                    div.innerHTML = html;
+                    container.appendChild(div);
                 });
 
-                container.querySelectorAll('.corr-ignore').forEach(function(btn) {
-                    btn.addEventListener('click', function() {
-                        var word = btn.getAttribute('data-word');
-                        ignoreList.add(word);
-                        afficherCorrections();
-                    });
+                container.addEventListener('click', function(e) {
+                    var btn = e.target.closest('.suggestion-btn');
+                    if (!btn) return;
+
+                    var replacement = btn.getAttribute('data-replacement');
+                    var texteOriginal = btn.getAttribute('data-texte');
+                    var currentText = textarea.value;
+
+                    if (texteOriginal) {
+                        textarea.value = currentText.replace(texteOriginal, replacement);
+                    } else {
+                        textarea.value = currentText + ' ' + replacement;
+                    }
+
+                    status.textContent = 'Correction appliquée.';
+                    status.style.color = '#4CAF50';
+
+                    btn.parentElement.style.display = 'none';
                 });
 
             } catch (err) {
-                status.textContent = 'Erreur de correction';
+                status.textContent = 'Erreur lors de la vérification.';
                 status.style.color = '#e74c3c';
             }
-        }
-
-        btnCorriger.addEventListener('click', function() {
-            ignoreList.clear();
-            afficherCorrections();
         });
-
     })();
     </script>
 

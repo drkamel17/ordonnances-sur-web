@@ -1,612 +1,317 @@
 var FrenchSpellCheck = (function() {
 
     // ============================================================
-    // 1. MOTS CONFONDUS (les erreurs les plus fréquentes)
+    // 1. MOTS CONFONDUS (à/a, ou/où, ces/ses, et/est, son/sont...)
     // ============================================================
     var motsConfondus = [
-        // et / est
-        { regex: /\bil et\b/g, msg: "Confusion : 'il et' → 'il est' (verbe être)", rep: "il est" },
-        { regex: /\bell et\b/g, msg: "Confusion : 'elle et' → 'elle est' (verbe être)", rep: "elle est" },
-        { regex: /\bnous et\b/g, msg: "Confusion : 'nous et' → 'nous êtes' (verbe être)", rep: "nous êtes" },
-        { regex: /\bvous et\b/g, msg: "Confusion : 'vous et' → 'vous êtes' (verbe être)", rep: "vous êtes" },
-        { regex: /\bce et\b/g, msg: "Confusion : 'ce et' → 'c'est' (verbe être)", rep: "c'est" },
-        { regex: /\bqui et\b/g, msg: "Confusion : 'qui et' → 'qui est' (verbe être)", rep: "qui est" },
-        { regex: /\bquoi et\b/g, msg: "Confusion : 'quoi et' → 'quoi est'", rep: "quoi est" },
-        { regex: /\bcela et\b/g, msg: "Confusion : 'cela et' → 'cela est'", rep: "cela est" },
-        { regex: /\bje et\b/g, msg: "Confusion : 'je et' → 'je suis' (verbe être)", rep: "je suis" },
-        { regex: /\btu et\b/g, msg: "Confusion : 'tu et' → 'tu es' (verbe être)", rep: "tu es" },
+        { regex: /\b(\w+)\s+à\b/g, msg: "Confusion 'à/a' : après un verbe, c'est 'a' (avoir). Ex: 'il a mal'", rep: null },
+        { regex: /\bil à\b/g, msg: "'il à' → 'il a' (verbe avoir, sans accent)", rep: "il a", auto: true },
+        { regex: /\belle à\b/g, msg: "'elle à' → 'elle a' (verbe avoir, sans accent)", rep: "elle a", auto: true },
+        { regex: /\bnous à\b/g, msg: "'nous à' → 'nous a' (verbe avoir)", rep: "nous a", auto: true },
+        { regex: /\bvous à\b/g, msg: "'vous à' → 'vous a' (verbe avoir)", rep: "vous a", auto: true },
+        { regex: /\bils à\b/g, msg: "'ils à' → 'ils a' (verbe avoir)", rep: "ils a", auto: true },
+        { regex: /\belles à\b/g, msg: "'elles à' → 'elles a' (verbe avoir)", rep: "elles a", auto: true },
 
-        // à / a
-        { regex: /\bil a un\b/g, msg: "Vérifiez : 'il a un' (avoir) ou 'il à un' ?", rep: null },
-        { regex: /\bil à\b/g, msg: "Confusion : 'il à' → 'il a' (verbe avoir, pas préposition)", rep: "il a" },
-        { regex: /\belle à\b/g, msg: "Confusion : 'elle à' → 'elle a' (verbe avoir)", rep: "elle a" },
-        { regex: /\bje à\b/g, msg: "Confusion : 'je à' → 'j'ai' (verbe avoir)", rep: "j'ai" },
-        { regex: /\bnous à\b/g, msg: "Confusion : 'nous à' → 'nous avons' (verbe avoir)", rep: "nous avons" },
-        { regex: /\bvous à\b/g, msg: "Confusion : 'vous à' → 'vous avez' (verbe avoir)", rep: "vous avez" },
+        { regex: /\bou\b/g, msg: "Vérifiez : 'ou' (conjonction) ou 'où' (lieu/moment) ?", rep: null },
+        { regex: /\boù\b/g, msg: "Vérifiez : 'où' (lieu/moment) ou 'ou' (conjonction) ?", rep: null },
 
-        // son / sont
-        { regex: /\bil son\b/g, msg: "Confusion : 'il son' → 'il sont' ou 'son' (possessif) ?", rep: null },
-        { regex: /\bell son\b/g, msg: "Confusion : 'elle son' → 'elle sont' ou 'son' (possessif) ?", rep: null },
+        { regex: /\bces\b/g, msg: "Vérifiez : 'ces' (démonstratif) ou 'ses' (possessif) ?", rep: null },
+        { regex: /\bses\b/g, msg: "Vérifiez : 'ses' (possessif) ou 'ces' (démonstratif) ?", rep: null },
 
-        // ou / où
-        { regex: /\bil va ou\b/g, msg: "Vérifiez : 'où' (lieu) ou 'ou' (alternative) ?", rep: null },
+        { regex: /\b(et)\s+(est)\b/g, msg: "'et est' → 'et est' est correct (conjonction + verbe)", rep: null },
+        { regex: /\bil est\b/g, msg: "Vérifiez : 'il est' (être) ou 'il ét' (incorrect) ?", rep: null },
 
-        // ces / c'est / ses
-        { regex: /\bces est\b/g, msg: "Confusion : 'ces est' → 'c'est' (ce + est)", rep: "c'est" },
-        { regex: /\bcest\b/g, msg: "Écriture : 'c'est' (avec apostrophe)", rep: "c'est" },
+        { regex: /\bson\b/g, msg: "Vérifiez : 'son' (possessif) ou 'sont' (verbe être) ?", rep: null },
+        { regex: /\bsont\b/g, msg: "Vérifiez : 'sont' (verbe être) ou 'son' (possessif) ?", rep: null },
 
-        // leur / leurs
-        { regex: /\bleur ont\b/g, msg: "Vérifiez : 'leur' (singulier) ou 'leurs' (pluriel) ?", rep: null },
+        { regex: /\bc'\s*est\b/g, msg: "Vérifiez : 'c'est' (contraction) correct", rep: null },
+        { regex: /\bs'\s*est\b/g, msg: "Vérifiez : 's'est' (verbe être avec pronom réfléchi) correct", rep: null },
 
-        // que / qu'
-        { regex: /\bil que\b/g, msg: "Vérifiez : 'qu'il' (devant voyelle) ou 'il que' ?", rep: null },
+        { regex: /\bce\b/g, msg: "Vérifiez : 'ce' (démonstratif) ou 'se' (pronom réfléchi) ?", rep: null },
+        { regex: /\bse\b/g, msg: "Vérifiez : 'se' (pronom réfléchi) ou 'ce' (démonstratif) ?", rep: null },
 
-        // était / était
-        { regex: /\belle etait\b/g, msg: "Orthographe : 'était' (avec accent)", rep: "elle était" },
-        { regex: /\bil etait\b/g, msg: "Orthographe : 'était' (avec accent)", rep: "il était" },
-
-        // plus / plus
-        { regex: /\bne plus\b/g, msg: "Vérifiez : 'ne plus' (négation) ou 'plus' (comparatif) ?", rep: null },
-
-        // comment / com-ment
-        { regex: /\bcoment\b/g, msg: "Orthographe : 'comment' (double 'm')", rep: "comment" },
-
-        // commencer / commencer
-        { regex: /\bcommencer\b/g, msg: "Orthographe : 'commencer' (un seul 'n')", rep: "commencer" },
-
-        // professionnel / professionnel
-        { regex: /\bproffessionnel\b/g, msg: "Orthographe : 'professionnel' (un seul 'f')", rep: "professionnel" },
-        { regex: /\bproffesionnel\b/g, msg: "Orthographe : 'professionnel'", rep: "professionnel" },
-
-        // planification / planification
-        { regex: /\bplannification\b/g, msg: "Orthographe : 'planification' (un seul 'n')", rep: "planification" },
-
-        // quelquefois / quelquefois
-        { regex: /\bquelque fois\b/g, msg: "Écriture : 'quelquefois' (un seul mot)", rep: "quelquefois" },
-
-        // celuila / celui-là
-        { regex: /\bcelui la\b/g, msg: "Écriture : 'celui-là' (avec trait d'union)", rep: "celui-là" },
+        { regex: /\bcompliment\b/g, msg: "Confusion : 'compliment' (souhaite) ou 'complément' (qui complète) ?", rep: null },
+        { regex: /\bcomplément\b/g, msg: "Vérifiez : 'complément' (qui complète) ou 'compliment' (souhaite) ?", rep: null },
     ];
 
     // ============================================================
-    // 2. ORTHOGRAPHE MÉDICALE (fautes fréquentes en contexte médical)
+    // 2. ORTHOGRAPHE / DYSLEXIE (transpositions, doubles, omissions)
     // ============================================================
-    var orthographeMedicale = [
-        // Ecchymose / ecchymose
-        { regex: /\becchimose\b/gi, msg: "Orthographe : 'ecchymose' (un seul 'c')", rep: "ecchymose" },
-        { regex: /\bexchimose\b/gi, msg: "Orthographe : 'ecchymose'", rep: "ecchymose" },
+    var orthographe = [
+        // Transpositions (dyslexie)
+        { regex: /\bfoirat\b/g, msg: "'foirat' → 'forfait'", rep: "forfait", auto: true },
+        { regex: /\bfolret\b/g, msg: "'folret' → 'forlet' ? Vérifiez", rep: null },
+        { regex: /\bfractior\b/g, msg: "'fractior' → 'fracture'", rep: "fracture", auto: true },
+        { regex: /\bplatie\b/g, msg: "'platie' → 'plaie'", rep: "plaie", auto: true },
 
-        // Hémorragie
-        { regex: /\bhemoragie\b/gi, msg: "Orthographe : 'hémorragie' (accent + double 'r')", rep: "hémorragie" },
-        { regex: /\bhémoragie\b/gi, msg: "Orthographe : 'hémorragie' (double 'r')", rep: "hémorragie" },
+        // Doubles lettres manquées
+        { regex: /\bcommancer\b/g, msg: "'commancer' → 'commencer'", rep: "commencer", auto: true },
+        { regex: /\bcommencé\b/g, msg: "'commencé' est correct (participe passé)", rep: null },
+        { regex: /\bcommencer\b/g, msg: "'commencer' est correct (infinitif)", rep: null },
+        { regex: /\bplannifier\b/g, msg: "'plannifier' → 'planifier' (un seul 'n')", rep: "planifier", auto: true },
+        { regex: /\bplannification\b/g, msg: "'plannification' → 'planification'", rep: "planification", auto: true },
+        { regex: /\bproffessionnel\b/g, msg: "'proffessionnel' → 'professionnel' (un seul 'f')", rep: "professionnel", auto: true },
+        { regex: /\bproffesionnel\b/g, msg: "'proffesionnel' → 'professionnel'", rep: "professionnel", auto: true },
+        { regex: /\bbesoins?\s+essentiels?\b/g, msg: "Vérifiez l'accord : 'besoin essentiel' ou 'besoins essentiels' ?", rep: null },
+        { regex: /\bordonance\b/g, msg: "'ordonance' → 'ordonnance' (double 'n')", rep: "ordonnance", auto: true },
+        { regex: /\bgrocesse\b/g, msg: "'grocesse' → 'grossesse' (double 's')", rep: "grossesse", auto: true },
+        { regex: /\bappatite\b/g, msg: "'appatite' → 'appétit' ou 'appétite'", rep: null },
 
-        // Symptôme
-        { regex: /\bsympthomes?\b/gi, msg: "Orthographe : 'symptôme' (p muet + accent)", rep: "symptôme" },
-        { regex: /\bsymtomes?\b/gi, msg: "Orthographe : 'symptôme'", rep: "symptôme" },
+        // Accents manqués
+        { regex: /\bdiabete\b/g, msg: "'diabete' → 'diabète' (accent grave)", rep: "diabète", auto: true },
+        { regex: /\bdiabetique\b/g, msg: "'diabetique' → 'diabétique' (accent aigu)", rep: "diabétique", auto: true },
+        { regex: /\bepilepsie\b/g, msg: "'epilepsie' → 'épilepsie' (accent aigu)", rep: "épilepsie", auto: true },
+        { regex: /\bhemoragie\b/g, msg: "'hemoragie' → 'hémorragie' (accent + double 'r')", rep: "hémorragie", auto: true },
+        { regex: /\bhemoragie\b/g, msg: "'hemoragie' → 'hémorragie' (double 'r')", rep: "hémorragie", auto: true },
+        { regex: /\bcontusioné\b/g, msg: "'contusioné' → 'contusionné' (accent aigu)", rep: "contusionné", auto: true },
+        { regex: /\bacuté\b/g, msg: "'acuté' → 'aigu' (mot différent)", rep: "aigu", auto: true },
 
-        // Diabète
-        { regex: /\bdiabéte\b/gi, msg: "Orthographe : 'diabète' (accent grave)", rep: "diabète" },
-        { regex: /\bdiabetique\b/gi, msg: "Orthographe : 'diabétique'", rep: "diabétique" },
-
-        // Épilepsie
-        { regex: /\bepilepsie\b/gi, msg: "Orthographe : 'épilepsie' (accent)", rep: "épilepsie" },
-
-        // Ordonnance
-        { regex: /\bordonance\b/gi, msg: "Orthographe : 'ordonnance' (double 'n')", rep: "ordonnance" },
-
-        // Grossesse
-        { regex: /\bgrocesse\b/gi, msg: "Orthographe : 'grossesse' (double 's')", rep: "grossesse" },
-
-        // Injection
-        { regex: /\binjetion\b/gi, msg: "Orthographe : 'injection'", rep: "injection" },
-
-        // Prescrire
-        { regex: /\bprscrire\b/gi, msg: "Orthographe : 'prescrire'", rep: "prescrire" },
-
-        // Contusionné
-        { regex: /\bcontusioné\b/gi, msg: "Orthographe : 'contusionné' (accent)", rep: "contusionné" },
-
-        // Traumatisme
-        { regex: /\btraumtisme\b/gi, msg: "Orthographe : 'traumatisme'", rep: "traumatisme" },
-
-        // Antibiotique
-        { regex: /\bantibiotque\b/gi, msg: "Orthographe : 'antibiotique'", rep: "antibiotique" },
-
-        // Aigu
-        { regex: /\bacuté\b/gi, msg: "Orthographe : 'aigu' (pas d'accent sur le 'u')", rep: "aigu" },
-
-        // Fracture
-        { regex: /\bfracturé\b/gi, msg: "Vérifiez : 'fracturé' (participe) ou 'fracture' (substantif) ?", rep: null },
-
-        // Pronostic
-        { regex: /\bpronostique\b/gi, msg: "Orthographe : 'pronostic' (pas de 'que')", rep: "pronostic" },
+        // Fautes médicales courantes (dyslexie + orthographe)
+        { regex: /\becchimose\b/g, msg: "'ecchimose' → 'ecchymose' (avec 'y')", rep: "ecchymose", auto: true },
+        { regex: /\bexchymose\b/g, msg: "'exchymose' → 'ecchymose'", rep: "ecchymose", auto: true },
+        { regex: /\bexchimose\b/g, msg: "'exchimose' → 'ecchymose'", rep: "ecchymose", auto: true },
+        { regex: /\btraumtisme\b/g, msg: "'traumtisme' → 'traumatisme'", rep: "traumatisme", auto: true },
+        { regex: /\bsympthome\b/g, msg: "'sympthome' → 'symptôme' (p muet + accent)", rep: "symptôme", auto: true },
+        { regex: /\bsympthomes\b/g, msg: "'sympthomes' → 'symptômes'", rep: "symptômes", auto: true },
+        { regex: /\bsymtome\b/g, msg: "'symtome' → 'symptôme'", rep: "symptôme", auto: true },
+        { regex: /\bsymtomes\b/g, msg: "'symtomes' → 'symptômes'", rep: "symptômes", auto: true },
+        { regex: /\bantibiotque\b/g, msg: "'antibiotque' → 'antibiotique'", rep: "antibiotique", auto: true },
+        { regex: /\binjetion\b/g, msg: "'injetion' → 'injection'", rep: "injection", auto: true },
+        { regex: /\bprscrire\b/g, msg: "'prscrire' → 'prescrire'", rep: "prescrire", auto: true },
+        { regex: /\bcelui la\b/g, msg: "'celui la' → 'celui-là' (trait d'union)", rep: "celui-là", auto: true },
+        { regex: /\bquelque fois\b/g, msg: "'quelque fois' → 'quelquefois' (un seul mot)", rep: "quelquefois", auto: true },
+        { regex: /\bc'est à dire\b/g, msg: "'c'est à dire' → 'c'est-à-dire' (traits d'union)", rep: "c'est-à-dire", auto: true },
     ];
 
     // ============================================================
-    // 3. ACCORD MASCULIN / FÉMININ
+    // 3. ACCORDS MASCULIN / FÉMININ
     // ============================================================
-    var accordRules = [
-        // Noms - formes féminines
-        { regex: /\bun patient\b/g, msg: "Vérifiez : 'un patient' (masc.) ou 'une patiente' (fém.) ?", rep: null },
-        { regex: /\bune patiente?\b/g, msg: "Vérifiez : 'une patiente' (fém.) ou 'un patient' (masc.) ?", rep: null },
-        { regex: /\bun docteur\b/g, msg: "Vérifiez : 'un docteur' (masc.) ou 'une docteure' (fém.) ?", rep: null },
-        { regex: /\bun médecin\b/g, msg: "Vérifiez : 'un médecin' (masc.) ou 'une médecin' (fém.) ?", rep: null },
-        { regex: /\bun chirurgien\b/g, msg: "Vérifiez : 'un chirurgien' (masc.) ou 'une chirurgienne' (fém.) ?", rep: null },
+    var accords = [
+        // Patients
+        { regex: /\bpatient\b/g, msg: "Accord : 'patient' (masc.) ou 'patiente' (fém.) ?", rep: null },
+        { regex: /\bpatiente\b/g, msg: "Accord : 'patiente' (fém.)", rep: null },
 
-        // Adjectifs - accord
-        { regex: /\bil est important\b/g, msg: "Vérifiez : 'important' (masc.) ou 'importante' (fém.) ?", rep: null },
-        { regex: /\belle est important\b/g, msg: "Accord : 'elle est importante' (fém.)", rep: "elle est importante" },
-        { regex: /\bil est léger\b/g, msg: "Vérifiez : 'léger' (masc.) ou 'légère' (fém.) ?", rep: null },
-        { regex: /\belle est léger\b/g, msg: "Accord : 'elle est légère' (fém.)", rep: "elle est légère" },
-        { regex: /\bil est bon\b/g, msg: "Vérifiez : 'bon' (masc.) ou 'bonne' (fém.) ?", rep: null },
-        { regex: /\belle est bon\b/g, msg: "Accord : 'elle est bonne' (fém.)", rep: "elle est bonne" },
-        { regex: /\bil est grand\b/g, msg: "Vérifiez : 'grand' (masc.) ou 'grande' (fém.) ?", rep: null },
-        { regex: /\belle est grand\b/g, msg: "Accord : 'elle est grande' (fém.)", rep: "elle est grande" },
-        { regex: /\bil est petit\b/g, msg: "Vérifiez : 'petit' (masc.) ou 'petite' (fém.) ?", rep: null },
-        { regex: /\belle est petit\b/g, msg: "Accord : 'elle est petite' (fém.)", rep: "elle est petite" },
-        { regex: /\bil est nouveau\b/g, msg: "Vérifiez : 'nouveau' (masc.) ou 'nouvelle' (fém.) ?", rep: null },
-        { regex: /\belle est nouveau\b/g, msg: "Accord : 'elle est nouvelle' (fém.)", rep: "elle est nouvelle" },
-        { regex: /\bil est ancien\b/g, msg: "Vérifiez : 'ancien' (masc.) ou 'ancienne' (fém.) ?", rep: null },
-        { regex: /\belle est ancien\b/g, msg: "Accord : 'elle est ancienne' (fém.)", rep: "elle est ancienne" },
-        { regex: /\bil est mauvais\b/g, msg: "Vérifiez : 'mauvais' (masc.) ou 'mauvaise' (fém.) ?", rep: null },
-        { regex: /\belle est mauvais\b/g, msg: "Accord : 'elle est mauvaise' (fém.)", rep: "elle est mauvaise" },
-
-        // Participes passés avec être
-        { regex: /\bil est tombé\b/g, msg: "Vérifiez : 'tombé' (masc.) ou 'tombée' (fém.) ?", rep: null },
-        { regex: /\belle est tombé\b/g, msg: "Accord : 'elle est tombée' (fém.)", rep: "elle est tombée" },
-        { regex: /\bil est allé\b/g, msg: "Vérifiez : 'allé' (masc.) ou 'allée' (fém.) ?", rep: null },
-        { regex: /\belle est allé\b/g, msg: "Accord : 'elle est allée' (fém.)", rep: "elle est allée" },
-        { regex: /\bil est venu\b/g, msg: "Vérifiez : 'venu' (masc.) ou 'venue' (fém.) ?", rep: null },
-        { regex: /\belle est venu\b/g, msg: "Accord : 'elle est venue' (fém.)", rep: "elle est venue" },
-        { regex: /\bil est resté\b/g, msg: "Vérifiez : 'resté' (masc.) ou 'restée' (fém.) ?", rep: null },
-        { regex: /\belle est resté\b/g, msg: "Accord : 'elle est restée' (fém.)", rep: "elle est restée" },
-        { regex: /\bil est parti\b/g, msg: "Vérifiez : 'parti' (masc.) ou 'partie' (fém.) ?", rep: null },
-        { regex: /\belle est parti\b/g, msg: "Accord : 'elle est partie' (fém.)", rep: "elle est partie" },
-        { regex: /\bil est rentré\b/g, msg: "Vérifiez : 'rentré' (masc.) ou 'rentrée' (fém.) ?", rep: null },
-        { regex: /\belle est rentré\b/g, msg: "Accord : 'elle est rentrée' (fém.)", rep: "elle est rentrée" },
-        { regex: /\bil est sorti\b/g, msg: "Vérifiez : 'sorti' (masc.) ou 'sortie' (fém.) ?", rep: null },
-        { regex: /\belle est sorti\b/g, msg: "Accord : 'elle est sortie' (fém.)", rep: "elle est sortie" },
-        { regex: /\bil est entré\b/g, msg: "Vérifiez : 'entré' (masc.) ou 'entrée' (fém.) ?", rep: null },
-        { regex: /\belle est entré\b/g, msg: "Accord : 'elle est entrée' (fém.)", rep: "elle est entrée" },
-        { regex: /\bil est décédé\b/g, msg: "Vérifiez : 'décédé' (masc.) ou 'décédée' (fém.) ?", rep: null },
-        { regex: /\belle est décédé\b/g, msg: "Accord : 'elle est décédée' (fém.)", rep: "elle est décédée" },
-        { regex: /\bil est né\b/g, msg: "Vérifiez : 'né' (masc.) ou 'née' (fém.) ?", rep: null },
-        { regex: /\belle est né\b/g, msg: "Accord : 'elle est née' (fém.)", rep: "elle est née" },
-
-        // Participes passés avec avoir (devant COD)
-        { regex: /\bil a examiné\b/g, msg: "Vérifiez : 'examiné' (avant COD → invariable)", rep: null },
-        { regex: /\belle a examiné\b/g, msg: "Vérifiez : 'examiné' (avant COD → invariable)", rep: null },
+        // Adjectifs fréquents — laisser en info, pas de remplacement auto
+        { regex: /\b(\w+)ée?\s+(patient|personne|femme|patiente)\b/gi, msg: "Vérifiez l'accord de l'adjectif avec le nom féminin", rep: null },
+        { regex: /\b(\w+)é\s+(homme|garçon|médecin)\b/gi, msg: "Vérifiez l'accord de l'adjectif avec le nom masculin", rep: null },
     ];
 
     // ============================================================
     // 4. CONJUGAISON
     // ============================================================
-    var conjugaisonRules = [
-        // Être
-        { regex: /\bje suis\b/g, msg: "Vérifiez : 'je suis' (verbe être)", rep: null },
-        { regex: /\bje sois\b/g, msg: "Erreur : 'je suis' (présent) ou 'je sois' (subjonctif) ?", rep: null },
-        { regex: /\btu es\b/g, msg: "Vérifiez : 'tu es' (verbe être)", rep: null },
-        { regex: /\bil est\b/g, msg: "Vérifiez : 'il est' (masc.) ou 'elle est' (fém.) ?", rep: null },
-        { regex: /\belle est\b/g, msg: "Vérifiez : 'elle est' (fém.) ou 'il est' (masc.) ?", rep: null },
-        { regex: /\bnous sommes\b/g, msg: "Vérifiez : 'nous sommes' (verbe être)", rep: null },
-        { regex: /\bvous êtes\b/g, msg: "Vérifiez : 'vous êtes' (verbe être)", rep: null },
-
-        // Avoir
-        { regex: /\bj'ai\b/g, msg: "Vérifiez : 'j'ai' (verbe avoir)", rep: null },
-        { regex: /\btu as\b/g, msg: "Vérifiez : 'tu as' (verbe avoir)", rep: null },
-        { regex: /\bil a\b/g, msg: "Vérifiez : 'il a' (avoir) ou 'il à' (préposition) ?", rep: null },
-        { regex: /\belle a\b/g, msg: "Vérifiez : 'elle a' (avoir) ou 'elle à' (préposition) ?", rep: null },
-        { regex: /\bnous avons\b/g, msg: "Vérifiez : 'nous avons' (verbe avoir)", rep: null },
-        { regex: /\bvous avez\b/g, msg: "Vérifiez : 'vous avez' (verbe avoir)", rep: null },
+    var conjugaison = [
+        { regex: /\bil à\b/g, msg: "'il à' → 'il a' (avoir sans accent)", rep: "il a", auto: true },
+        { regex: /\belle à\b/g, msg: "'elle à' → 'elle a' (avoir sans accent)", rep: "elle a", auto: true },
+        { regex: /\bils à\b/g, msg: "'ils à' → 'ils a' (avoir)", rep: "ils a", auto: true },
+        { regex: /\belles à\b/g, msg: "'elles à' → 'elles a' (avoir)", rep: "elles a", auto: true },
+        { regex: /\bnous avons\b/g, msg: "'nous avons' correct", rep: null },
+        { regex: /\bvous avez\b/g, msg: "'vous avez' correct", rep: null },
+        { regex: /\bil sont\b/g, msg: "'il sont' → 'ils sont' ou 'il est'", rep: null },
+        { regex: /\belle sont\b/g, msg: "'elle sont' → 'elles sont' ou 'elle est'", rep: null },
+        { regex: /\bil on\b/g, msg: "'il on' → 'il' ou 'on'", rep: null },
+        { regex: /\belle on\b/g, msg: "'elle on' → 'elle' ou 'on'", rep: null },
     ];
 
     // ============================================================
     // 5. GRAMMAIRE GÉNÉRALE
     // ============================================================
-    var grammaireRules = [
-        // Articles contractés
-        { regex: /\bde le\b/g, msg: "Articles contractés : 'de le' → 'du'", rep: "du" },
-        { regex: /\bde les\b/g, msg: "Articles contractés : 'de les' → 'des'", rep: "des" },
-        { regex: /\bà le\b/g, msg: "Articles contractés : 'à le' → 'au'", rep: "au" },
-        { regex: /\bà les\b/g, msg: "Articles contractés : 'à les' → 'aux'", rep: "aux" },
+    var grammaire = [
+        { regex: /\bde le\b/g, msg: "'de le' → 'du' (article contracté)", rep: "du", auto: true },
+        { regex: /\bde les\b/g, msg: "'de les' → 'des' (article contracté)", rep: "des", auto: true },
+        { regex: /\bà le\b/g, msg: "'à le' → 'au' (article contracté)", rep: "au", auto: true },
+        { regex: /\bà les\b/g, msg: "'à les' → 'aux' (article contracté)", rep: "aux", auto: true },
 
-        // Négation
-        { regex: /\bne pas\b/g, msg: "Vérifiez : 'ne pas' (négation complète)", rep: null },
-        { regex: /\bpas ne\b/g, msg: "Erreur : 'pas ne' → 'ne pas' (ordre correct)", rep: "ne pas" },
+        { regex: /\bnonetheless\b/g, msg: "Mot anglais : traduisez en français", rep: null },
+        { regex: /\bhowever\b/g, msg: "Mot anglais : traduisez en français", rep: null },
+        { regex: /\bmoreover\b/g, msg: "Mot anglais : traduisez en français", rep: null },
 
-        // Ponctuation
-        { regex: /\.\./g, msg: "Double point détecté", rep: "." },
-        { regex: /\s+,/g, msg: "Espace avant la virgule", rep: "," },
-        { regex: /\s+\./g, msg: "Espace avant le point", rep: "." },
+        { regex: /\.\./g, msg: "Double point détecté", rep: ".", auto: true },
+        { regex: /\s+,/g, msg: "Espace avant virgule supprimé", rep: ",", auto: true },
+        { regex: /\s+\./g, msg: "Espace avant point supprimé", rep: ".", auto: true },
     ];
 
     // ============================================================
-    // 6. CORRECTIONS PAR DISTANCE DE LEVENSHTEIN (dyslexie / typos)
+    // TOUTES LES RÈGLES COMBINÉES
     // ============================================================
-    var dictionnaireMedical = [
-        "ecchymose", "hématome", "oedème", "inflammation", "infection",
-        "fracture", "entorse", "luxation", "claudication", "boiterie",
-        "douleur", "souffrance", "gêne", "raideur", "limitation",
-        "céphalée", "migraine", "vertige", "syncope",
-        "nausée", "vomissement", "diarrhée", "constipation",
-        "toux", "dyspnée", "essoufflement", "oppression",
-        "palpitation", "arythmie", "tachycardie", "bradycardie",
-        "hypertension", "hypotension", "diabète", "hyperglycémie",
-        "hypoglycémie", "cholestérol", "anémie", "thrombopénie",
-        "bronchite", "pneumonie", "pleurésie", "asthme",
-        "hépatite", "cirrhose", "pancréatite", "cholécystite",
-        "appendicite", "arthrose", "arthrite", "polyarthrite",
-        "rhumatisme", "lumbago", "sciatique", "cervicalgie",
-        "tendinite", "bursite", "épicondylite", "ténosynovite",
-        "allergie", "eczéma", "urticaire", "dermite",
-        "psoriasis", "acné", "mycose", "herpès", "verrue",
-        "traumatisme", "contusion", "plaie", "coupure", "brûlure",
-        "cicatrice", "kyste", "tumeur", "cancer",
-        "handicap", "invalidité", "incapacité", "déficience",
-        "séquelle", "syndrome", "pathologie", "affection",
-        "traitement", "médicament", "ordonnance", "prescription",
-        "diagnostic", "pronostic", "bilan", "examen",
-        "radiographie", "scanner", "irm", "échographie",
-        "injection", "perfusion", "transfusion", "vaccination",
-        "chirurgie", "opération", "anesthésie", "hospitalisation",
-        "consultation", "examen clinique", "auscultation",
-        "palpation", "percussion", "auscultation",
-        "amplitude", "articulation", "mobilité", "souplesse",
-        "muscle", "tendon", "ligament", "os", "cartilage",
-        "tête", "front", "tempe", "oeil", "nez", "oreille",
-        "bouche", "gorge", "cou", "épaule", "bras", "coude",
-        "poignet", "main", "doigt", "thorax", "dos", "rein",
-        "ventre", "abdomen", "hanche", "genou", "jambe",
-        "cheville", "pied", "talon", "visage", "menton",
+    var toutesRegles = [].concat(motsConfondus, orthographe, accords, conjugaison, grammaire);
+
+    // ============================================================
+    // DICTIONNAIRE DE BASE (mots très courants)
+    // ============================================================
+    var dictionnaireBase = new Set([
+        // Articles, prépositions, conjonctions
+        "le", "la", "les", "un", "une", "des", "du", "de", "au", "aux",
+        "et", "ou", "mais", "donc", "car", "ni", "ne", "pas", "plus",
+        "en", "y", "à", "ce", "se", "me", "te", "lui", "leur",
+        // Pronoms
+        "je", "tu", "il", "elle", "nous", "vous", "ils", "elles",
+        "mon", "ton", "son", "ma", "ta", "sa", "mes", "tes", "ses",
+        "qui", "que", "quoi", "dont", "où", "lequel", "laquelle",
+        "celui", "celle", "ceux", "celles", "cette", "cet",
+        // Verbes courants
+        "être", "avoir", "faire", "dire", "aller", "voir", "pouvoir",
+        "vouloir", "devoir", "falloir", "prendre", "donner", "partir",
+        "mettre", "passer", "venir", "tenir", "rester", "paraître",
+        "suivre", "devenir", "sortir", "entrer", "tomber", "revenir",
+        "savoir", "croire", "penser", "vivre", "porter", "jeter",
+        "sentir", "partir", "ouvrir", "offrir", "servir",
+        // Formes conjuguées courantes
+        "est", "sont", "a", "ont", "été", "fait", "dit", "va", "peut",
+        "vient", "faut", "doit", "prend", "donne", "met", "passe",
+        "reste", "entre", "sort", "tombe", "croit", "sait",
+        // Adjectifs
+        "bon", "mauvais", "grand", "petit", "vieux", "jeune",
+        "nouveau", "long", "court", "large", "haut", "bas",
+        "fort", "faible", "vrai", "faux", "juste", "seul", "autre",
+        "premier", "dernier", "important", "grave", "sérieux",
+        "malade", "fatigué", "fatiguée", "souffrant", "souffrante",
+        // Noms courants
+        "jour", "temps", "an", "mois", "heure", "fois",
+        "homme", "femme", "enfant", "personne", "gens", "monde",
+        "maison", "ville", "pays", "terre", "eau", "feu",
+        "corps", "tête", "main", "bras", "jambe", "pied",
+        "coeur", "sang", "os", "peau", "oeil", "yeux",
+        "vie", "mort", "nuit", "lumière", "ombre",
+        // Adverbes
+        "bien", "mal", "beaucoup", "peu", "trop", "très", "assez",
+        "aussi", "encore", "déjà", "toujours", "jamais", "parfois",
+        "souvent", "ici", "là", "alors", "ainsi", "cependant",
+        "néanmoins", "pourtant", "avant", "après", "pendant", "depuis",
+        "avec", "sans", "pour", "selon", "malgré", "chez", "vers",
+        // Mots médicaux de base
         "patient", "patiente", "médecin", "docteur",
-        "arrêt", "reprise", "prolongation", "congé",
+        "soin", "soins", "santé", "maladie",
+        "traitement", "médicament", "ordonnance", "certificat",
+        "examen", "diagnostic", "symptôme", "symptômes",
+        "douleur", "douleurs", "fièvre", "toux",
+        "fracture", "entorse", "blessure", "plaie", "plaies",
+        "coupure", "brûlure", "choc", "traumatisme",
+        "ecchymose", "ecchymoses", "hématome", "hématomes",
+        "oedème", "inflammation", "infection",
+        "allergie", "asthme", "diabète", "hypertension",
+        "nausée", "vomissement", "vertige", "syncope",
+        "radio", "scanner", "irm", "échographie",
+        "chirurgie", "opération", "hospitalisation",
+        "injection", "piqûre", "vaccination",
+        "pansement", "cicatrice", "suture",
+        "repos", "marche", "effort",
         "certificat", "attestation", "rapport",
-        "plaie", "coupure", "entaille", "déchirure",
-        "ecchymose", "hématome", "œdème", "gorge",
-        "poignet", "cheville", "genou", "coude", "épaule",
-        "genou", "cuisse", "tibia", "mollet", "orteil",
-        "radius", "cubitus", "humérus", "fémur", "rotule",
-        "clavicule", "omoplate", "sternum", "colonne",
-        "vertèbre", "bassin", "sacrum", "coccyx",
-        "paume", "dos", "talon", "voûte",
-        "pouce", "annulaire", "auriculaire", "majeur",
-    ];
+        "arrêt", "congé", "reprise", "prolongation",
+        "poignet", "poignets", "cheville", "chevilles",
+        "genou", "genoux", "épaule", "épaules",
+        "coude", "coudes", "genou", "genoux",
+        "cuisse", "cuisses", "jambe", "jambes",
+        "tibia", "mollet", "mollets",
+        "pied", "pieds", "talon", "orteil", "orteils",
+        "dos", "rein", "reins", "ventre",
+        "cou", "gorge", "bouche", "nez", "oreille", "oreilles",
+        "front", "tempe", "menton", "nuque",
+        "main", "mains", "doigt", "doigts", "pouce",
+        "bras", "avant-bras",
+        "thorax", "poitrine", "abdomen",
+        "hanche", "hanches", "bassin",
+        "coeur", "cœur", "poumon", "poumons",
+        "foie", "rate", "estomac", "intestin",
+        "cerveau", "nerf", "nerfs",
+        "muscle", "muscles", "tendon", "tendons",
+        "ligament", "ligaments", "articulation", "articulations",
+        "os", "squelette", "peau", "veine", "veines",
+        "artère", "artères", "glande", "glandes",
+        "patiente", "patients", "patientes",
+        "infirmier", "infirmière",
+        "pharmacien", "pharmacienne",
+    ]);
 
-    /**
-     * Distance de Levenshtein
-     */
+    // ============================================================
+    // LEVENSHTEIN
+    // ============================================================
     function levenshtein(a, b) {
         var m = a.length, n = b.length;
-        if (m === 0) return n;
-        if (n === 0) return m;
         var dp = [];
         for (var i = 0; i <= m; i++) { dp[i] = [i]; }
         for (var j = 0; j <= n; j++) { dp[0][j] = j; }
         for (var i = 1; i <= m; i++) {
             for (var j = 1; j <= n; j++) {
-                var cost = a[i-1] === b[j-1] ? 0 : 1;
-                dp[i][j] = Math.min(dp[i-1][j] + 1, dp[i][j-1] + 1, dp[i-1][j-1] + cost);
+                var cost = a[i - 1] === b[j - 1] ? 0 : 1;
+                dp[i][j] = Math.min(dp[i - 1][j] + 1, dp[i][j - 1] + 1, dp[i - 1][j - 1] + cost);
             }
         }
         return dp[m][n];
     }
 
-    /**
-     * Détecte les lettres transposées (dyslexie)
-     * Ex: "ecchymsoe" → "ecchymose"
-     */
-    function detecterTransposition(mot) {
-        var corrections = [];
-        for (var i = 0; i < mot.length - 1; i++) {
-            var transposed = mot.substring(0, i) + mot[i+1] + mot[i] + mot.substring(i+2);
-            for (var j = 0; j < dictionnaireMedical.length; j++) {
-                if (levenshtein(transposed, dictionnaireMedical[j]) <= 1) {
-                    corrections.push(dictionnaireMedical[j]);
-                }
+    function trouverSimilaires(mot, maxDist) {
+        maxDist = maxDist || 2;
+        var resultats = [];
+        var m = mot.toLowerCase();
+        dictionnaireBase.forEach(function(d) {
+            if (d === m) return;
+            var dist = levenshtein(m, d);
+            if (dist > 0 && dist <= maxDist) {
+                resultats.push({ mot: d, distance: dist });
             }
-        }
-        return corrections;
+        });
+        resultats.sort(function(a, b) { return a.distance - b.distance; });
+        return resultats.slice(0, 5).map(function(r) { return r.mot; });
     }
 
-    /**
-     * Trouve les corrections par Levenshtein
-     */
-    function trouverCorrections(mot) {
-        var corrections = [];
-        var motLower = mot.toLowerCase();
-
-        for (var i = 0; i < dictionnaireMedical.length; i++) {
-            var d = levenshtein(motLower, dictionnaireMedical[i].toLowerCase());
-            if (d > 0 && d <= 2) {
-                corrections.push({ mot: dictionnaireMedical[i], distance: d });
-            }
-        }
-
-        corrections.sort(function(a, b) { return a.distance - b.distance; });
-        return corrections.slice(0, 5).map(function(c) { return c.mot; });
-    }
-
-    /**
-     * Vérifie un mot (hors dictionnaire)
-     */
-    function verifierMot(mot) {
-        if (!mot || mot.length < 3) return null;
-        var motLower = mot.toLowerCase();
-
-        // Vérifier dictionnaire français
-        var dictionnaireBase = [
-            "le", "la", "les", "un", "une", "des", "du", "de", "au", "aux",
-            "et", "ou", "mais", "donc", "car", "ni", "ne", "pas", "plus",
-            "je", "tu", "il", "elle", "nous", "vous", "ils", "elles",
-            "me", "te", "se", "lui", "leur", "moi", "toi", "soi",
-            "mon", "ton", "son", "ma", "ta", "sa", "mes", "tes", "ses",
-            "ce", "cette", "ces", "cet", "celui", "celle", "ceux", "celles",
-            "qui", "que", "quoi", "dont", "où", "lequel", "laquel",
-            "être", "avoir", "faire", "dire", "aller", "voir", "pouvoir",
-            "vouloir", "devoir", "falloir", "prendre", "donner", "partir",
-            "mettre", "passer", "venir", "tenir", "rester", "paraître",
-            "suivre", "devenir", "sortir", "entrer", "tomber", "revenir",
-            "bien", "mal", "beaucoup", "peu", "trop", "très", "assez",
-            "aussi", "encore", "déjà", "toujours", "jamais", "parfois",
-            "souvent", "ici", "là", "alors", "ainsi", "cependant",
-            "avant", "après", "pendant", "depuis", "chez", "vers",
-            "avec", "sans", "pour", "selon", "malgré",
-            "jour", "temps", "an", "mois", "heure", "fois",
-            "homme", "femme", "enfant", "personne", "gens", "monde",
-            "maison", "ville", "pays", "terre", "eau", "feu", "air",
-            "corps", "tête", "oeil", "main", "bras", "jambe", "pied",
-            "coeur", "sang", "os", "peau", "cheveux", "oreille",
-            "vie", "mort", "nuit", "jour", "lumière", "ombre",
-            "bon", "mauvais", "grand", "petit", "vieux", "jeune",
-            "nouveau", "long", "court", "large", "haut", "bas",
-            "fort", "faible", "vite", "lentement", "ensemble",
-            "vrai", "faux", "juste", "seul", "autre", "même",
-            "premier", "dernier", "prochain", "ancien",
-            "malade", "santé", "médecin", "docteur", "patient",
-            "traitement", "médicament", "ordonnance", "certificat",
-            "examen", "diagnostic", "symptôme", "douleur", "fièvre",
-            "injection", "piqûre", "pansement", "cicatrice",
-            "radiographie", "scanner", "irm", "échographie",
-            "chirurgie", "opération", "anesthésie", "hospitalisation",
-            "consultation", "arrêt", "reprise", "prolongation",
-            "bilan", "résultat", "prescription", "posologie",
-            "effet", "secondaire", "contre-indication",
-            "urgence", "ambulance", "samu", "pompiers",
-            "vaccination", "vaccin", "sérum", "antibiotique",
-            "antidouleur", "anti-inflammatoire", "anticoagulant",
-            "handicap", "invalidité", "incapacité", "déficience",
-            "séquelle", "fonctionnelle", "motrice",
-            "sport", "effort", "repos", "activité",
-            "alimentation", "régime", "hygiène", "sommeil",
-            "suivi", "contrôle", "visite", "rendez-vous",
-            "assurance", "mutuelle", "sécurité", "sociale",
-            "rapport", "compte-rendu", "protocole",
-            "information", "conseil", "recommandation",
-            "observation", "constat", "évaluation", "appréciation",
-            "guérison", "rémission", "rechute", "complication",
-            "capacité", "aptitude", "restriction", "limitation",
-            "déplacement", "locomotion", "marche", "position",
-            "état", "etat", "formé", "guéri", "soulagé", "stabilisé",
-            "modéré", "important", "sévère", "léger", "grave",
-            "aigu", "chronique", "récidivante", "récurrent",
-            "bilatéral", "unilatéral", "droit", "gauche",
-            "antérieur", "postérieur", "supérieur", "inférieur",
-            "interne", "externe", "profond", "superficiel",
-            "total", "partiel", "complet", "incomplet",
-            "normal", "anormal", "régulier", "irrégulier",
-            "positif", "négatif", "actif", "inactif",
-            "stables", "instable", "évolué", "non évolué",
-            "associé", "isolé", "primaire", "secondaire",
-            "direct", "indirect", "médiat", "immédiat",
-            "temporaire", "permanent", "définitif", "provisoire",
-            "volontaire", "involontaire", "accidentel",
-            "mecanique", "mécanique", "physique", "chimique",
-            "biologique", "psychologique", "social", "médical",
-            "chirurgical", "thérapeutique", "diagnostique",
-            "pronostique", "préventif", "curatif", "palliatif",
-            "symptomatique", "étiologique", "pathogène",
-            "bénin", "malin", "local", "généralisé",
-            "superficiel", "profond", "partiel", "total",
-            "complet", "incomplet", "initial", "terminal",
-            "précoce", "tardif", "immédiat", "retardé",
-            "aiguë", "subaiguë", "chronique", "évolutive",
-            "stable", "instable", "progressive", "régressive",
-            "réversible", "irréversible", "fonctionnelle",
-            "organique", "structurelle", "fonctionnel",
-            "organique", "structurel", "morphologique",
-            "histologique", "cytologique", "biochimique",
-            "hormonal", "métabolique", "endocrinien",
-            "vasculaire", "hématologique", "immunologique",
-            "allergique", "auto-immun", "inflammatoire",
-            "infectieux", "contagieux", "bactérien", "viral",
-            "parasitaire", "fongique", "néoplasique", "tumoral",
-            "dégénératif", "dystrophique", "atrophié", "hypertrophié",
-            "hyperplasique", "herniaire", "obstructif", "occlusif",
-            "perforant", "hémorragique", "ischémique", "hypoxique",
-            "anoxique", "toxique", "septique", "abcessé",
-            "phlegmoneux", "gangréneux", "nécrotique", "ulcéré",
-            "excorié", "érosif", "fissuré", "déchiré",
-            "décollé", "désinséré", "luxé", "fracturé",
-            "subluxé", "entorsé", "étiré", "distendu",
-            "contracturé", "spasmodique", "tétanique", "convulsif",
-            "paralytique", "parétique", "paresthésique", "dysesthésique",
-            "hyperesthésique", "hypoesthésique", "anesthésique",
-            "algique", "douloureux", "douloureuse",
-            "sensible", "insensible", "hypersensible", "hyposensible",
-            "mobile", "immobile", "stable", "mobile",
-            "souple", "rigide", "souple", "rigide",
-            "souple", "rigide", "souple", "rigide",
-            "souple", "rigide",
-            "syndrome", "maladie", "affection", "pathologie",
-            "lésion", "atteinte", "trouble", "dérèglement",
-            "dysfonction", "insuffisance", "hypofonction",
-            "hyperfonction", "excès", "manque", "déficit",
-            "altération", "modification", "changement",
-            "progression", "évolution", "aggravation",
-            "amélioration", "stabilisation", "guérison",
-            "rémission", "rechute", "récidive", "complication",
-            "séquelle", "séquelles", "séquelle fonctionnelle",
-            "capacité", "incapacité", "inaptitude", "aptitude",
-            "restriction", "limitation", "interdiction",
-            "contre-indication", "précaution", "mise en garde",
-            "avertissement", "notification", "déclaration",
-            "certificat", "attestation", "rapport",
-            "compte-rendu", "protocole", "consentement",
-            "information", "explication", "conseil",
-            "recommandation", "observation", "constat",
-            "évaluation", "appréciation", "estimation",
-            "pronostic", "évolution", "pronostic",
-            "guérison", "rémission", "rechute", "complication",
-            "séquelle", "séquelles", "séquelle fonctionnelle",
-        ];
-
-        // Vérifier dans le dictionnaire de base
-        if (dictionnaireBase.indexOf(motLower) !== -1) return null;
-
-        // Vérifier dans le dictionnaire médical
-        for (var i = 0; i < dictionnaireMedical.length; i++) {
-            if (dictionnaireMedical[i].toLowerCase() === motLower) return null;
-        }
-
-        // Chercher des corrections
-        var corrections = trouverCorrections(mot);
-        if (corrections.length > 0) {
-            return {
-                mot: mot,
-                type: "orthographe",
-                message: "Mot non reconnu",
-                suggestions: corrections
-            };
-        }
-        return null;
-    }
-
-    /**
-     * Fonction principale de vérification
-     */
+    // ============================================================
+    // VÉRIFICATION PRINCIPALE
+    // ============================================================
     function verifier(texte) {
         var erreurs = [];
-        var texteCorrige = texte;
+        var vus = {};
 
-        // 1. Appliquer les mots confondus
-        for (var i = 0; i < motsConfondus.length; i++) {
-            var rule = motsConfondus[i];
-            var regex = new RegExp(rule.regex.source, rule.regex.flags);
+        // Pass 1 : règles regex (orthographe, grammaire, mots confondus, conjugaison)
+        for (var i = 0; i < toutesRegles.length; i++) {
+            var regle = toutesRegles[i];
+            var regex = new RegExp(regle.regex.source, regle.regex.flags);
             var match;
             while ((match = regex.exec(texte)) !== null) {
+                var cle = regle.msg + "|" + match.index;
+                if (vus[cle]) continue;
+                vus[cle] = true;
                 erreurs.push({
                     position: match.index,
-                    longueur: match[0].length,
                     texte: match[0],
-                    type: "confusion",
-                    message: rule.msg,
-                    remplacement: rule.rep
+                    type: regle.msg.indexOf("Accord") >= 0 ? "accord" :
+                          regle.msg.indexOf("→") >= 0 ? "correction" : "vérification",
+                    message: regle.msg,
+                    remplacement: regle.rep || null,
+                    auto: regle.auto || false
                 });
             }
         }
 
-        // 2. Appliquer l'orthographe médicale
-        for (var i = 0; i < orthographeMedicale.length; i++) {
-            var rule = orthographeMedicale[i];
-            var regex = new RegExp(rule.regex.source, rule.regex.flags);
-            var match;
-            while ((match = regex.exec(texte)) !== null) {
-                erreurs.push({
-                    position: match.index,
-                    longueur: match[0].length,
-                    texte: match[0],
-                    type: "orthographe",
-                    message: rule.msg,
-                    remplacement: rule.rep
-                });
-            }
-        }
-
-        // 3. Appliquer les règles d'accord
-        for (var i = 0; i < accordRules.length; i++) {
-            var rule = accordRules[i];
-            var regex = new RegExp(rule.regex.source, rule.regex.flags);
-            var match;
-            while ((match = regex.exec(texte)) !== null) {
-                erreurs.push({
-                    position: match.index,
-                    longueur: match[0].length,
-                    texte: match[0],
-                    type: "accord",
-                    message: rule.msg,
-                    remplacement: rule.rep
-                });
-            }
-        }
-
-        // 4. Appliquer la conjugaison
-        for (var i = 0; i < conjugaisonRules.length; i++) {
-            var rule = conjugaisonRules[i];
-            var regex = new RegExp(rule.regex.source, rule.regex.flags);
-            var match;
-            while ((match = regex.exec(texte)) !== null) {
-                erreurs.push({
-                    position: match.index,
-                    longueur: match[0].length,
-                    texte: match[0],
-                    type: "conjugaison",
-                    message: rule.msg,
-                    remplacement: rule.rep
-                });
-            }
-        }
-
-        // 5. Appliquer la grammaire
-        for (var i = 0; i < grammaireRules.length; i++) {
-            var rule = grammaireRules[i];
-            var regex = new RegExp(rule.regex.source, rule.regex.flags);
-            var match;
-            while ((match = regex.exec(texte)) !== null) {
-                erreurs.push({
-                    position: match.index,
-                    longueur: match[0].length,
-                    texte: match[0],
-                    type: "grammaire",
-                    message: rule.msg,
-                    remplacement: rule.rep
-                });
-            }
-        }
-
-        // 6. Vérifier les mots inconnus (dyslexie / typos)
-        var searchPos = 0;
+        // Pass 2 : vérification orthographique des mots isolés
         var mots = texte.split(/\s+/);
-        for (var i = 0; i < mots.length; i++) {
-            var motBrut = mots[i];
-            var mot = motBrut.replace(/[.,;:!?'"()\-]/g, '');
-            var wordStart = texte.indexOf(motBrut, searchPos);
-            if (mot.length >= 3) {
-                var erreur = verifierMot(mot);
-                if (erreur) {
-                    erreurs.push({
-                        position: wordStart,
-                        longueur: motBrut.length,
-                        texte: motBrut,
-                        type: erreur.type,
-                        message: erreur.message,
-                        remplacement: erreur.suggestions && erreur.suggestions.length > 0 ? erreur.suggestions[0] : null,
-                        suggestions: erreur.suggestions
-                    });
+        for (var j = 0; j < mots.length; j++) {
+            var mot = mots[j].replace(/[.,;:!?'"()\[\]{}]/g, "").toLowerCase();
+            if (mot.length < 3) continue;
+            if (dictionnaireBase.has(mot)) continue;
+            // Chercher similaire uniquement si court (évite les faux positifs sur les termes longs)
+            if (mot.length <= 15) {
+                var similaires = trouverSimilaires(mot, mot.length <= 6 ? 2 : 3);
+                if (similaires.length > 0) {
+                    var cleMot = "mot|" + mot;
+                    if (!vus[cleMot]) {
+                        vus[cleMot] = true;
+                        erreurs.push({
+                            position: texte.toLowerCase().indexOf(mot),
+                            texte: mot,
+                            type: "orthographe",
+                            message: "Mot possibly mal orthographié : '" + mot + "'",
+                            remplacement: null,
+                            suggestions: similaires,
+                            auto: false
+                        });
+                    }
                 }
             }
-            searchPos = wordStart + motBrut.length;
         }
 
-        return {
-            erreurs: erreurs,
-            textCorrige: texteCorrige
-        };
+        return { erreurs: erreurs };
     }
 
-    return {
-        verifier: verifier,
-        trouverCorrections: trouverCorrections,
-        _regles: motsConfondus.concat(orthographeMedicale).concat(accordRules).concat(conjugaisonRules).concat(grammaireRules)
-    };
+    return { verifier: verifier };
 
 })();
