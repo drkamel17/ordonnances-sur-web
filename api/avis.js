@@ -9,7 +9,7 @@ const DEFAULT_CONFIG = {
 export async function POST(request) {
   try {
     const body = await request.json();
-    const { nom, etablissement, message, action, password, avisId } = body;
+    const { nom, etablissement, message, action, password, avisId, reponse } = body;
 
     const supabaseUrl = process.env.SUPABASE_URL || DEFAULT_CONFIG.SUPABASE_URL;
     const supabaseKey = process.env.SUPABASE_KEY || DEFAULT_CONFIG.SUPABASE_KEY;
@@ -86,7 +86,42 @@ export async function POST(request) {
       return new Response(JSON.stringify({ success: response.ok, message: response.ok ? 'Rejete' : 'Erreur' }), { headers: { 'Content-Type': 'application/json' } });
     }
 
-    return new Response(JSON.stringify({ success: false, message: 'Action non reconnue' }), { status: 400, headers: { 'Content-Type': 'application/json' } });
+    // Répondre à un avis (admin)
+    if (action === 'reply' && avisId && body.reponse) {
+      if (!password || password !== writePassword) {
+        return new Response(JSON.stringify({ success: false, message: 'Mot de passe admin requis' }), { status: 401, headers: { 'Content-Type': 'application/json' } });
+      }
+
+      const response = await fetch(`${supabaseUrl}/rest/v1/avis?id=eq.${avisId}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': supabaseKey,
+          'Authorization': `Bearer ${supabaseKey}`,
+          'Prefer': 'return=minimal'
+        },
+        body: JSON.stringify({ reponse_admin: body.reponse })
+      });
+
+      return new Response(JSON.stringify({ success: response.ok, message: response.ok ? 'Reponse ajoutee' : 'Erreur' }), { headers: { 'Content-Type': 'application/json' } });
+    }
+
+    // Supprimer définitivement un avis (admin)
+    if (action === 'delete' && avisId) {
+      if (!password || password !== writePassword) {
+        return new Response(JSON.stringify({ success: false, message: 'Mot de passe admin requis' }), { status: 401, headers: { 'Content-Type': 'application/json' } });
+      }
+
+      const response = await fetch(`${supabaseUrl}/rest/v1/avis?id=eq.${avisId}`, {
+        method: 'DELETE',
+        headers: {
+          'apikey': supabaseKey,
+          'Authorization': `Bearer ${supabaseKey}`
+        }
+      });
+
+      return new Response(JSON.stringify({ success: response.ok, message: response.ok ? 'Supprime' : 'Erreur' }), { headers: { 'Content-Type': 'application/json' } });
+    }
   } catch (error) {
     return new Response(JSON.stringify({ success: false, message: error.message }), { status: 500, headers: { 'Content-Type': 'application/json' } });
   }

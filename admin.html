@@ -439,17 +439,27 @@ async function chargerAvisPending() {
           minute: '2-digit'
         });
         html += `
-          <div class="pending-card ext">
+          <div class="pending-card ext" id="avis-${a.id}">
             <div class="pending-header">
               <span class="pending-title">${a.nom}</span>
               <span class="badge-etablissement">${a.etablissement || 'Non précisé'}</span>
             </div>
             <div class="pending-user">${date}</div>
             <div class="comment-msg">${a.message}</div>
-            <button class="btn btn-confirm" onclick="confirmerAvis('${a.id}')" style="margin-right:10px;">Confirmer</button>
-            <button class="btn btn-reject" onclick="rejeterAvis('${a.id}')">Rejeter</button>
+            ${a.reponse_admin ? `<div class="reply-section"><div class="reply-label">✉ Réponse de l'admin:</div><div class="reply-text">${a.reponse_admin}</div></div>` : ''}
+            <div class="admin-buttons" style="margin-top:10px; display:flex; gap:10px;">
+              <button class="btn btn-confirm" onclick="confirmerAvis('${a.id}')" style="margin-right:10px;">Confirmer</button>
+              <button class="btn btn-reject" onclick="rejeterAvis('${a.id}')">Rejeter</button>
+              <button class="btn-admin-action btn-reply" onclick="showReplyFormAvis('${a.id}')" style="background:#2196F3;color:white;padding:5px 12px;border:none;border-radius:4px;cursor:pointer;font-size:0.85em;"><i class="fas fa-reply"></i> Répondre</button>
+              <button class="btn-admin-action btn-delete" onclick="deleteAvis('${a.id}')" style="background:#f44336;color:white;padding:5px 12px;border:none;border-radius:4px;cursor:pointer;font-size:0.85em;"><i class="fas fa-trash"></i> Supprimer</button>
+            </div>
+            <div id="reply-form-avis-${a.id}" class="reply-form" style="display:none; margin-top:10px;">
+              <textarea id="reply-text-avis-${a.id}" placeholder="Votre réponse..." style="width:100%;padding:10px;border:1px solid #ddd;border-radius:6px;min-height:80px;font-family:inherit;"></textarea>
+              <button onclick="submitReplyAvis('${a.id}')" style="margin-top:8px;padding:8px 16px;background:#4CAF50;color:white;border:none;border-radius:4px;cursor:pointer;">Envoyer la réponse</button>
+              <button onclick="hideReplyFormAvis('${a.id}')" style="margin-top:8px;margin-left:10px;padding:8px 16px;background:#999;color:white;border:none;border-radius:4px;cursor:pointer;">Annuler</button>
+            </div>
           </div>
-        `;
+        `;`
       });
       container.innerHTML = html;
     } else {
@@ -488,6 +498,49 @@ async function rejeterAvis(avisId) {
     });
     const result = await response.json();
     if (result.success) { alert('Commentaire de l\'extension rejeté!'); chargerAvisPending(); }
+    else { alert('Erreur: ' + result.message); }
+  } catch (e) { alert('Erreur'); }
+}
+
+function showReplyFormAvis(avisId) {
+  document.getElementById(`reply-form-avis-${avisId}`).style.display = 'block';
+}
+
+function hideReplyFormAvis(avisId) {
+  document.getElementById(`reply-form-avis-${avisId}`).style.display = 'none';
+  const t = document.getElementById(`reply-text-avis-${avisId}`);
+  if (t) t.value = '';
+}
+
+async function submitReplyAvis(avisId) {
+  const replyText = (document.getElementById(`reply-text-avis-${avisId}`).value || '').trim();
+  if (!replyText) { alert('Veuillez entrer une réponse'); return; }
+  const pass = getPassword();
+  if (!pass) return;
+  try {
+    const response = await fetch('/api/avis', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'reply', password: pass, avisId: avisId, reponse: replyText })
+    });
+    const result = await response.json();
+    if (result.success) { alert('Réponse enregistrée!'); chargerAvisPending(); }
+    else { alert('Erreur: ' + result.message); }
+  } catch (e) { alert('Erreur'); }
+}
+
+async function deleteAvis(avisId) {
+  if (!confirm('Voulez-vous vraiment supprimer cet avis?')) return;
+  const pass = getPassword();
+  if (!pass) return;
+  try {
+    const response = await fetch('/api/avis', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'delete', password: pass, avisId: avisId })
+    });
+    const result = await response.json();
+    if (result.success) { alert('Avis supprimé!'); chargerAvisPending(); }
     else { alert('Erreur: ' + result.message); }
   } catch (e) { alert('Erreur'); }
 }
