@@ -50,7 +50,6 @@
     }
     .section.or { border-left: 4px solid #ff9800; }
     .section.com { border-left: 4px solid #9C27B0; }
-    .section.ext { border-left: 4px solid #00bcd4; }
     .pending-card {
       border: 2px solid #ddd;
       border-radius: 8px;
@@ -59,14 +58,6 @@
     }
     .pending-card.ord { border-color: #ff9800; background: #fff3e0; }
     .pending-card.com { border-color: #9C27B0; background: #f3e5f5; }
-    .pending-card.ext { border-color: #00bcd4; background: #e0f7fa; }
-    .badge-etablissement {
-      background: #00bcd4;
-      color: white;
-      padding: 3px 10px;
-      border-radius: 12px;
-      font-size: 0.8em;
-    }
     .pending-header {
       display: flex;
       justify-content: space-between;
@@ -162,7 +153,7 @@
   <div class="header">
     <h1><i class="fas fa-cogs"></i> Panel Admin</h1>
     <div>
-      <a href="https://ordonnances-sur-web.vercel.app/commentaire/index.html" class="btn" style="background: #9C27B0; color: white; margin-right: 10px;">
+      <a href="commentaire/index.html" class="btn" style="background: #9C27B0; color: white; margin-right: 10px;">
         <i class="fas fa-comments"></i> Gérer les Commentaires
       </a>
       <a href="index.html" class="btn btn-retour"><i class="fas fa-home"></i> Retour</a>
@@ -181,15 +172,6 @@
     <h2><i class="fas fa-comments"></i> Commentaires en attente</h2>
     <div id="commentaires-list"></div>
   </div>
-
-  <!-- Section Commentaires de l'extension en attente -->
-  <div class="section ext">
-    <h2><i class="fas fa-comment-dots"></i> Commentaires de l'extension en attente</h2>
-    <a href="index.html" class="btn btn-modify" style="margin-bottom: 10px;">
-      <i class="fas fa-comments"></i> Gérer les commentaires
-    </a>
-    <div id="avis-list"></div>
-  </div>
 </div>
 
 <script>
@@ -203,7 +185,7 @@ function verifyPassword() {
   }
   
   // Vérification côté serveur via API
-  fetch(`/api/ordonnances?verify=true&pass=${encodeURIComponent(pass)}`)
+  fetch(`/api/save-supabase?verify=true&pass=${encodeURIComponent(pass)}`)
     .then(res => {
       if (res.ok) {
         adminPass = pass;
@@ -242,12 +224,11 @@ function getPassword() {
 async function chargerDonnees() {
   await chargerOrdonnancesPending();
   await chargerCommentairesPending();
-  await chargerAvisPending();
 }
 
 async function chargerOrdonnancesPending() {
   try {
-    const response = await fetch('/api/ordonnances?pending=true');
+    const response = await fetch('/api/save-supabase?pending=true');
     const result = await response.json();
     const container = document.getElementById('ordonnances-list');
     
@@ -332,81 +313,11 @@ async function chargerCommentairesPending() {
   }
 }
 
-async function chargerAvisPending() {
-  try {
-    const response = await fetch('/api/avis?pending=true');
-    const result = await response.json();
-    const container = document.getElementById('avis-list');
-
-    if (result.success && result.avis && result.avis.length > 0) {
-      let html = '';
-      result.avis.forEach(a => {
-        const date = new Date(a.created_at).toLocaleDateString('fr-FR', {
-          day: '2-digit',
-          month: '2-digit',
-          year: 'numeric',
-          hour: '2-digit',
-          minute: '2-digit'
-        });
-        html += `
-          <div class="pending-card ext">
-            <div class="pending-header">
-              <span class="pending-title">${a.nom}</span>
-              <span class="badge-etablissement">${a.etablissement || 'Non précisé'}</span>
-            </div>
-            <div class="pending-user">${date}</div>
-            <div class="comment-msg">${a.message}</div>
-            <button class="btn btn-confirm" onclick="confirmerAvis('${a.id}')" style="margin-right:10px;">Confirmer</button>
-            <button class="btn btn-reject" onclick="rejeterAvis('${a.id}')">Rejeter</button>
-          </div>
-        `;
-      });
-      container.innerHTML = html;
-    } else {
-      container.innerHTML = '<div class="no-data">Aucun commentaire de l\'extension en attente</div>';
-    }
-  } catch (e) {
-    console.error(e);
-    container.innerHTML = '<div class="no-data">Erreur de chargement</div>';
-  }
-}
-
-async function confirmerAvis(avisId) {
-  const pass = getPassword();
-  if (!pass) return;
-  try {
-    const response = await fetch('/api/avis', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ action: 'confirm', password: pass, avisId: avisId })
-    });
-    const result = await response.json();
-    if (result.success) { alert('Commentaire de l\'extension confirmé!'); chargerAvisPending(); }
-    else { alert('Erreur: ' + result.message); }
-  } catch (e) { alert('Erreur'); }
-}
-
-async function rejeterAvis(avisId) {
-  if (!confirm('Voulez-vous rejeter ce commentaire de l\'extension?')) return;
-  const pass = getPassword();
-  if (!pass) return;
-  try {
-    const response = await fetch('/api/avis', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ action: 'reject', password: pass, avisId: avisId })
-    });
-    const result = await response.json();
-    if (result.success) { alert('Commentaire de l\'extension rejeté!'); chargerAvisPending(); }
-    else { alert('Erreur: ' + result.message); }
-  } catch (e) { alert('Erreur'); }
-}
-
 async function confirmerOrdonnance(userId) {
   const pass = getPassword();
   if (!pass) return;
   try {
-    const response = await fetch('/api/ordonnances', {
+    const response = await fetch('/api/save-supabase', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ action: 'confirm', password: pass, data: {}, pendingKey: userId })
@@ -422,7 +333,7 @@ async function rejeterOrdonnance(userId) {
   const pass = getPassword();
   if (!pass) return;
   try {
-    const response = await fetch('/api/ordonnances', {
+    const response = await fetch('/api/save-supabase', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ action: 'reject', password: pass, pendingKey: userId })
@@ -437,7 +348,7 @@ async function modifierOrdonnance(userId, titre, index) {
   const pass = getPassword();
   if (!pass) return;
   try {
-    const response = await fetch('/api/ordonnances?pending=true');
+    const response = await fetch('/api/save-supabase?pending=true');
     const result = await response.json();
     const user = result.users.find(u => u.id === userId);
     if (!user || !user.data[titre]) { alert('Non trouvé'); return; }
@@ -449,7 +360,7 @@ async function modifierOrdonnance(userId, titre, index) {
       quantite: document.getElementById(`ord_${index}_${mIndex}_qte`).value
     }));
     
-    const saveResponse = await fetch('/api/ordonnances', {
+    const saveResponse = await fetch('/api/save-supabase', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ action: 'modify', password: pass, pendingId: userId, titre: titre, nouveauxMedicaments: medsModifies })
