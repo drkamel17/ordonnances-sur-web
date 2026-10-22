@@ -60,6 +60,13 @@
     .pending-card.ord { border-color: #ff9800; background: #fff3e0; }
     .pending-card.com { border-color: #9C27B0; background: #f3e5f5; }
     .pending-card.ext { border-color: #00bcd4; background: #e0f7fa; }
+    .badge-etablissement {
+      background: #00bcd4;
+      color: white;
+      padding: 3px 10px;
+      border-radius: 12px;
+      font-size: 0.8em;
+    }
     .pending-header {
       display: flex;
       justify-content: space-between;
@@ -235,6 +242,7 @@ function getPassword() {
 async function chargerDonnees() {
   await chargerOrdonnancesPending();
   await chargerCommentairesPending();
+  await chargerAvisPending();
 }
 
 async function chargerOrdonnancesPending() {
@@ -410,6 +418,76 @@ async function rejeterCommentaire(commentId) {
     });
     const result = await response.json();
     if (result.success) { alert('Commentaire rejeté!'); chargerCommentairesPending(); }
+    else { alert('Erreur: ' + result.message); }
+  } catch (e) { alert('Erreur'); }
+}
+
+async function chargerAvisPending() {
+  try {
+    const response = await fetch('/api/avis?pending=true');
+    const result = await response.json();
+    const container = document.getElementById('avis-list');
+
+    if (result.success && result.avis && result.avis.length > 0) {
+      let html = '';
+      result.avis.forEach(a => {
+        const date = new Date(a.created_at).toLocaleDateString('fr-FR', {
+          day: '2-digit',
+          month: '2-digit',
+          year: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit'
+        });
+        html += `
+          <div class="pending-card ext">
+            <div class="pending-header">
+              <span class="pending-title">${a.nom}</span>
+              <span class="badge-etablissement">${a.etablissement || 'Non précisé'}</span>
+            </div>
+            <div class="pending-user">${date}</div>
+            <div class="comment-msg">${a.message}</div>
+            <button class="btn btn-confirm" onclick="confirmerAvis('${a.id}')" style="margin-right:10px;">Confirmer</button>
+            <button class="btn btn-reject" onclick="rejeterAvis('${a.id}')">Rejeter</button>
+          </div>
+        `;
+      });
+      container.innerHTML = html;
+    } else {
+      container.innerHTML = '<div class="no-data">Aucun commentaire de l\'extension en attente</div>';
+    }
+  } catch (e) {
+    console.error(e);
+    container.innerHTML = '<div class="no-data">Erreur de chargement</div>';
+  }
+}
+
+async function confirmerAvis(avisId) {
+  const pass = getPassword();
+  if (!pass) return;
+  try {
+    const response = await fetch('/api/avis', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'confirm', password: pass, avisId: avisId })
+    });
+    const result = await response.json();
+    if (result.success) { alert('Commentaire de l\'extension confirmé!'); chargerAvisPending(); }
+    else { alert('Erreur: ' + result.message); }
+  } catch (e) { alert('Erreur'); }
+}
+
+async function rejeterAvis(avisId) {
+  if (!confirm('Voulez-vous rejeter ce commentaire de l\'extension?')) return;
+  const pass = getPassword();
+  if (!pass) return;
+  try {
+    const response = await fetch('/api/avis', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'reject', password: pass, avisId: avisId })
+    });
+    const result = await response.json();
+    if (result.success) { alert('Commentaire de l\'extension rejeté!'); chargerAvisPending(); }
     else { alert('Erreur: ' + result.message); }
   } catch (e) { alert('Erreur'); }
 }
